@@ -64,12 +64,12 @@
     },
     {
       "id": "impostor",
-      "name": "Impostor Android Game",
+      "name": "Omni-Impostor",
       "context": "personal",
       "desc":     { "en": "Native Android game with multimodular architecture, offline/online modes, Firebase Auth and Google Sign-In.",                               "es": "Juego Android nativo con arquitectura multimodular, modos offline/online, Firebase Auth y Google Sign-In." },
       "long_desc":{ "en": "Personal Android project built as a production-grade template and game. Uses multi-module architecture (app, core, data, domain, feature) with Gradle convention plugins, Detekt static analysis, CI/CD validation workflows, LeakCanary and Chucker for debug diagnostics. Integrates Firebase Authentication with Google Sign-In and Couchbase + OpenDB for data persistence. Navigation: Splash → Login → Home with bottom nav (Face, Ranking, Profile) supporting offline and online game modes.", "es": "Proyecto Android personal desarrollado como plantilla de nivel producción y juego. Usa arquitectura multi-módulo (app, core, data, domain, feature) con plugins de convención Gradle, análisis estático Detekt, workflows CI/CD, LeakCanary y Chucker para diagnóstico en debug. Integra Firebase Authentication con Google Sign-In y Couchbase + OpenDB para persistencia de datos. Navegación: Splash → Login → Home con barra inferior (Face, Ranking, Profile) con modos de juego offline y online." },
       "tags": ["Kotlin", "Jetpack Compose", "Firebase", "Multi-Module", "Detekt", "CI/CD"],
-      "github": "https://github.com/Sebas1705/ImpostorAndroidGame",
+      "github": null,
       "demo": "https://play.google.com/store/apps/details?id=es.sebas1705.impostorandroidgame"
     },
     {
@@ -89,7 +89,7 @@
       "desc":     { "en": "Previous portfolio: Astro + Clean Architecture, VPS-hosted with CI/CD, Playwright e2e tests and 100% unit test coverage.",                  "es": "Portafolio anterior: Astro + Arquitectura Limpia, alojado en VPS con CI/CD, tests e2e Playwright y 100% cobertura unitaria." },
       "long_desc":{ "en": "Multi-language Astro website (14 locales) built with Clean Architecture (Domain, Application, Infrastructure, Presentation layers). Deployed on a self-hosted VPS with Docker Compose and Nginx Proxy Manager. Features WCAG accessibility compliance, 100% Vitest unit coverage and 91.66% branch coverage, automated Playwright e2e tests, and CI/CD with auto-deploy on push.", "es": "Web Astro multiidioma (14 idiomas) construida con Arquitectura Limpia (capas Domain, Application, Infrastructure, Presentation). Desplegada en VPS propio con Docker Compose y Nginx Proxy Manager. WCAG accesible, 100% cobertura unitaria con Vitest y 91.66% de ramas, tests e2e automáticos con Playwright y CI/CD con despliegue automático." },
       "tags": ["Astro", "TypeScript", "Clean Architecture", "Docker", "Vitest", "Playwright"],
-      "github": "https://github.com/Sebas1705/my-portfolio",
+      "github": "https://github.com/Sebas1705Carreer/carreerV1",
       "demo": null
     },
     {

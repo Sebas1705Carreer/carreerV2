@@ -2,7 +2,7 @@
 
 Personal portfolio v2 built with **React 19**, **TypeScript**, **Vite**, and **Tailwind CSS v4**. Deployed as a static site on GitHub Pages, consuming live data from the career API. Includes an in-browser **PDF CV generator**.
 
-**Live site:** https://sebas1705.github.io/carreerV2/
+**Live site:** https://sebas1705carreer.github.io/carreerV2/
 
 ---
 
@@ -69,7 +69,7 @@ carreerV2/
 Prerequisites: Node.js 20+, npm
 
 ```bash
-git clone https://github.com/Sebas1705/carreerV2.git
+git clone https://github.com/Sebas1705Carreer/carreerV2.git
 cd carreerV2
 npm install
 npm run dev
@@ -110,6 +110,6 @@ Runs on every push to `main`:
 
 | Repo | Description |
 |---|---|
-| [career-api](https://github.com/Sebas1705/career-api) | Hono + Cloudflare Workers API powering the data |
-| [carreerV1](https://github.com/Sebas1705/carreerV1) | Portfolio v1 - Astro SSG, Clean Architecture, 10 languages |
-| [career-editor-kmp](https://github.com/Sebas1705/career-editor-kmp) | KMP desktop/Android editor for career-api data |
+| [career-api-worker](https://github.com/Sebas1705Carreer/career-api-worker) | Cloudflare Workers + KV API powering the data |
+| [carreerV1](https://github.com/Sebas1705Carreer/carreerV1) | Portfolio v1 - Astro SSG, Clean Architecture, 10 languages |
+| [career-editor-kmp](https://github.com/Sebas1705Carreer/career-editor-kmp) | KMP desktop/Android editor for career-api data |
