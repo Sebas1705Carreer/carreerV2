@@ -4,7 +4,7 @@ import { usePortfolioData } from '../context/PortfolioDataContext'
 import { localize } from '../lib/localize'
 import { useLang } from '../hooks/useLang'
 import {
-  Document, Page, Text, View, Link, StyleSheet, Font,
+  Document, Page, Text, View, Link, StyleSheet,
   pdf, type DocumentProps,
 } from '@react-pdf/renderer'
 
@@ -38,7 +38,7 @@ const ROLES: Record<RoleId, RoleProfile> = {
     summaryEs:
       'Desarrollador Full Stack & Móvil con más de 2 años de experiencia en producción en Solusoft (Madrid, Híbrido). Promocionado de Junior a Senior por liderazgo técnico y ownership demostrado. Publicadas dos apps Android nativas en Google Play Store — EPDM Portal Musical (desde cero) e Iberext (migración desde Windows legacy). Dominio completo de la pila: Kotlin/Jetpack Compose, .NET/C#, React/TypeScript, SQL Server y Azure. TFM del Máster: AxiomNode — plataforma de 16 repositorios con motor de IA (Python/LLM), cliente móvil (Kotlin/Compose) y pipeline DevSecOps (Docker, Kubernetes, 90% cobertura, CodeQL SAST, Trivy SCA).',
     prioritySkillIds: ['kotlin','typescript','csharp','javascript','java','jetpack-compose','react','dotnet','spring-boot','tailwindcss','docker','docker-compose','kubernetes','git','sqlserver','sql','postgresql','mongodb','firebase','azure','mvvm','mvc','microservices','bff','clean-architecture','multimodular-mixed','adr','scrum','tdd','devsecops','owasp','solid','prompt-engineering','copilot','llmops'],
-    projectIds: ['epdm','iberext','axiomnode','youknow','agedi','sisley','vpslocalorchestrator'],
+    projectIds: ['epdm','iberext','axiomnode','youknow','agedi','sisley','vpsorchestrator'],
     maxCerts: 5,
   },
   mobile: {
@@ -68,7 +68,7 @@ const ROLES: Record<RoleId, RoleProfile> = {
     summaryEs:
       'Desarrollador Backend con más de 2 años construyendo y manteniendo APIs empresariales en producción en Solusoft (Madrid, Híbrido). Tecnologías principales: C# / .NET (MVC, Web API), SQL Server y Azure. Experiencia con Spring Boot, Node.js/TypeScript y Python (FastAPI). TFM del Máster: AxiomNode — plataforma de microservicios (TypeScript/Node.js) con API Gateway, patrón BFF, RBAC, cifrado AES, auditoría, trazabilidad distribuida, 555 tests en 23 suites, CodeQL SAST y Trivy SCA. Despliegues Docker y Kubernetes gestionados mediante CI/CD centralizado (GitHub Actions).',
     prioritySkillIds: ['csharp','java','kotlin','typescript','python','dotnet','spring-boot','spring','nodejs','fastapi','express','sqlserver','sql','mysql','postgresql','mongodb','docker','docker-compose','kubernetes','azure','firebase','mvc','clean-architecture','microservices','bff','hexagonal','event-driven','adr','git','postman','scrum','agile'],
-    projectIds: ['agedi','sisley','axiomnode','vpslocalorchestrator','iberext','epdm'],
+    projectIds: ['agedi','sisley','axiomnode','vpsorchestrator','iberext','epdm'],
     maxCerts: 4,
   },
   frontend: {
@@ -102,13 +102,9 @@ const SPOKEN_LANGS = {
 }
 
 // ── PDF styles ────────────────────────────────────────────────────────────────
-Font.register({
-  family: 'Helvetica',
-  fonts: [
-    { src: 'https://fonts.gstatic.com/s/opensans/v40/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0C4nY1M2xLER.woff2', fontWeight: 400 },
-    { src: 'https://fonts.gstatic.com/s/opensans/v40/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsg-1x4gaVIUwaEQbjA.woff2', fontWeight: 700 },
-  ],
-})
+// Sin Font.register: @react-pdf no soporta woff2 (el registro anterior con
+// fonts.gstatic caía en silencio) — Helvetica es una de las 14 fuentes
+// estándar de PDF y no necesita registro ni red.
 
 const PURPLE = '#7c3aed'
 const DARK   = '#1e293b'
@@ -333,7 +329,9 @@ function CVDocument({ lang, role, personal, skills, jobs, projects, education }:
             <Text style={s.h2}>{certsLbl}</Text>
             {cvCerts.map((c, i) => (
               <View key={i} style={s.certRow}>
-                <Link src={c.url} style={s.certName}>{loc(c.name)}</Link>
+                {c.url
+                  ? <Link src={c.url} style={s.certName}>{loc(c.name)}</Link>
+                  : <Text style={s.certName}>{loc(c.name)}</Text>}
                 <Text style={s.certMeta}>{c.issuer} · {c.date}</Text>
               </View>
             ))}
@@ -635,8 +633,12 @@ export default function CVGenerator({ onClose }: Props) {
                     <div className="space-y-1.5">
                       {cvCerts.map((c, i) => (
                         <div key={i} className="flex items-baseline justify-between gap-2">
-                          <a href={c.url} target="_blank" rel="noopener noreferrer"
-                            className="text-[10px] text-violet-600 hover:underline font-medium">{loc(c.name)}</a>
+                          {c.url ? (
+                            <a href={c.url} target="_blank" rel="noopener noreferrer"
+                              className="text-[10px] text-violet-600 hover:underline font-medium">{loc(c.name)}</a>
+                          ) : (
+                            <span className="text-[10px] text-violet-600 font-medium">{loc(c.name)}</span>
+                          )}
                           <span className="text-[9px] text-slate-400 whitespace-nowrap flex-shrink-0">{c.issuer} · {c.date}</span>
                         </div>
                       ))}

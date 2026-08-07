@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useState } from 'react'
+import { Suspense, lazy, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from './hooks/useTheme'
 import { useSection } from './hooks/useSection'
@@ -14,7 +14,9 @@ import ExperienceSection from './components/sections/ExperienceSection'
 import ProjectsSection from './components/sections/ProjectsSection'
 import EducationSection from './components/sections/EducationSection'
 import ContactSection from './components/sections/ContactSection'
-import CVGenerator from './components/CVGenerator'
+
+// Lazy: @react-pdf pesa ~1MB minificado y solo hace falta al generar un CV
+const CVGenerator = lazy(() => import('./components/CVGenerator'))
 
 const SECTIONS = [
   HeroSection,
@@ -96,7 +98,7 @@ export default function App() {
           className="absolute inset-x-0 top-0 bottom-0 md:inset-0 pb-14 md:pb-0"
         >
           <SectionDecor sectionKey={SECTION_KEYS[current]} />
-          <CurrentSection onNext={next} onPrev={prev} onOpenCV={current === SECTIONS.length - 1 ? () => setShowCV(true) : undefined} />
+          <CurrentSection onNext={next} onPrev={prev} onOpenCV={() => setShowCV(true)} />
         </motion.div>
       </AnimatePresence>
 
@@ -175,7 +177,11 @@ export default function App() {
       </div>
 
       {/* ── CV Generator modal ── */}
-      {showCV && <CVGenerator onClose={() => setShowCV(false)} />}
+      {showCV && (
+        <Suspense fallback={null}>
+          <CVGenerator onClose={() => setShowCV(false)} />
+        </Suspense>
+      )}
     </div>
   )
 }

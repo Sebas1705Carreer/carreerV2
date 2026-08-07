@@ -17,23 +17,25 @@ interface Props {
   delay?: number
 }
 
+const cardClass =
+  'flex items-start gap-2.5 sm:gap-3 bg-slate-50 dark:bg-slate-900 rounded-xl p-3 sm:p-3.5 border border-slate-100 dark:border-slate-800 transition-all duration-200 group'
+const linkClass =
+  ' hover:border-violet-300 dark:hover:border-violet-700 hover:shadow-md hover:shadow-violet-500/5'
+
 /**
- * Certification card with external link.
- * Self-contained: reads language internally.
+ * Certification card. Renders as an external link only when the cert has a
+ * URL — in-progress certs (url: null) are a plain, non-clickable card.
  */
 export default function CertCard({ cert, delay = 0 }: Props) {
   const lang = useLang()
+  const anim = {
+    initial: { opacity: 0, x: 20 },
+    animate: { opacity: 1, x: 0 },
+    transition: { delay, duration: 0.45, ease: [0.22, 1, 0.36, 1] as const },
+  }
 
-  return (
-    <motion.a
-      href={cert.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-      className="flex items-start gap-2.5 sm:gap-3 bg-slate-50 dark:bg-slate-900 rounded-xl p-3 sm:p-3.5 border border-slate-100 dark:border-slate-800 hover:border-violet-300 dark:hover:border-violet-700 hover:shadow-md hover:shadow-violet-500/5 transition-all duration-200 group"
-    >
+  const body = (
+    <>
       <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center text-sm shrink-0">
         🏆
       </div>
@@ -42,17 +44,31 @@ export default function CertCard({ cert, delay = 0 }: Props) {
           <p className="font-medium text-slate-900 dark:text-white text-xs group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors truncate leading-snug">
             {localize(cert.name, lang)}
           </p>
-          <span className="text-slate-400 dark:text-slate-500 shrink-0">
-            <ExternalLinkIcon />
-          </span>
+          {cert.url && (
+            <span className="text-slate-400 dark:text-slate-500 shrink-0">
+              <ExternalLinkIcon />
+            </span>
+          )}
         </div>
         <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
           {cert.issuer} · {cert.date}
         </p>
-        <p className="text-[10px] sm:text-[11px] text-slate-400 dark:text-slate-500 mt-0.5 leading-relaxed line-clamp-1 sm:line-clamp-2">
-          {localize(cert.desc, lang)}
-        </p>
       </div>
+    </>
+  )
+
+  if (!cert.url) {
+    return <motion.div {...anim} className={cardClass}>{body}</motion.div>
+  }
+  return (
+    <motion.a
+      {...anim}
+      href={cert.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={cardClass + linkClass}
+    >
+      {body}
     </motion.a>
   )
 }

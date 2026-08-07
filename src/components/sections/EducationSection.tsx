@@ -87,13 +87,13 @@ export default function EducationSection() {
               <>
                 <div className="space-y-2 sm:space-y-2.5">
                   {certs.slice(0, CERTS_VISIBLE).map((cert, i) => (
-                    <CertCard key={String(cert.url)} cert={cert} delay={0.18 + i * 0.07} />
+                    <CertCard key={cert.id ?? `cert-${i}`} cert={cert} delay={0.18 + i * 0.07} />
                   ))}
 
                   <AnimatePresence initial={false}>
                     {showAllCerts && certs.slice(CERTS_VISIBLE).map((cert, i) => (
                       <motion.div
-                        key={String(cert.url)}
+                        key={cert.id ?? `cert-${CERTS_VISIBLE + i}`}
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}

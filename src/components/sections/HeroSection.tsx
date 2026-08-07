@@ -13,7 +13,7 @@ const item = (delay: number) => ({
   transition: { delay, duration: 0.55, ease },
 })
 
-export default function HeroSection({ onNext }: SectionProps) {
+export default function HeroSection({ onNext, onOpenCV }: SectionProps) {
   const { t } = useTranslation()
   const lang = useLang()
   const { personal } = usePortfolioData()
@@ -60,11 +60,11 @@ export default function HeroSection({ onNext }: SectionProps) {
         >
           {t('hero.cta_contact')}
         </a>
-        {personal.cvUrl && (
-          <a
-            href={personal.cvUrl}
-            download
-            className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 border border-violet-300 dark:border-violet-700 text-violet-600 dark:text-violet-400 rounded-full font-semibold hover:bg-violet-50 dark:hover:bg-violet-950/40 transition-all duration-200 hover:scale-105 active:scale-95 text-sm sm:text-base touch-manipulation"
+        {/* Abre el generador de CV (el cv_url estático de la API apuntaba a un PDF inexistente → 404) */}
+        {onOpenCV && (
+          <button
+            onClick={onOpenCV}
+            className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 border border-violet-300 dark:border-violet-700 text-violet-600 dark:text-violet-400 rounded-full font-semibold hover:bg-violet-50 dark:hover:bg-violet-950/40 transition-all duration-200 hover:scale-105 active:scale-95 text-sm sm:text-base touch-manipulation cursor-pointer"
           >
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -72,7 +72,7 @@ export default function HeroSection({ onNext }: SectionProps) {
               <line x1="12" y1="15" x2="12" y2="3" />
             </svg>
             {isEs ? 'Descargar CV' : 'Download CV'}
-          </a>
+          </button>
         )}
       </motion.div>
 

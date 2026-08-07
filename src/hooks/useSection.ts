@@ -42,7 +42,7 @@ export function useSection() {
         if (e.deltaY > 0 && !atBottom) return
         if (e.deltaY < 0 && !atTop) return
       }
-      e.deltaY > 0 ? next() : prev()
+      if (e.deltaY > 0) next(); else prev()
     }
     window.addEventListener('wheel', onWheel, { passive: true })
     return () => window.removeEventListener('wheel', onWheel)
@@ -60,7 +60,9 @@ export function useSection() {
       const dx = startX - e.changedTouches[0].clientX
       const dy = startY - e.changedTouches[0].clientY
       // Only treat as horizontal swipe if predominantly horizontal
-      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) dx > 0 ? next() : prev()
+      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
+        if (dx > 0) next(); else prev()
+      }
     }
     window.addEventListener('touchstart', onTouchStart, { passive: true })
     window.addEventListener('touchend', onTouchEnd, { passive: true })

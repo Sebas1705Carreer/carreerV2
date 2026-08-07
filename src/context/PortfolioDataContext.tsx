@@ -43,11 +43,13 @@ export interface RawEduItem {
 }
 
 export interface RawCert {
+  /** Optional for backwards-compat with cached/fallback data predating it */
+  id?: string
   name: ML
   issuer: string
   date: string
-  desc: ML
-  url: string
+  /** null for in-progress certifications */
+  url: string | null
 }
 
 export interface RawSoftSkill {
@@ -130,7 +132,7 @@ const PortfolioContext = createContext<PortfolioContextValue>({
 const API_BASE = (import.meta.env.VITE_CAREER_API_URL as string | undefined)?.replace(/\/$/, '')
   ?? 'https://career-api.sebas1705.workers.dev'
 
-const CACHE_KEY = 'portfolio_data_v6'
+const CACHE_KEY = 'portfolio_data_v7'
 
 // ── API response → portfolio shape adapters ───────────────────────────────────
 
@@ -187,6 +189,7 @@ function adaptJobs(rows: any[]): RawJob[] {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function adaptProjects(rows: any[]): { work: RawProject[]; featured: RawProject[] } {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const toProject = (r: any): RawProject => ({
     id:        r.id,
     name:      r.name,
@@ -214,41 +217,64 @@ function adaptEducation(eduRows: any[], certRows: any[]): { items: RawEduItem[];
       icon:   ({ graduation: '🎓', university: '🎓', school: '🏫', master: '🎓' } as Record<string, string>)[r.icon] ?? r.icon ?? '🎓',
     })),
     certs: certRows.map(r => ({
+      id:     r.id,
       name:   r.name,
       issuer: r.issuer,
       date:   r.date,
-      desc:   r.desc,
-      url:    r.url,
+      url:    r.url ?? null,
     })),
   }
 }
 
 // ── Provider ──────────────────────────────────────────────────────────────────
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const adaptSoftSkills = (rows: any[]): RawSoftSkill[] =>
+  rows.map(s => ({ icon: s.icon ?? '✦', name: s.name ?? ml('', '') }))
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const adaptSkills = (rows: any[]): RawSkill[] =>
+  rows.map(s => ({ id: s.id, name: s.name, iconUrl: s.icon_url, level: s.level, category: s.category }))
+
+function readCache(): PortfolioRawData | null {
+  try {
+    const cached = sessionStorage.getItem(CACHE_KEY)
+    if (cached) return JSON.parse(cached) as PortfolioRawData
+  } catch { sessionStorage.removeItem(CACHE_KEY) }
+  return null
+}
+
 export function PortfolioProvider({ children }: { children: React.ReactNode }) {
-  const [data, setData]       = useState<PortfolioRawData>(defaultValue)
-  const [loading, setLoading] = useState(true)
+  // Lazy init from the session cache: no setState-in-effect cascade
+  const [data, setData]       = useState<PortfolioRawData>(() => readCache() ?? defaultValue)
+  const [loading, setLoading] = useState(() => readCache() === null)
   const [error, setError]     = useState<string | null>(null)
   const [tick, setTick]       = useState(0)
 
+  // loading/error se preparan aquí (event handler) y no dentro del effect:
+  // la regla react-hooks/set-state-in-effect veta los setState síncronos allí.
   const reload = () => {
     sessionStorage.removeItem(CACHE_KEY)
+    setLoading(true)
+    setError(null)
     setTick(t => t + 1)
   }
 
   useEffect(() => {
-    const cached = sessionStorage.getItem(CACHE_KEY)
-    if (cached) {
-      try { setData(JSON.parse(cached)); setLoading(false); return }
-      catch { sessionStorage.removeItem(CACHE_KEY) }
-    }
-
-    setLoading(true)
-    setError(null)
+    // First render already hydrated from cache; only fetch on reload() or cold start
+    if (tick === 0 && readCache() !== null) return
 
     const get = (path: string) =>
       fetch(`${API_BASE}${path}`).then(r => {
         if (!r.ok) throw new Error(`${path}: HTTP ${r.status}`)
+        return r.json()
+      })
+
+    // Offline fallback: public/data/*.json are kept in the already-adapted
+    // shape, so they can be applied directly if the live API is unreachable.
+    const local = (name: string) =>
+      fetch(`${import.meta.env.BASE_URL}data/${name}.json`).then(r => {
+        if (!r.ok) throw new Error(`fallback ${name}.json: HTTP ${r.status}`)
         return r.json()
       })
 
@@ -264,8 +290,8 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
       .then(([personal, softSkillsRaw, skillsRaw, jobsRaw, projectsRaw, eduRaw, certsRaw]) => {
         const loaded: PortfolioRawData = {
           personal:   adaptPersonal(personal),
-          softSkills: softSkillsRaw.map((s: any) => ({ icon: s.icon ?? '✦', name: s.name ?? ml('', '') })),
-          skills:     skillsRaw.map((s: any) => ({ id: s.id, name: s.name, iconUrl: s.icon_url, level: s.level, category: s.category })),
+          softSkills: adaptSoftSkills(softSkillsRaw),
+          skills:     adaptSkills(skillsRaw),
           jobs:       adaptJobs(jobsRaw),
           projects:   adaptProjects(projectsRaw),
           education:  adaptEducation(eduRaw, certsRaw),
@@ -275,9 +301,27 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
         setLoading(false)
       })
       .catch(err => {
-        console.error('[PortfolioData]', err)
-        setError(err.message ?? 'Failed to load portfolio data')
-        setLoading(false)
+        console.warn('[PortfolioData] API unreachable, trying local fallback', err)
+        Promise.all([
+          local('personal'),
+          local('soft-skills'),
+          local('skills'),
+          local('jobs'),
+          local('projects'),
+          local('education'),
+        ])
+          .then(([personal, softSkills, skills, jobs, projects, education]) => {
+            setData({
+              personal: { ...personal, pillars: personal.pillars ?? PILLARS },
+              softSkills, skills, jobs, projects, education,
+            })
+            setLoading(false)
+          })
+          .catch(err2 => {
+            console.error('[PortfolioData]', err2)
+            setError(err.message ?? 'Failed to load portfolio data')
+            setLoading(false)
+          })
       })
   }, [tick])
 
@@ -288,4 +332,5 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const usePortfolioData = () => useContext(PortfolioContext)
