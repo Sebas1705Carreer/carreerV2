@@ -44,7 +44,7 @@
       "id": "apimovil",
       "name": "ApiMovil",
       "context": "work",
-      "desc":     { "en": "Internal .NET API powering Solusoft mobile applications.",                                                                                   "es": "API .NET interna que da servicio a las aplicaciones móviles de Solusoft." },
+      "desc":     { "en": "Internal .NET API powering the Transportes Chinchón mobile applications.",                                                                    "es": "API .NET interna que da servicio a las aplicaciones móviles de Transportes Chinchón." },
       "tags": ["C#", ".NET", "REST", "SQL Server"],
       "github": null,
       "demo": null
