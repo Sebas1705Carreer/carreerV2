@@ -16,8 +16,10 @@ export interface RawJob {
   role: ML
   company: string
   companyUrl: string
-  /** YYYY-MM — used to derive the years-of-experience hero stat */
+  /** YYYY-MM — used to derive the years-of-experience hero stat and ATS CV dates */
   startDate?: string
+  /** YYYY-MM, null while the job is current */
+  endDate?: string | null
   period: ML
   type: ML
   desc: ML
@@ -181,6 +183,7 @@ function adaptJobs(rows: any[]): RawJob[] {
       company:    r.company,
       companyUrl: r.companyUrl,
       startDate:  r.startDate ?? undefined,
+      endDate:    r.endDate ?? null,
       period:     r.period,
       type:       r.type,
       desc:       r.desc,
