@@ -873,5 +873,89 @@
         "iconUrl":  "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg",
         "level":  3,
         "category":  "databases"
+    },
+    {
+        "id":  "go",
+        "name":  "Go",
+        "iconUrl":  "https://img.icons8.com/color/100/golang.png",
+        "level":  3,
+        "category":  "languages"
+    },
+    {
+        "id":  "wails",
+        "name":  "Wails",
+        "iconUrl":  null,
+        "level":  2,
+        "category":  "frameworks"
+    },
+    {
+        "id":  "hilt",
+        "name":  "Hilt",
+        "iconUrl":  null,
+        "level":  3,
+        "category":  "frameworks"
+    },
+    {
+        "id":  "compose-multiplatform",
+        "name":  "Compose Multiplatform",
+        "iconUrl":  "https://developer.android.com/static/images/spot-icons/jetpack-compose.svg",
+        "level":  3,
+        "category":  "frameworks"
+    },
+    {
+        "id":  "scikit-learn",
+        "name":  "scikit-learn",
+        "iconUrl":  "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/scikitlearn/scikitlearn-original.svg",
+        "level":  2,
+        "category":  "ai"
+    },
+    {
+        "id":  "prometheus",
+        "name":  "Prometheus",
+        "iconUrl":  "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/prometheus/prometheus-original.svg",
+        "level":  2,
+        "category":  "tools"
+    },
+    {
+        "id":  "grafana",
+        "name":  "Grafana",
+        "iconUrl":  "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/grafana/grafana-original.svg",
+        "level":  2,
+        "category":  "tools"
+    },
+    {
+        "id":  "codeql",
+        "name":  "CodeQL",
+        "iconUrl":  null,
+        "level":  2,
+        "category":  "tools"
+    },
+    {
+        "id":  "trivy",
+        "name":  "Trivy",
+        "iconUrl":  null,
+        "level":  2,
+        "category":  "tools"
+    },
+    {
+        "id":  "mpi",
+        "name":  "MPI",
+        "iconUrl":  null,
+        "level":  2,
+        "category":  "tools"
+    },
+    {
+        "id":  "openmp",
+        "name":  "OpenMP",
+        "iconUrl":  null,
+        "level":  2,
+        "category":  "tools"
+    },
+    {
+        "id":  "rag",
+        "name":  "RAG",
+        "iconUrl":  null,
+        "level":  2,
+        "category":  "ai"
     }
 ]
