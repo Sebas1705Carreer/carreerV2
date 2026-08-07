@@ -14,7 +14,10 @@
       { "en": "AGEDI System",     "es": "Sistema AGEDI" },
       { "en": "Sisley System",    "es": "Sistema Sisley" },
       { "en": "Iberext App",      "es": "App Iberext" },
-      { "en": "EPDM Music Portal","es": "Portal Musical EPDM" }
+      { "en": "EPDM Music Portal","es": "Portal Musical EPDM" },
+      { "en": "ApiMovil",         "es": "ApiMovil" },
+      { "en": "Wemob API",        "es": "API Wemob" },
+      { "en": "Transportes Chinchón", "es": "Transportes Chinchón" }
     ],
     "achievements": [
       { "en": "Promoted to Senior within the same team after demonstrated technical growth and ownership",           "es": "Promoción a Senior dentro del mismo equipo tras demostrar crecimiento técnico y responsabilidad" },

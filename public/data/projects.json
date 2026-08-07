@@ -39,6 +39,42 @@
       "tags": ["Kotlin", "Jetpack Compose", "C#", ".NET", "Firebase", "SQL Server"],
       "github": null,
       "demo": "https://play.google.com/store/apps/details?id=es.solusoft.epdm"
+    },
+    {
+      "id": "apimovil",
+      "name": "ApiMovil",
+      "context": "work",
+      "desc":     { "en": "Internal .NET API powering Solusoft mobile applications.",                                                                                   "es": "API .NET interna que da servicio a las aplicaciones móviles de Solusoft." },
+      "tags": ["C#", ".NET", "REST", "SQL Server"],
+      "github": null,
+      "demo": null
+    },
+    {
+      "id": "wemob",
+      "name": "Wemob API",
+      "context": "work",
+      "desc":     { "en": ".NET backend API for the Wemob platform.",                                                                                                   "es": "API backend .NET para la plataforma Wemob." },
+      "tags": ["C#", ".NET", "REST", "SQL Server"],
+      "github": null,
+      "demo": null
+    },
+    {
+      "id": "chinchon-android",
+      "name": "Transportes Chinchón Android",
+      "context": "work",
+      "desc":     { "en": "Native Android app for Transportes Chinchón.",                                                                                               "es": "App Android nativa para Transportes Chinchón." },
+      "tags": ["Kotlin", "Jetpack Compose", "Android"],
+      "github": null,
+      "demo": null
+    },
+    {
+      "id": "chinchon-ios",
+      "name": "Transportes Chinchón iOS",
+      "context": "work",
+      "desc":     { "en": "Native iOS app for Transportes Chinchón.",                                                                                                   "es": "App iOS nativa para Transportes Chinchón." },
+      "tags": ["Swift", "SwiftUI", "iOS"],
+      "github": null,
+      "demo": null
     }
   ],
   "featured": [
@@ -73,7 +109,7 @@
       "demo": "https://play.google.com/store/apps/details?id=es.sebas1705.impostorandroidgame"
     },
     {
-      "id": "vpslocalorchestrator",
+      "id": "vpsorchestrator",
       "name": "Local VPS Orchestrator",
       "context": "academic",
       "desc":     { "en": "Production-ready REST API to orchestrate VPS resources with RBAC, encryption, audit logging, metrics and distributed tracing.",              "es": "API REST lista para producción para orquestar recursos VPS con RBAC, cifrado, auditoría, métricas y trazabilidad distribuida." },
@@ -100,6 +136,60 @@
       "long_desc":{ "en": "Ongoing personal repo focused on sharpening algorithmic thinking. Covers sorting, dynamic programming, graph traversal, string manipulation and more across Kotlin, C#, Java, JavaScript, Python, Bash and TypeScript.", "es": "Repositorio personal en curso centrado en agudizar el pensamiento algorítmico. Cubre ordenación, programación dinámica, recorrido de grafos, manipulación de cadenas y más en Kotlin, C#, Java, JavaScript, Python, Bash y TypeScript." },
       "tags": ["Kotlin", "C#", "Java", "JavaScript", "Python", "Bash", "TypeScript"],
       "github": "https://github.com/Sebas1705/Codewars",
+      "demo": null
+    },
+    {
+      "id": "templetry",
+      "name": "Templetry",
+      "context": "personal",
+      "desc":     { "en": "Project scaffolding for every platform: pure Go engine + CLI, native desktop app (Wails) and a CI-verified template catalog.",                "es": "Scaffolding de proyectos multiplataforma: engine en Go + CLI, app de escritorio nativa (Wails) y catálogo de plantillas verificado por CI." },
+      "tags": ["Go", "Wails", "React", "TypeScript", "Kotlin Multiplatform", "CI/CD"],
+      "github": "https://github.com/Templetry",
+      "demo": null
+    },
+    {
+      "id": "career-ecosystem",
+      "name": "Career Ecosystem (Folio)",
+      "context": "personal",
+      "desc":     { "en": "Portfolio as a product: Cloudflare Workers API as single source of truth, React portfolio and a KMP editor for Android and Desktop.",         "es": "Portfolio como producto: API en Cloudflare Workers como fuente única de verdad, portfolio en React y editor KMP para Android y Escritorio." },
+      "tags": ["Cloudflare Workers", "TypeScript", "React", "Kotlin Multiplatform", "Ktor"],
+      "github": "https://github.com/Sebas1705Carreer",
+      "demo": null
+    },
+    {
+      "id": "kmp-native-base",
+      "name": "KMP Native Base",
+      "context": "personal",
+      "desc":     { "en": "Kotlin Multiplatform template — Android + Desktop + iOS — modular clean architecture, convention plugins and CI.",                            "es": "Plantilla Kotlin Multiplatform — Android + Desktop + iOS — arquitectura limpia modular, convention plugins y CI." },
+      "tags": ["Kotlin Multiplatform", "Compose Multiplatform", "Clean Architecture", "CI/CD"],
+      "github": "https://github.com/Sebas1705/KMPNativeBase",
+      "demo": null
+    },
+    {
+      "id": "profesores-a-casa",
+      "name": "TutorsAtHome",
+      "context": "academic",
+      "desc":     { "en": "Distributed web app connecting private tutors with students — Spring Boot, RabbitMQ, HAProxy, Docker.",                                       "es": "App web distribuida que conecta profesores particulares con alumnos — Spring Boot, RabbitMQ, HAProxy, Docker." },
+      "tags": ["Java", "Spring Boot", "RabbitMQ", "HAProxy", "Docker", "MySQL"],
+      "github": "https://github.com/Sebas1705/ProfesoresACasa",
+      "demo": null
+    },
+    {
+      "id": "computer-vision-labs",
+      "name": "Computer Vision Labs",
+      "context": "academic",
+      "desc":     { "en": "Road sign detection (MSER + HSV) and OCR pipeline (LDA/PCA + sklearn) in Python/OpenCV.",                                                     "es": "Detección de señales de tráfico (MSER + HSV) y pipeline OCR (LDA/PCA + sklearn) en Python/OpenCV." },
+      "tags": ["Python", "OpenCV", "Machine Learning", "scikit-learn"],
+      "github": "https://github.com/Sebas1705/ComputerVisionLab1",
+      "demo": null
+    },
+    {
+      "id": "enigma",
+      "name": "Enigma HPC",
+      "context": "academic",
+      "desc":     { "en": "Parallel Enigma machine decryption in C++ — MPI master-slave vs sequential/OpenMP.",                                                          "es": "Descifrado paralelo de la máquina Enigma en C++ — MPI maestro-esclavo vs secuencial/OpenMP." },
+      "tags": ["C++", "MPI", "OpenMP", "HPC"],
+      "github": "https://github.com/Sebas1705/Enigma",
       "demo": null
     }
   ]

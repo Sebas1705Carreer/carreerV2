@@ -41,6 +41,20 @@
       "url":     "https://www.appcademy.dev/certificates/cert_ZKrT1jVn"
     },
     {
+      "name":    { "en": "iOS App Development with SwiftUI and UIKit",                        "es": "Desarrollo de Apps iOS con SwiftUI y UIKit" },
+      "issuer":  "Udemy",
+      "date":    "In progress",
+      "desc":    { "en": "Native iOS app development with SwiftUI and UIKit.", "es": "Desarrollo de apps iOS nativas con SwiftUI y UIKit." },
+      "url":     null
+    },
+    {
+      "name":    { "en": "Kotlin Multiplatform: Intensive Course for Android and iOS",        "es": "Kotlin Multiplatform: Curso Intensivo para Android e iOS" },
+      "issuer":  "Udemy",
+      "date":    "Apr 2026",
+      "desc":    { "en": "Sharing code between Android and iOS with Kotlin Multiplatform.", "es": "Compartir código entre Android e iOS con Kotlin Multiplatform." },
+      "url":     "https://www.udemy.com/certificate/UC-8c52c3ca-a258-410f-b126-5c1e1a43f0e5/"
+    },
+    {
       "name":    { "en": "Master Android with Kotlin, Compose & Gemini AI",                 "es": "Domina Android con Kotlin, Compose y Gemini AI" },
       "issuer":  "Udemy",
       "date":    "Aug 2025",
