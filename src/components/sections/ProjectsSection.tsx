@@ -23,7 +23,7 @@ export default function ProjectsSection() {
 
   return (
     <SectionWrapper maxWidth="max-w-6xl">
-      <SectionHeader navKey="nav.projects" titleKey="projects.title" className="mb-4 sm:mb-6" />
+      <SectionHeader navKey="nav.projects" titleKey="projects.title" className="mb-4 sm:mb-6" meta={String(workList.length + featuredList.length)} />
 
       {/* Tab switcher */}
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="flex gap-2 justify-center mb-4 sm:mb-6">

@@ -94,9 +94,9 @@ export default function SectionDecor({ sectionKey }: Props) {
             opacity: item.opacity,
             rotate: `${item.rotate}deg`,
             lineHeight: 1,
-            fontFamily: 'ui-monospace, monospace',
+            fontFamily: "'JetBrains Mono', ui-monospace, monospace",
             fontWeight: 700,
-            color: 'rgb(139 92 246)',
+            color: '#4A5AF0',
           }}
           className="dark:brightness-150"
         >

@@ -140,7 +140,7 @@ export default function SkillsSection() {
 
   return (
     <SectionWrapper maxWidth="max-w-6xl">
-      <SectionHeader navKey="nav.skills" titleKey="skills.title" className="mb-4 sm:mb-5" />
+      <SectionHeader navKey="nav.skills" titleKey="skills.title" className="mb-4 sm:mb-5" meta={skills.length ? String(skills.length) : undefined} />
 
       {loading ? (
         <SkillChipsSkeleton />

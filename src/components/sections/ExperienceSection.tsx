@@ -9,7 +9,7 @@ export default function ExperienceSection() {
 
   return (
     <SectionWrapper maxWidth="max-w-4xl">
-      <SectionHeader navKey="nav.experience" titleKey="experience.title" className="mb-8 sm:mb-10" />
+      <SectionHeader navKey="nav.experience" titleKey="experience.title" className="mb-8 sm:mb-10" meta={jobs.length ? String(jobs.length) : undefined} />
 
       <div className="relative">
         {/* Timeline vertical line */}

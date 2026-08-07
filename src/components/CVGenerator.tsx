@@ -106,11 +106,12 @@ const SPOKEN_LANGS = {
 // fonts.gstatic caía en silencio) — Helvetica es una de las 14 fuentes
 // estándar de PDF y no necesita registro ni red.
 
-const PURPLE = '#7c3aed'
+// Family ink palette — same brand as the site, the org and the Folio editor
+const PURPLE = '#4A5AF0'
 const DARK   = '#1e293b'
 const MID    = '#475569'
 const LIGHT  = '#94a3b8'
-const BORDER = '#ede9fe'
+const BORDER = '#E0E4FD'
 
 const s = StyleSheet.create({
   page:       { fontFamily: 'Helvetica', fontSize: 9, color: DARK, paddingTop: 28, paddingBottom: 28, paddingHorizontal: 32, lineHeight: 1.4 },
@@ -122,7 +123,7 @@ const s = StyleSheet.create({
   contactRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 2, marginTop: 5, fontSize: 7.5, color: MID, borderTopWidth: 1.5, borderTopColor: PURPLE, paddingTop: 4 },
   contactSep: { color: LIGHT },
   kwRow:      { flexDirection: 'row', flexWrap: 'wrap', gap: 3, marginTop: 5 },
-  kw:         { fontSize: 7, fontWeight: 700, color: PURPLE, borderWidth: 1, borderColor: '#ddd6fe', backgroundColor: '#f5f3ff', borderRadius: 2, paddingHorizontal: 5, paddingVertical: 1 },
+  kw:         { fontSize: 7, fontWeight: 700, color: PURPLE, borderWidth: 1, borderColor: '#C7CDFB', backgroundColor: '#EEF0FE', borderRadius: 2, paddingHorizontal: 5, paddingVertical: 1 },
   // section heading
   h2:         { fontSize: 7, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1.2, color: PURPLE, borderBottomWidth: 1, borderBottomColor: BORDER, paddingBottom: 2, marginTop: 12, marginBottom: 5 },
   // summary

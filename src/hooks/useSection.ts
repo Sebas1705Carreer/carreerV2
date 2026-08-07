@@ -1,25 +1,58 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 
-const SECTION_COUNT = 7
-
-export function useSection() {
-  const [current, setCurrent] = useState(0)
+/**
+ * Slide-deck section state with hash deep links: #projects opens the projects
+ * section directly, navigation pushes history entries so browser back/forward
+ * walk the deck, and the hero keeps a clean URL (no hash).
+ */
+export function useSection(sectionKeys: readonly string[]) {
+  const initial = () => {
+    const i = sectionKeys.indexOf(window.location.hash.slice(1))
+    return i >= 0 ? i : 0
+  }
+  const [current, setCurrent] = useState(initial)
   const [direction, setDirection] = useState(1)
   const locked = useRef(false)
+  const currentRef = useRef(current)
+  useEffect(() => { currentRef.current = current }, [current])
+
+  const go = useCallback(
+    (index: number, push: boolean) => {
+      if (index === currentRef.current) return
+      setDirection(index > currentRef.current ? 1 : -1)
+      setCurrent(index)
+      if (push) {
+        const url = index === 0
+          ? window.location.pathname + window.location.search
+          : `#${sectionKeys[index]}`
+        history.pushState(null, '', url)
+      }
+    },
+    [sectionKeys],
+  )
 
   const navigate = useCallback(
     (index: number) => {
-      if (locked.current || index === current) return
+      if (locked.current || index === currentRef.current) return
       locked.current = true
       setTimeout(() => { locked.current = false }, 700)
-      setDirection(index > current ? 1 : -1)
-      setCurrent(index)
+      go(index, true)
     },
-    [current],
+    [go],
   )
 
-  const next = useCallback(() => navigate(Math.min(current + 1, SECTION_COUNT - 1)), [current, navigate])
-  const prev = useCallback(() => navigate(Math.max(current - 1, 0)), [current, navigate])
+  const next = useCallback(() => navigate(Math.min(currentRef.current + 1, sectionKeys.length - 1)), [navigate, sectionKeys])
+  const prev = useCallback(() => navigate(Math.max(currentRef.current - 1, 0)), [navigate])
+
+  // Browser back/forward (and manual hash edits) drive the deck
+  useEffect(() => {
+    const onPop = () => {
+      const i = sectionKeys.indexOf(window.location.hash.slice(1))
+      go(i >= 0 ? i : 0, false)
+    }
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
+  }, [go, sectionKeys])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {

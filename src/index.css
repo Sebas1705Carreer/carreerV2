@@ -2,11 +2,60 @@
 
 @variant dark (&:where(.dark, .dark *));
 
+/*
+ * Family design tokens — the career ecosystem palette (org profile, Folio
+ * editor and this site share it): ink indigo #4A5AF0 + teal #00A896.
+ *
+ * The violet/purple Tailwind scales are remapped to the ink scale on purpose:
+ * every existing `violet-*` / `purple-*` class in the codebase renders the
+ * brand ink without touching each component.
+ */
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
+
+  --color-violet-50:  #EEF0FE;
+  --color-violet-100: #E0E4FD;
+  --color-violet-200: #C7CDFB;
+  --color-violet-300: #A6B0F8;
+  --color-violet-400: #7D89F4;
+  --color-violet-500: #5B68F2;
+  --color-violet-600: #4A5AF0;
+  --color-violet-700: #3A46D4;
+  --color-violet-800: #303AAE;
+  --color-violet-900: #2B3489;
+  --color-violet-950: #1A1F52;
+
+  --color-purple-50:  #EEF0FE;
+  --color-purple-100: #E0E4FD;
+  --color-purple-200: #C7CDFB;
+  --color-purple-300: #A6B0F8;
+  --color-purple-400: #7D89F4;
+  --color-purple-500: #5B68F2;
+  --color-purple-600: #4A5AF0;
+  --color-purple-700: #3A46D4;
+  --color-purple-800: #303AAE;
+  --color-purple-900: #2B3489;
+  --color-purple-950: #1A1F52;
+
+  /* Brand teal (published/ok accent) over Tailwind's teal midtones */
+  --color-teal-500: #00A896;
+  --color-teal-600: #008F80;
+}
+
 html,
 body,
 #root {
   height: 100%;
   overflow: hidden;
   margin: 0;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--font-sans);
+}
+
+/* Quality floor: visible keyboard focus everywhere (rounded-full buttons included) */
+:focus-visible {
+  outline: 2px solid var(--color-violet-600);
+  outline-offset: 2px;
+  border-radius: 4px;
 }

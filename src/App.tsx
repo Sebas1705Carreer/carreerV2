@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, MotionConfig, motion } from 'framer-motion'
 import { Suspense, lazy, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from './hooks/useTheme'
@@ -61,7 +61,7 @@ const ChevronRight = () => (
 // ── Main App ──────────────────────────────────────────────────────────────────
 export default function App() {
   const { theme, toggle: toggleTheme } = useTheme()
-  const { current, direction, navigate, next, prev } = useSection()
+  const { current, direction, navigate, next, prev } = useSection(SECTION_KEYS)
   const { i18n, t } = useTranslation()
   const [showCV, setShowCV] = useState(false)
 
@@ -71,6 +71,8 @@ export default function App() {
   const isLast  = current === SECTIONS.length - 1
 
   return (
+    // reducedMotion="user": framer-motion honours prefers-reduced-motion globally
+    <MotionConfig reducedMotion="user">
     <div className="relative h-screen w-screen overflow-hidden bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
       <Background />
       <Controls theme={theme} onToggleTheme={toggleTheme} onToggleLang={toggleLang} lang={i18n.language} />
@@ -183,5 +185,6 @@ export default function App() {
         </Suspense>
       )}
     </div>
+    </MotionConfig>
   )
 }

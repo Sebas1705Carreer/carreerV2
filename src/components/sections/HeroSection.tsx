@@ -7,6 +7,8 @@ import { useLang } from '../../hooks/useLang'
 import SectionWrapper from '../ui/SectionWrapper'
 
 const ease = [0.22, 1, 0.36, 1] as const
+// Captured at module load — render stays pure (react-compiler rule)
+const NOW = Date.now()
 const item = (delay: number) => ({
   initial: { opacity: 0, y: 28 },
   animate: { opacity: 1, y: 0 },
@@ -16,13 +18,21 @@ const item = (delay: number) => ({
 export default function HeroSection({ onNext, onOpenCV }: SectionProps) {
   const { t } = useTranslation()
   const lang = useLang()
-  const { personal } = usePortfolioData()
+  const { personal, jobs, projects } = usePortfolioData()
   const isEs = lang === 'es'
 
+  // Stats derived from live data, with the pre-API literals as fallback
+  const allProjects = [...(projects.work ?? []), ...(projects.featured ?? [])]
+  const starts = jobs.map(j => j.startDate).filter((s): s is string => !!s).sort()
+  const years = starts.length
+    ? Math.max(1, Math.floor((NOW - new Date(`${starts[0]}-01`).getTime()) / (365.25 * 24 * 3600 * 1000)))
+    : 2
+  const playApps = allProjects.filter(p => p.demo?.includes('play.google')).length || 2
+
   const stats = [
-    { num: '2+',  label: isEs ? 'años exp.' : 'years exp.' },
-    { num: '2',   label: isEs ? 'apps Play Store' : 'Play Store apps' },
-    { num: '16',  label: isEs ? 'repos TFM' : 'TFM repos' },
+    { num: `${years}+`, label: isEs ? 'años exp.' : 'years exp.' },
+    { num: String(playApps), label: isEs ? 'apps Play Store' : 'Play Store apps' },
+    { num: allProjects.length ? String(allProjects.length) : '20', label: isEs ? 'proyectos' : 'projects' },
     { num: '90%', label: isEs ? 'cobertura tests' : 'test coverage' },
   ]
 
@@ -34,7 +44,7 @@ export default function HeroSection({ onNext, onOpenCV }: SectionProps) {
 
       <motion.h1
         {...item(0.15)}
-        className="text-[2.75rem] sm:text-7xl lg:text-9xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-3 sm:mb-5 leading-tight break-words hyphens-auto"
+        className="font-display text-[2.75rem] sm:text-7xl lg:text-8xl font-bold tracking-tight text-slate-900 dark:text-white mb-3 sm:mb-5 leading-tight break-words hyphens-auto"
       >
         {personal.name || 'Sebastián Entrerrios García'}
       </motion.h1>

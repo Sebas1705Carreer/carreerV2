@@ -29,7 +29,7 @@ export default function EducationSection() {
 
   return (
     <SectionWrapper maxWidth="max-w-6xl">
-      <SectionHeader navKey="nav.education" titleKey="education.title" className="mb-6 sm:mb-8" />
+      <SectionHeader navKey="nav.education" titleKey="education.title" className="mb-6 sm:mb-8" meta={certs.length ? `${items.length}+${certs.length}` : undefined} />
 
       {/* Tab bar */}
       <div className="flex gap-2 mb-6 sm:mb-8">
