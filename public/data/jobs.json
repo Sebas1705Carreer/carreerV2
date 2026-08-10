@@ -1,75 +1,175 @@
 [
-  {
-    "id": "senior-solusoft",
-    "role":    { "en": "Senior Full Stack & Mobile Developer",        "es": "Senior Desarrollador Full Stack & Móvil" },
-    "company": "Solusoft",
-    "companyUrl": "https://www.solusoft.es/",
-    "period":  { "en": "January 2026 – Present",                      "es": "Enero 2026 – Presente" },
-    "type":    { "en": "Hybrid",                                       "es": "Híbrido" },
-    "desc":    {
-      "en": "Leading development and architectural decisions on full stack and mobile applications. Driving technical improvements, mentoring, and delivering high-impact features across multiple products.",
-      "es": "Liderazgo técnico y de decisiones arquitectónicas en aplicaciones full stack y móviles. Impulsando mejoras técnicas, mentorización y entrega de funcionalidades de alto impacto en múltiples productos."
+    {
+        "id":  "senior-solusoft",
+        "role":  {
+                     "en":  "Senior Full Stack \u0026 Mobile Developer",
+                     "es":  "Senior Desarrollador Full Stack \u0026 Movil"
+                 },
+        "company":  "Solusoft",
+        "companyUrl":  "https://www.solusoft.es/",
+        "startDate":  "2026-01",
+        "endDate":  null,
+        "period":  {
+                       "en":  "January 2026 - Present",
+                       "es":  "Enero 2026 - Presente"
+                   },
+        "type":  {
+                     "en":  "Hybrid",
+                     "es":  "Hibrido"
+                 },
+        "desc":  {
+                     "en":  "Leading development and architectural decisions.",
+                     "es":  "Liderazgo tecnico y de decisiones arquitectonicas."
+                 },
+        "projects":  [
+                         {
+                             "en":  "AGEDI",
+                             "es":  "AGEDI"
+                         },
+                         {
+                             "en":  "Sisley",
+                             "es":  "Sisley"
+                         },
+                         {
+                             "en":  "Iberext",
+                             "es":  "Iberext"
+                         },
+                         {
+                             "en":  "EPDM",
+                             "es":  "EPDM"
+                         },
+                         {
+                             "en":  "ApiMovil",
+                             "es":  "ApiMovil"
+                         },
+                         {
+                             "en":  "Wemob",
+                             "es":  "Wemob"
+                         },
+                         {
+                             "en":  "Transportes Chinchón",
+                             "es":  "Transportes Chinchón"
+                         }
+                     ],
+        "achievements":  [
+                             {
+                                 "en":  "Promoted to Senior within the same team",
+                                 "es":  "Promocion a Senior dentro del mismo equipo"
+                             },
+                             {
+                                 "en":  "Led architectural refactors across multiple projects",
+                                 "es":  "Lidere refactorizaciones arquitectonicas en multiples proyectos"
+                             },
+                             {
+                                 "en":  "Drove adoption of clean multimodular architecture",
+                                 "es":  "Impulse la arquitectura limpia y multimodular"
+                             },
+                             {
+                                 "en":  "Continued full ownership of EPDM and Iberext lifecycle",
+                                 "es":  "Ownership completo de EPDM e Iberext"
+                             }
+                         ]
     },
-    "projects": [
-      { "en": "AGEDI System",     "es": "Sistema AGEDI" },
-      { "en": "Sisley System",    "es": "Sistema Sisley" },
-      { "en": "Iberext App",      "es": "App Iberext" },
-      { "en": "EPDM Music Portal","es": "Portal Musical EPDM" },
-      { "en": "ApiMovil",         "es": "ApiMovil" },
-      { "en": "Wemob API",        "es": "API Wemob" },
-      { "en": "Transportes Chinchón", "es": "Transportes Chinchón" }
-    ],
-    "achievements": [
-      { "en": "Promoted to Senior within the same team after demonstrated technical growth and ownership",           "es": "Promoción a Senior dentro del mismo equipo tras demostrar crecimiento técnico y responsabilidad" },
-      { "en": "Led architectural refactors across multiple projects to improve maintainability and scalability",     "es": "Lideré refactorizaciones arquitectónicas en varios proyectos para mejorar mantenibilidad y escalabilidad" },
-      { "en": "Drove adoption of clean multimodular architecture patterns across the mobile codebase",              "es": "Impulsé la adopción de patrones de arquitectura limpia y multimodular en el código móvil" },
-      { "en": "Continued full ownership of the EPDM and Iberext mobile application lifecycle",                     "es": "Ownership completo del ciclo de vida de las aplicaciones móviles EPDM e Iberext" }
-    ]
-  },
-  {
-    "id": "junior-solusoft",
-    "role":    { "en": "Junior Full Stack & Mobile Developer",        "es": "Junior Desarrollador Full Stack & Móvil" },
-    "company": "Solusoft",
-    "companyUrl": "https://www.solusoft.es/",
-    "period":  { "en": "March 2025 – December 2025",                  "es": "Marzo 2025 – Diciembre 2025" },
-    "type":    { "en": "Hybrid",                                       "es": "Híbrido" },
-    "desc":    {
-      "en": "Development and maintenance of full stack and mobile applications. Implementing new features and continuous improvement following agile methodologies and clean, modular architectures.",
-      "es": "Desarrollo y mantenimiento de aplicaciones full stack y móviles. Implementación de nuevas funcionalidades y mejora continua siguiendo metodologías ágiles y arquitecturas limpias y modulares."
+    {
+        "id":  "junior-solusoft",
+        "role":  {
+                     "en":  "Junior Full Stack \u0026 Mobile Developer",
+                     "es":  "Junior Desarrollador Full Stack \u0026 Movil"
+                 },
+        "company":  "Solusoft",
+        "companyUrl":  "https://www.solusoft.es/",
+        "startDate":  "2025-03",
+        "endDate":  "2025-12",
+        "period":  {
+                       "en":  "March 2025 - December 2025",
+                       "es":  "Marzo 2025 - Diciembre 2025"
+                   },
+        "type":  {
+                     "en":  "Hybrid",
+                     "es":  "Hibrido"
+                 },
+        "desc":  {
+                     "en":  "Development and maintenance following agile methodologies.",
+                     "es":  "Desarrollo y mantenimiento siguiendo metodologias agiles."
+                 },
+        "projects":  [
+                         {
+                             "en":  "AGEDI",
+                             "es":  "AGEDI"
+                         },
+                         {
+                             "en":  "Sisley",
+                             "es":  "Sisley"
+                         },
+                         {
+                             "en":  "Iberext",
+                             "es":  "Iberext"
+                         },
+                         {
+                             "en":  "EPDM",
+                             "es":  "EPDM"
+                         }
+                     ],
+        "achievements":  [
+                             {
+                                 "en":  "Full development of EPDM mobile app published on Play Store",
+                                 "es":  "Desarrollo completo de la app EPDM publicada en Play Store"
+                             },
+                             {
+                                 "en":  "Built Iberext mobile app from scratch",
+                                 "es":  "Desarrollo desde cero de Iberext"
+                             }
+                         ]
     },
-    "projects": [
-      { "en": "AGEDI System",     "es": "Sistema AGEDI" },
-      { "en": "Sisley System",    "es": "Sistema Sisley" },
-      { "en": "Iberext App",      "es": "App Iberext" },
-      { "en": "EPDM Music Portal","es": "Portal Musical EPDM" }
-    ],
-    "achievements": [
-      { "en": "Maintenance and continuous improvement of the AGEDI enterprise management system",                   "es": "Mantenimiento y mejora continua del sistema empresarial AGEDI" },
-      { "en": "Maintenance and continuous improvement of Sisley frontend and backend",                             "es": "Mantenimiento y mejora continua del frontend y backend de Sisley" },
-      { "en": "Continued development of Iberext mobile app, expanding fire prevention systems management features","es": "Continuación del desarrollo de la app móvil Iberext, ampliando funcionalidades de gestión contra incendios" },
-      { "en": "Full development of EPDM mobile app – Music Portal (published on Google Play Store)",               "es": "Desarrollo completo de la app móvil EPDM – Portal de la Música (publicada en Google Play Store)" }
-    ]
-  },
-  {
-    "id": "intern-solusoft",
-    "role":    { "en": "Full Stack & Mobile Developer Intern",        "es": "Prácticas Desarrollador Full Stack & Móvil" },
-    "company": "Solusoft",
-    "companyUrl": "https://www.solusoft.es/",
-    "period":  { "en": "October 2024 – February 2025",                "es": "Octubre 2024 – Febrero 2025" },
-    "type":    { "en": "Hybrid",                                       "es": "Híbrido" },
-    "desc":    {
-      "en": "Supervised learning and development in full stack and mobile projects. Contribution to feature development and application maintenance.",
-      "es": "Aprendizaje y desarrollo bajo supervisión en proyectos full stack y móviles. Contribución al desarrollo de nuevas funcionalidades y mantenimiento de aplicaciones."
-    },
-    "projects": [
-      { "en": "AGEDI System", "es": "Sistema AGEDI" },
-      { "en": "Sisley System","es": "Sistema Sisley" },
-      { "en": "Iberext App",  "es": "App Iberext" }
-    ],
-    "achievements": [
-      { "en": "Implemented new features across multiple AGEDI projects",                                           "es": "Implementé nuevas funcionalidades en varios proyectos para AGEDI" },
-      { "en": "Maintenance of Sisley frontend and backend project",                                               "es": "Mantenimiento del frontend y backend de Sisley" },
-      { "en": "Built Iberext mobile app from scratch — migrated and extended from a legacy Windows tablet version","es": "Desarrollo desde cero de la app móvil para Iberext — migrada y ampliada desde la versión legacy para tablet Windows" }
-    ]
-  }
+    {
+        "id":  "intern-solusoft",
+        "role":  {
+                     "en":  "Full Stack \u0026 Mobile Developer Intern",
+                     "es":  "Practicas Desarrollador Full Stack \u0026 Movil"
+                 },
+        "company":  "Solusoft",
+        "companyUrl":  "https://www.solusoft.es/",
+        "startDate":  "2024-10",
+        "endDate":  "2025-02",
+        "period":  {
+                       "en":  "October 2024 - February 2025",
+                       "es":  "Octubre 2024 - Febrero 2025"
+                   },
+        "type":  {
+                     "en":  "Hybrid",
+                     "es":  "Hibrido"
+                 },
+        "desc":  {
+                     "en":  "Supervised learning and development.",
+                     "es":  "Aprendizaje y desarrollo bajo supervision."
+                 },
+        "projects":  [
+                         {
+                             "en":  "AGEDI",
+                             "es":  "AGEDI"
+                         },
+                         {
+                             "en":  "Sisley",
+                             "es":  "Sisley"
+                         },
+                         {
+                             "en":  "Iberext",
+                             "es":  "Iberext"
+                         }
+                     ],
+        "achievements":  [
+                             {
+                                 "en":  "Implemented new features across AGEDI projects",
+                                 "es":  "Implemente nuevas funcionalidades en AGEDI"
+                             },
+                             {
+                                 "en":  "Maintenance of Sisley frontend and backend",
+                                 "es":  "Mantenimiento de Sisley"
+                             },
+                             {
+                                 "en":  "Built Iberext mobile app from scratch",
+                                 "es":  "Desarrollo desde cero de Iberext"
+                             }
+                         ]
+    }
 ]
