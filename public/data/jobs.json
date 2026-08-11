@@ -21,6 +21,10 @@
                      "en":  "Leading development and architectural decisions.",
                      "es":  "Liderazgo tecnico y de decisiones arquitectonicas."
                  },
+        "long_desc":  {
+                          "en":  "Technical lead of the mobile and full-stack side of Solusoft\u0027s client products. I own architectural decisions across AGEDI, Sisley, Iberext and EPDM — driving refactors towards clean, multimodular architecture — and lead the Transportes Chinchón programme: native Android (Kotlin/Jetpack Compose) and native iOS (Swift/SwiftUI) apps backed by ApiMovil and Wemob, internal .NET REST APIs I design and maintain. Day to day: architecture reviews, delivery planning in agile cycles and hands-on development across the stack.",
+                          "es":  "Referente técnico del lado móvil y full-stack de los productos de cliente de Solusoft. Llevo las decisiones de arquitectura en AGEDI, Sisley, Iberext y EPDM — impulsando refactorizaciones hacia arquitectura limpia multimodular — y lidero el programa de Transportes Chinchón: apps nativas Android (Kotlin/Jetpack Compose) e iOS (Swift/SwiftUI) sobre ApiMovil y Wemob, APIs REST .NET internas que diseño y mantengo. En el día a día: revisiones de arquitectura, planificación de entregas en ciclos ágiles y desarrollo directo en toda la pila."
+                      },
         "projects":  [
                          {
                              "en":  "AGEDI",
@@ -92,6 +96,10 @@
                      "en":  "Development and maintenance following agile methodologies.",
                      "es":  "Desarrollo y mantenimiento siguiendo metodologias agiles."
                  },
+        "long_desc":  {
+                          "en":  "Development and maintenance across Solusoft\u0027s product portfolio following agile methodologies. Built the EPDM Music Portal Android app from scratch (Kotlin, Jetpack Compose, Firebase) and published it on Google Play; built the Iberext fire-prevention app from scratch, migrating a legacy Windows tablet application to native Android; full-stack maintenance of AGEDI and Sisley (C#/.NET, SQL Server, Azure).",
+                          "es":  "Desarrollo y mantenimiento del porfolio de productos de Solusoft siguiendo metodologías ágiles. Construí desde cero la app Android EPDM Portal Musical (Kotlin, Jetpack Compose, Firebase) y la publiqué en Google Play; desarrollé desde cero la app de prevención de incendios Iberext, migrando una aplicación legacy de tablet Windows a Android nativo; mantenimiento full-stack de AGEDI y Sisley (C#/.NET, SQL Server, Azure)."
+                      },
         "projects":  [
                          {
                              "en":  "AGEDI",
@@ -143,6 +151,10 @@
                      "en":  "Supervised learning and development.",
                      "es":  "Aprendizaje y desarrollo bajo supervision."
                  },
+        "long_desc":  {
+                          "en":  "Supervised learning and development inside the AGEDI and Sisley teams: implemented features across AGEDI projects, maintained the Sisley frontend and backend (C#/.NET, SQL Server) and laid the ground work of the Iberext mobile app. First contact with enterprise agile delivery.",
+                          "es":  "Aprendizaje y desarrollo supervisado dentro de los equipos de AGEDI y Sisley: implementé funcionalidades en los proyectos de AGEDI, mantuve el frontend y backend de Sisley (C#/.NET, SQL Server) y puse las bases de la app móvil de Iberext. Primer contacto con la entrega ágil en entorno empresarial."
+                      },
         "projects":  [
                          {
                              "en":  "AGEDI",

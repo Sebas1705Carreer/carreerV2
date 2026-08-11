@@ -23,6 +23,8 @@ export interface RawJob {
   period: ML
   type: ML
   desc: ML
+  /** Rich detail shown in the expandable panel */
+  long_desc?: ML
   projects: ML[]
   achievements: ML[]
 }
@@ -43,6 +45,8 @@ export interface RawEduItem {
   school: string
   period: ML
   detail: ML
+  /** Rich detail shown in the expandable panel */
+  long_desc?: ML
   icon: string
 }
 
@@ -187,6 +191,7 @@ function adaptJobs(rows: any[]): RawJob[] {
       period:     r.period,
       type:       r.type,
       desc:       r.desc,
+      long_desc:  r.long_desc ?? undefined,
       projects,
       achievements,
     }
@@ -220,6 +225,7 @@ function adaptEducation(eduRows: any[], certRows: any[]): { items: RawEduItem[];
       school: r.school,
       period: r.period,
       detail: r.detail,
+      long_desc: r.long_desc ?? undefined,
       icon:   ({ graduation: '🎓', university: '🎓', school: '🏫', master: '🎓' } as Record<string, string>)[r.icon] ?? r.icon ?? '🎓',
     })),
     certs: certRows.map(r => ({

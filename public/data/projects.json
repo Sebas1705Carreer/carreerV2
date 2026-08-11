@@ -1,196 +1,450 @@
 {
-  "work": [
-    {
-      "id": "agedi",
-      "name": "AGEDI System",
-      "context": "work",
-      "desc":     { "en": "Enterprise management platform for AGEDI. Business logic, dashboards and reporting with Power BI.",                                         "es": "Plataforma de gestión empresarial para AGEDI. Lógica de negocio, dashboards e informes con Power BI." },
-      "long_desc":{ "en": "Full-stack enterprise management platform built with C# / .NET and SQL Server. Includes Azure Data Studio integration, Power BI dashboards for reporting, and a web frontend. Maintained and improved with new features following agile methodologies.", "es": "Plataforma empresarial full-stack construida con C# / .NET y SQL Server. Incluye integración con Azure Data Studio, dashboards de Power BI para informes y un frontend web. Mantenida y mejorada con nuevas funcionalidades siguiendo metodologías ágiles." },
-      "tags": ["C#", ".NET", "SQL Server", "Azure", "Power BI", "JavaScript"],
-      "github": null,
-      "demo": null
-    },
-    {
-      "id": "sisley",
-      "name": "Sisley System",
-      "context": "work",
-      "desc":     { "en": "Web application and backend for Sisley content management using MVC architecture.",                                                          "es": "Aplicación web y backend para la gestión de contenido de Sisley usando arquitectura MVC." },
-      "long_desc":{ "en": "Content management system built with C# / .NET following the MVC pattern, backed by SQL Server and deployed on Azure. Responsible for feature development and continuous maintenance of both frontend and backend layers.", "es": "Sistema de gestión de contenido construido con C# / .NET siguiendo el patrón MVC, con SQL Server y desplegado en Azure. Responsable del desarrollo de funcionalidades y mantenimiento continuo de las capas frontend y backend." },
-      "tags": ["C#", ".NET", "SQL Server", "Azure", "MVC"],
-      "github": null,
-      "demo": null
-    },
-    {
-      "id": "iberext",
-      "name": "Iberext System",
-      "context": "work",
-      "desc":     { "en": "Android mobile app for fire prevention systems management, migrated from a legacy Windows tablet version.",                                  "es": "App móvil Android para gestión de sistemas de prevención de incendios, migrada desde una versión legacy para tablet Windows." },
-      "long_desc":{ "en": "Built from scratch in Kotlin with Jetpack Compose, migrating and extending an existing Windows tablet application. Connects to a C# / .NET + SQL Server backend. Implements multimodular clean architecture with Firebase integration.", "es": "Desarrollada desde cero en Kotlin con Jetpack Compose, migrando y ampliando una aplicación Windows existente. Se conecta a un backend C# / .NET + SQL Server. Implementa arquitectura limpia multimodular con integración de Firebase." },
-      "tags": ["Kotlin", "Jetpack Compose", "C#", ".NET", "Firebase", "Clean Architecture"],
-      "github": null,
-      "demo": null
-    },
-    {
-      "id": "epdm",
-      "name": "EPDM – Music Portal",
-      "context": "work",
-      "desc":     { "en": "Android mobile app for managing music content with rights controlled by AGEDI. Published on Play Store.",                                    "es": "App móvil Android para gestionar contenido musical con derechos gestionados por AGEDI. Publicada en Play Store." },
-      "long_desc":{ "en": "Native Android app built with Kotlin and Jetpack Compose for the AGEDI Music Portal. Manages protected music content, playback and user rights. Backend powered by C# / .NET and SQL Server with Firebase for real-time features. Published on Google Play Store.", "es": "App nativa Android desarrollada con Kotlin y Jetpack Compose para el Portal de la Música de AGEDI. Gestiona contenido musical protegido, reproducción y derechos de usuario. Backend con C# / .NET y SQL Server, Firebase para funcionalidades en tiempo real. Publicada en Google Play Store." },
-      "tags": ["Kotlin", "Jetpack Compose", "C#", ".NET", "Firebase", "SQL Server"],
-      "github": null,
-      "demo": "https://play.google.com/store/apps/details?id=es.solusoft.epdm"
-    },
-    {
-      "id": "apimovil",
-      "name": "ApiMovil",
-      "context": "work",
-      "desc":     { "en": "Internal .NET API powering the Transportes Chinchón mobile applications.",                                                                    "es": "API .NET interna que da servicio a las aplicaciones móviles de Transportes Chinchón." },
-      "tags": ["C#", ".NET", "REST", "SQL Server"],
-      "github": null,
-      "demo": null
-    },
-    {
-      "id": "wemob",
-      "name": "Wemob API",
-      "context": "work",
-      "desc":     { "en": ".NET backend API for the Wemob platform.",                                                                                                   "es": "API backend .NET para la plataforma Wemob." },
-      "tags": ["C#", ".NET", "REST", "SQL Server"],
-      "github": null,
-      "demo": null
-    },
-    {
-      "id": "chinchon-android",
-      "name": "Transportes Chinchón Android",
-      "context": "work",
-      "desc":     { "en": "Native Android app for Transportes Chinchón.",                                                                                               "es": "App Android nativa para Transportes Chinchón." },
-      "tags": ["Kotlin", "Jetpack Compose", "Android"],
-      "github": null,
-      "demo": null
-    },
-    {
-      "id": "chinchon-ios",
-      "name": "Transportes Chinchón iOS",
-      "context": "work",
-      "desc":     { "en": "Native iOS app for Transportes Chinchón.",                                                                                                   "es": "App iOS nativa para Transportes Chinchón." },
-      "tags": ["Swift", "SwiftUI", "iOS"],
-      "github": null,
-      "demo": null
-    }
-  ],
-  "featured": [
-    {
-      "id": "axiomnode",
-      "name": "AxiomNode",
-      "context": "academic",
-      "desc":     { "en": "Master's TFM: production-grade multi-repo microservices platform with AI engine, mobile app, backoffice and full DevSecOps pipeline.",      "es": "TFM del Máster: plataforma de microservicios multi-repo con motor de IA, app móvil, backoffice y pipeline DevSecOps completo." },
-      "long_desc":{ "en": "16-repository platform built as the AI Development Master's final project. Architecture: API Gateway → BFF per channel (mobile/backoffice) → domain microservices (users, quiz, wordpass) → AI engine (Python/llama with RAG, prompt versioning and LLMOps metrics). Mobile app in Kotlin/Jetpack Compose. Backoffice in React/TypeScript. Infrastructure: Docker + Kubernetes, GitHub Actions CI/CD, immutable tags, centralised secrets. Quality: 90% Vitest/pytest coverage across 8 repos, Codecov, Playwright E2E smoke tests, CodeQL SAST, Trivy SCA, Prometheus + Grafana observability with LLM-specific dashboards. Security: STRIDE threat model, prompt-injection policies, secrets rotation runbook.", "es": "Plataforma de 16 repositorios construida como proyecto final del Máster en Desarrollo con IA. Arquitectura: API Gateway → BFF por canal (móvil/backoffice) → microservicios de dominio (usuarios, quiz, wordpass) → motor de IA (Python/llama con RAG, versionado de prompts y métricas LLMOps). App móvil en Kotlin/Jetpack Compose. Backoffice en React/TypeScript. Infraestructura: Docker + Kubernetes, CI/CD con GitHub Actions, tags inmutables, secretos centralizados. Calidad: 90% cobertura Vitest/pytest en 8 repos, Codecov, tests E2E Playwright, CodeQL SAST, Trivy SCA, observabilidad Prometheus + Grafana con dashboards LLM. Seguridad: modelo de amenazas STRIDE, políticas anti-prompt-injection, runbook de rotación de secretos." },
-      "tags": ["TypeScript", "Python", "Kotlin", "Kubernetes", "Docker", "React", "LLM", "Microservices", "GitHub Actions"],
-      "github": "https://github.com/AxiomNode",
-      "demo": null
-    },
-    {
-      "id": "youknow",
-      "name": "YouKnow",
-      "context": "academic",
-      "desc":     { "en": "Android social network app for educational games and chat with full gamification system.",                                                    "es": "App Android de red social para juegos educativos y chat con sistema completo de gamificación." },
-      "long_desc":{ "en": "Bachelor's final project. Full-featured Android app integrating real-time Firebase Firestore, Auth and Storage. Users create study groups, challenge friends to quizzes, earn XP points and climb leaderboards. Built with Kotlin, Jetpack Compose and MVVM/MVI architecture.", "es": "Proyecto final de grado. App Android completa con Firebase Firestore en tiempo real, Auth y Storage. Los usuarios crean grupos de estudio, desafían a amigos en cuestionarios, acumulan puntos XP y escalan clasificaciones. Desarrollada con Kotlin, Jetpack Compose y arquitectura MVVM/MVI." },
-      "tags": ["Kotlin", "Jetpack Compose", "Firebase", "MVVM", "MVI", "Figma"],
-      "github": "https://github.com/Sebas1705/YouKnow",
-      "demo": null
-    },
-    {
-      "id": "impostor",
-      "name": "Omni-Impostor",
-      "context": "personal",
-      "desc":     { "en": "Native Android game with multimodular architecture, offline/online modes, Firebase Auth and Google Sign-In.",                               "es": "Juego Android nativo con arquitectura multimodular, modos offline/online, Firebase Auth y Google Sign-In." },
-      "long_desc":{ "en": "Personal Android project built as a production-grade template and game. Uses multi-module architecture (app, core, data, domain, feature) with Gradle convention plugins, Detekt static analysis, CI/CD validation workflows, LeakCanary and Chucker for debug diagnostics. Integrates Firebase Authentication with Google Sign-In and Couchbase + OpenDB for data persistence. Navigation: Splash → Login → Home with bottom nav (Face, Ranking, Profile) supporting offline and online game modes.", "es": "Proyecto Android personal desarrollado como plantilla de nivel producción y juego. Usa arquitectura multi-módulo (app, core, data, domain, feature) con plugins de convención Gradle, análisis estático Detekt, workflows CI/CD, LeakCanary y Chucker para diagnóstico en debug. Integra Firebase Authentication con Google Sign-In y Couchbase + OpenDB para persistencia de datos. Navegación: Splash → Login → Home con barra inferior (Face, Ranking, Profile) con modos de juego offline y online." },
-      "tags": ["Kotlin", "Jetpack Compose", "Firebase", "Multi-Module", "Detekt", "CI/CD"],
-      "github": null,
-      "demo": "https://play.google.com/store/apps/details?id=es.sebas1705.impostorandroidgame"
-    },
-    {
-      "id": "vpsorchestrator",
-      "name": "Local VPS Orchestrator",
-      "context": "academic",
-      "desc":     { "en": "Production-ready REST API to orchestrate VPS resources with RBAC, encryption, audit logging, metrics and distributed tracing.",              "es": "API REST lista para producción para orquestar recursos VPS con RBAC, cifrado, auditoría, métricas y trazabilidad distribuida." },
-      "long_desc":{ "en": "Built for the AI Development Master's. A Node.js + Express + TypeScript REST API (v1.0.3, 106 commits) that monitors CPU, memory and disk metrics, manages Docker containers and schedules automated tasks. Features RBAC, AES encryption, audit logging, distributed tracing, and 555 automated tests across 23 suites. Persists data in MongoDB and is fully containerised with Docker Compose or deployable as a systemd service.", "es": "Desarrollado para el Máster en Desarrollo con IA. API REST en Node.js + Express + TypeScript (v1.0.3, 106 commits) que monitoriza métricas de CPU, memoria y disco, gestiona contenedores Docker y programa tareas automatizadas. Incluye RBAC, cifrado AES, auditoría, trazabilidad distribuida y 555 tests en 23 suites. Persiste datos en MongoDB y está completamente contenedorizado con Docker Compose o desplegable como servicio systemd." },
-      "tags": ["Node.js", "Express", "TypeScript", "Docker", "MongoDB", "RBAC"],
-      "github": "https://github.com/Sebas1705/VPSLocalOrchestrator",
-      "demo": null
-    },
-    {
-      "id": "portfolio",
-      "name": "Personal Portfolio v1",
-      "context": "personal",
-      "desc":     { "en": "Previous portfolio: Astro + Clean Architecture, VPS-hosted with CI/CD, Playwright e2e tests and 100% unit test coverage.",                  "es": "Portafolio anterior: Astro + Arquitectura Limpia, alojado en VPS con CI/CD, tests e2e Playwright y 100% cobertura unitaria." },
-      "long_desc":{ "en": "Multi-language Astro website (14 locales) built with Clean Architecture (Domain, Application, Infrastructure, Presentation layers). Deployed on a self-hosted VPS with Docker Compose and Nginx Proxy Manager. Features WCAG accessibility compliance, 100% Vitest unit coverage and 91.66% branch coverage, automated Playwright e2e tests, and CI/CD with auto-deploy on push.", "es": "Web Astro multiidioma (14 idiomas) construida con Arquitectura Limpia (capas Domain, Application, Infrastructure, Presentation). Desplegada en VPS propio con Docker Compose y Nginx Proxy Manager. WCAG accesible, 100% cobertura unitaria con Vitest y 91.66% de ramas, tests e2e automáticos con Playwright y CI/CD con despliegue automático." },
-      "tags": ["Astro", "TypeScript", "Clean Architecture", "Docker", "Vitest", "Playwright"],
-      "github": "https://github.com/Sebas1705Carreer/carreerV1",
-      "demo": null
-    },
-    {
-      "id": "codewars",
-      "name": "Codewars Katas",
-      "context": "personal",
-      "desc":     { "en": "Repository with solutions to Codewars katas in multiple languages: Kotlin, C#, Java, JavaScript, Python, Bash…",                             "es": "Repositorio con soluciones a katas de Codewars en múltiples lenguajes: Kotlin, C#, Java, JavaScript, Python, Bash…" },
-      "long_desc":{ "en": "Ongoing personal repo focused on sharpening algorithmic thinking. Covers sorting, dynamic programming, graph traversal, string manipulation and more across Kotlin, C#, Java, JavaScript, Python, Bash and TypeScript.", "es": "Repositorio personal en curso centrado en agudizar el pensamiento algorítmico. Cubre ordenación, programación dinámica, recorrido de grafos, manipulación de cadenas y más en Kotlin, C#, Java, JavaScript, Python, Bash y TypeScript." },
-      "tags": ["Kotlin", "C#", "Java", "JavaScript", "Python", "Bash", "TypeScript"],
-      "github": "https://github.com/Sebas1705/Codewars",
-      "demo": null
-    },
-    {
-      "id": "templetry",
-      "name": "Templetry",
-      "context": "personal",
-      "desc":     { "en": "Project scaffolding for every platform: pure Go engine + CLI, native desktop app (Wails) and a CI-verified template catalog.",                "es": "Scaffolding de proyectos multiplataforma: engine en Go + CLI, app de escritorio nativa (Wails) y catálogo de plantillas verificado por CI." },
-      "tags": ["Go", "Wails", "React", "TypeScript", "Kotlin Multiplatform", "CI/CD"],
-      "github": "https://github.com/Templetry",
-      "demo": null
-    },
-    {
-      "id": "career-ecosystem",
-      "name": "Career Ecosystem (Folio)",
-      "context": "personal",
-      "desc":     { "en": "Portfolio as a product: Cloudflare Workers API as single source of truth, React portfolio and a KMP editor for Android and Desktop.",         "es": "Portfolio como producto: API en Cloudflare Workers como fuente única de verdad, portfolio en React y editor KMP para Android y Escritorio." },
-      "tags": ["Cloudflare Workers", "TypeScript", "React", "Kotlin Multiplatform", "Ktor"],
-      "github": "https://github.com/Sebas1705Carreer",
-      "demo": null
-    },
-    {
-      "id": "kmp-native-base",
-      "name": "KMP Native Base",
-      "context": "personal",
-      "desc":     { "en": "Kotlin Multiplatform template — Android + Desktop + iOS — modular clean architecture, convention plugins and CI.",                            "es": "Plantilla Kotlin Multiplatform — Android + Desktop + iOS — arquitectura limpia modular, convention plugins y CI." },
-      "tags": ["Kotlin Multiplatform", "Compose Multiplatform", "Clean Architecture", "CI/CD"],
-      "github": "https://github.com/Sebas1705/KMPNativeBase",
-      "demo": null
-    },
-    {
-      "id": "profesores-a-casa",
-      "name": "TutorsAtHome",
-      "context": "academic",
-      "desc":     { "en": "Distributed web app connecting private tutors with students — Spring Boot, RabbitMQ, HAProxy, Docker.",                                       "es": "App web distribuida que conecta profesores particulares con alumnos — Spring Boot, RabbitMQ, HAProxy, Docker." },
-      "tags": ["Java", "Spring Boot", "RabbitMQ", "HAProxy", "Docker", "MySQL"],
-      "github": "https://github.com/Sebas1705/ProfesoresACasa",
-      "demo": null
-    },
-    {
-      "id": "computer-vision-labs",
-      "name": "Computer Vision Labs",
-      "context": "academic",
-      "desc":     { "en": "Road sign detection (MSER + HSV) and OCR pipeline (LDA/PCA + sklearn) in Python/OpenCV.",                                                     "es": "Detección de señales de tráfico (MSER + HSV) y pipeline OCR (LDA/PCA + sklearn) en Python/OpenCV." },
-      "tags": ["Python", "OpenCV", "Machine Learning", "scikit-learn"],
-      "github": "https://github.com/Sebas1705/ComputerVisionLab1",
-      "demo": null
-    },
-    {
-      "id": "enigma",
-      "name": "Enigma HPC",
-      "context": "academic",
-      "desc":     { "en": "Parallel Enigma machine decryption in C++ — MPI master-slave vs sequential/OpenMP.",                                                          "es": "Descifrado paralelo de la máquina Enigma en C++ — MPI maestro-esclavo vs secuencial/OpenMP." },
-      "tags": ["C++", "MPI", "OpenMP", "HPC"],
-      "github": "https://github.com/Sebas1705/Enigma",
-      "demo": null
-    }
-  ]
+    "work":  [
+                 {
+                     "id":  "agedi",
+                     "name":  "AGEDI System",
+                     "context":  "work",
+                     "desc":  {
+                                  "en":  "Enterprise management platform for AGEDI.",
+                                  "es":  "Plataforma de gestion empresarial para AGEDI."
+                              },
+                     "long_desc":  {
+                                       "en":  "Full-stack enterprise management platform built with C# / .NET and SQL Server. Includes Azure Data Studio integration, Power BI dashboards for reporting, and a web frontend. Maintained and improved with new features following agile methodologies.",
+                                       "es":  "Plataforma empresarial full-stack construida con C# / .NET y SQL Server. Incluye integración con Azure Data Studio, dashboards de Power BI para informes y un frontend web. Mantenida y mejorada con nuevas funcionalidades siguiendo metodologías ágiles."
+                                   },
+                     "tags":  [
+                                  "C#",
+                                  ".NET",
+                                  "SQL Server",
+                                  "Azure",
+                                  "Power BI",
+                                  "JavaScript"
+                              ],
+                     "github":  null,
+                     "demo":  null
+                 },
+                 {
+                     "id":  "sisley",
+                     "name":  "Sisley System",
+                     "context":  "work",
+                     "desc":  {
+                                  "en":  "Web application for Sisley content management.",
+                                  "es":  "Aplicacion web para gestion de contenido de Sisley."
+                              },
+                     "long_desc":  {
+                                       "en":  "Content management system built with C# / .NET following the MVC pattern, backed by SQL Server and deployed on Azure. Responsible for feature development and continuous maintenance of both frontend and backend layers.",
+                                       "es":  "Sistema de gestión de contenido construido con C# / .NET siguiendo el patrón MVC, con SQL Server y desplegado en Azure. Responsable del desarrollo de funcionalidades y mantenimiento continuo de las capas frontend y backend."
+                                   },
+                     "tags":  [
+                                  "C#",
+                                  ".NET",
+                                  "SQL Server",
+                                  "Azure",
+                                  "MVC"
+                              ],
+                     "github":  null,
+                     "demo":  null
+                 },
+                 {
+                     "id":  "iberext",
+                     "name":  "Iberext System",
+                     "context":  "work",
+                     "desc":  {
+                                  "en":  "Android app for fire prevention systems.",
+                                  "es":  "App Android para sistemas de prevencion de incendios."
+                              },
+                     "long_desc":  {
+                                       "en":  "Built from scratch in Kotlin with Jetpack Compose, migrating and extending an existing Windows tablet application. Connects to a C# / .NET + SQL Server backend. Implements multimodular clean architecture with Firebase integration.",
+                                       "es":  "Desarrollada desde cero en Kotlin con Jetpack Compose, migrando y ampliando una aplicación Windows existente. Se conecta a un backend C# / .NET + SQL Server. Implementa arquitectura limpia multimodular con integración de Firebase."
+                                   },
+                     "tags":  [
+                                  "Kotlin",
+                                  "Jetpack Compose",
+                                  "C#",
+                                  ".NET",
+                                  "Firebase",
+                                  "Clean Architecture"
+                              ],
+                     "github":  null,
+                     "demo":  null
+                 },
+                 {
+                     "id":  "epdm",
+                     "name":  "EPDM Music Portal",
+                     "context":  "work",
+                     "desc":  {
+                                  "en":  "Android app for managing music content with AGEDI rights.",
+                                  "es":  "App Android para gestionar contenido musical de AGEDI."
+                              },
+                     "long_desc":  {
+                                       "en":  "Native Android app built with Kotlin and Jetpack Compose for the AGEDI Music Portal. Manages protected music content, playback and user rights. Backend powered by C# / .NET and SQL Server with Firebase for real-time features. Published on Google Play Store.",
+                                       "es":  "App nativa Android desarrollada con Kotlin y Jetpack Compose para el Portal de la Música de AGEDI. Gestiona contenido musical protegido, reproducción y derechos de usuario. Backend con C# / .NET y SQL Server, Firebase para funcionalidades en tiempo real. Publicada en Google Play Store."
+                                   },
+                     "tags":  [
+                                  "Kotlin",
+                                  "Jetpack Compose",
+                                  "C#",
+                                  ".NET",
+                                  "Firebase",
+                                  "SQL Server"
+                              ],
+                     "github":  null,
+                     "demo":  "https://play.google.com/store/apps/details?id=es.solusoft.epdm"
+                 },
+                 {
+                     "id":  "apimovil",
+                     "name":  "ApiMovil",
+                     "context":  "work",
+                     "desc":  {
+                                  "en":  "Internal .NET API powering the Transportes Chinchón mobile applications.",
+                                  "es":  "API .NET interna que da servicio a las aplicaciones móviles de Transportes Chinchón."
+                              },
+                     "long_desc":  {
+                                       "en":  "Internal REST API in C#/.NET that powers the Transportes Chinchón mobile apps: authentication, business endpoints and SQL Server persistence, designed as the single backend shared by both native clients (Android and iOS).",
+                                       "es":  "API REST interna en C#/.NET que da servicio a las apps móviles de Transportes Chinchón: autenticación, endpoints de negocio y persistencia en SQL Server, diseñada como backend único compartido por los dos clientes nativos (Android e iOS)."
+                                   },
+                     "tags":  [
+                                  "C#",
+                                  ".NET",
+                                  "REST",
+                                  "SQL Server"
+                              ],
+                     "github":  null,
+                     "demo":  null
+                 },
+                 {
+                     "id":  "wemob",
+                     "name":  "Wemob API",
+                     "context":  "work",
+                     "desc":  {
+                                  "en":  ".NET backend API for the Wemob platform.",
+                                  "es":  "API backend .NET para la plataforma Wemob."
+                              },
+                     "long_desc":  {
+                                       "en":  ".NET backend API for the Wemob platform: REST endpoints over SQL Server serving web and mobile clients, developed and maintained as part of Solusoft\u0027s product portfolio.",
+                                       "es":  "API backend .NET para la plataforma Wemob: endpoints REST sobre SQL Server al servicio de clientes web y móviles, desarrollada y mantenida dentro del porfolio de productos de Solusoft."
+                                   },
+                     "tags":  [
+                                  "C#",
+                                  ".NET",
+                                  "REST",
+                                  "SQL Server"
+                              ],
+                     "github":  null,
+                     "demo":  null
+                 },
+                 {
+                     "id":  "chinchon-android",
+                     "name":  "Transportes Chinchón Android",
+                     "context":  "work",
+                     "desc":  {
+                                  "en":  "Native Android app for Transportes Chinchón.",
+                                  "es":  "App Android nativa para Transportes Chinchón."
+                              },
+                     "long_desc":  {
+                                       "en":  "Native Android app for Transportes Chinchón built with Kotlin and Jetpack Compose on a clean, multimodular architecture, consuming the ApiMovil .NET backend. Developed in feature parity with its native iOS sibling.",
+                                       "es":  "App Android nativa para Transportes Chinchón construida con Kotlin y Jetpack Compose sobre una arquitectura limpia multimodular, consumiendo el backend .NET ApiMovil. Desarrollada en paridad de funcionalidades con su hermana nativa de iOS."
+                                   },
+                     "tags":  [
+                                  "Kotlin",
+                                  "Jetpack Compose",
+                                  "Android"
+                              ],
+                     "github":  null,
+                     "demo":  null
+                 },
+                 {
+                     "id":  "chinchon-ios",
+                     "name":  "Transportes Chinchón iOS",
+                     "context":  "work",
+                     "desc":  {
+                                  "en":  "Native iOS app for Transportes Chinchón.",
+                                  "es":  "App iOS nativa para Transportes Chinchón."
+                              },
+                     "long_desc":  {
+                                       "en":  "Native iOS app for Transportes Chinchón built with Swift and SwiftUI, sharing its .NET backend (ApiMovil) and feature set with the Android app — my first production iOS delivery.",
+                                       "es":  "App iOS nativa para Transportes Chinchón construida con Swift y SwiftUI, compartiendo backend .NET (ApiMovil) y funcionalidades con la app Android — mi primera entrega iOS en producción."
+                                   },
+                     "tags":  [
+                                  "Swift",
+                                  "SwiftUI",
+                                  "iOS"
+                              ],
+                     "github":  null,
+                     "demo":  null
+                 }
+             ],
+    "featured":  [
+                     {
+                         "id":  "axiomnode",
+                         "name":  "AxiomNode",
+                         "context":  "academic",
+                         "desc":  {
+                                      "en":  "Master\u0027s TFM: production-grade microservices platform.",
+                                      "es":  "TFM del Master: plataforma de microservicios."
+                                  },
+                         "long_desc":  {
+                                           "en":  "16-repository platform built as the AI Development Master\u0027s final project. Architecture: API Gateway → BFF per channel (mobile/backoffice) → domain microservices (users, quiz, wordpass) → AI engine (Python/llama with RAG, prompt versioning and LLMOps metrics). Mobile app in Kotlin/Jetpack Compose. Backoffice in React/TypeScript. Infrastructure: Docker + Kubernetes, GitHub Actions CI/CD, immutable tags, centralised secrets. Quality: 90% Vitest/pytest coverage across 8 repos, Codecov, Playwright E2E smoke tests, CodeQL SAST, Trivy SCA, Prometheus + Grafana observability with LLM-specific dashboards. Security: STRIDE threat model, prompt-injection policies, secrets rotation runbook.",
+                                           "es":  "Plataforma de 16 repositorios construida como proyecto final del Máster en Desarrollo con IA. Arquitectura: API Gateway → BFF por canal (móvil/backoffice) → microservicios de dominio (usuarios, quiz, wordpass) → motor de IA (Python/llama con RAG, versionado de prompts y métricas LLMOps). App móvil en Kotlin/Jetpack Compose. Backoffice en React/TypeScript. Infraestructura: Docker + Kubernetes, CI/CD con GitHub Actions, tags inmutables, secretos centralizados. Calidad: 90% cobertura Vitest/pytest en 8 repos, Codecov, tests E2E Playwright, CodeQL SAST, Trivy SCA, observabilidad Prometheus + Grafana con dashboards LLM. Seguridad: modelo de amenazas STRIDE, políticas anti-prompt-injection, runbook de rotación de secretos."
+                                       },
+                         "tags":  [
+                                      "TypeScript",
+                                      "Python",
+                                      "Kotlin",
+                                      "Kubernetes",
+                                      "Docker",
+                                      "React",
+                                      "LLM"
+                                  ],
+                         "github":  "https://github.com/AxiomNode",
+                         "demo":  null
+                     },
+                     {
+                         "id":  "youknow",
+                         "name":  "YouKnow",
+                         "context":  "academic",
+                         "desc":  {
+                                      "en":  "Android social network app for educational games.",
+                                      "es":  "App Android de red social para juegos educativos."
+                                  },
+                         "long_desc":  {
+                                           "en":  "Bachelor\u0027s final project. Full-featured Android app integrating real-time Firebase Firestore, Auth and Storage. Users create study groups, challenge friends to quizzes, earn XP points and climb leaderboards. Built with Kotlin, Jetpack Compose and MVVM/MVI architecture.",
+                                           "es":  "Proyecto final de grado. App Android completa con Firebase Firestore en tiempo real, Auth y Storage. Los usuarios crean grupos de estudio, desafían a amigos en cuestionarios, acumulan puntos XP y escalan clasificaciones. Desarrollada con Kotlin, Jetpack Compose y arquitectura MVVM/MVI."
+                                       },
+                         "tags":  [
+                                      "Kotlin",
+                                      "Jetpack Compose",
+                                      "Firebase",
+                                      "MVVM",
+                                      "MVI",
+                                      "Figma"
+                                  ],
+                         "github":  "https://github.com/Sebas1705/YouKnow",
+                         "demo":  null
+                     },
+                     {
+                         "id":  "impostor",
+                         "name":  "Omni-Impostor",
+                         "context":  "personal",
+                         "desc":  {
+                                      "en":  "Native Android game with multimodular architecture.",
+                                      "es":  "Juego Android nativo con arquitectura multimodular."
+                                  },
+                         "long_desc":  {
+                                           "en":  "Personal Android project built as a production-grade template and game. Uses multi-module architecture (app, core, data, domain, feature) with Gradle convention plugins, Detekt static analysis, CI/CD validation workflows, LeakCanary and Chucker for debug diagnostics. Integrates Firebase Authentication with Google Sign-In and Couchbase + OpenDB for data persistence. Navigation: Splash → Login → Home with bottom nav (Face, Ranking, Profile) supporting offline and online game modes.",
+                                           "es":  "Proyecto Android personal desarrollado como plantilla de nivel producción y juego. Usa arquitectura multi-módulo (app, core, data, domain, feature) con plugins de convención Gradle, análisis estático Detekt, workflows CI/CD, LeakCanary y Chucker para diagnóstico en debug. Integra Firebase Authentication con Google Sign-In y Couchbase + OpenDB para persistencia de datos. Navegación: Splash → Login → Home con barra inferior (Face, Ranking, Profile) con modos de juego offline y online."
+                                       },
+                         "tags":  [
+                                      "Kotlin",
+                                      "Jetpack Compose",
+                                      "Firebase",
+                                      "Multi-Module",
+                                      "Detekt",
+                                      "CI/CD"
+                                  ],
+                         "github":  null,
+                         "demo":  "https://play.google.com/store/apps/details?id=es.sebas1705.impostorandroidgame"
+                     },
+                     {
+                         "id":  "vpsorchestrator",
+                         "name":  "Local VPS Orchestrator",
+                         "context":  "academic",
+                         "desc":  {
+                                      "en":  "REST API to orchestrate VPS resources with RBAC and 555 automated tests.",
+                                      "es":  "API REST para orquestar recursos VPS con RBAC y 555 tests."
+                                  },
+                         "long_desc":  {
+                                           "en":  "Built for the AI Development Master\u0027s. A Node.js + Express + TypeScript REST API (v1.0.3, 106 commits) that monitors CPU, memory and disk metrics, manages Docker containers and schedules automated tasks. Features RBAC, AES encryption, audit logging, distributed tracing, and 555 automated tests across 23 suites. Persists data in MongoDB and is fully containerised with Docker Compose or deployable as a systemd service.",
+                                           "es":  "Desarrollado para el Máster en Desarrollo con IA. API REST en Node.js + Express + TypeScript (v1.0.3, 106 commits) que monitoriza métricas de CPU, memoria y disco, gestiona contenedores Docker y programa tareas automatizadas. Incluye RBAC, cifrado AES, auditoría, trazabilidad distribuida y 555 tests en 23 suites. Persiste datos en MongoDB y está completamente contenedorizado con Docker Compose o desplegable como servicio systemd."
+                                       },
+                         "tags":  [
+                                      "Node.js",
+                                      "Express",
+                                      "TypeScript",
+                                      "Docker",
+                                      "MongoDB",
+                                      "RBAC"
+                                  ],
+                         "github":  "https://github.com/Sebas1705/VPSLocalOrchestrator",
+                         "demo":  null
+                     },
+                     {
+                         "id":  "portfolio",
+                         "name":  "Personal Portfolio v1",
+                         "context":  "personal",
+                         "desc":  {
+                                      "en":  "Previous portfolio: Astro + Clean Architecture, 14 locales.",
+                                      "es":  "Portafolio anterior: Astro + Arquitectura Limpia, 14 idiomas."
+                                  },
+                         "long_desc":  {
+                                           "en":  "Multi-language Astro website (14 locales) built with Clean Architecture (Domain, Application, Infrastructure, Presentation layers). Deployed on a self-hosted VPS with Docker Compose and Nginx Proxy Manager. Features WCAG accessibility compliance, 100% Vitest unit coverage and 91.66% branch coverage, automated Playwright e2e tests, and CI/CD with auto-deploy on push.",
+                                           "es":  "Web Astro multiidioma (14 idiomas) construida con Arquitectura Limpia (capas Domain, Application, Infrastructure, Presentation). Desplegada en VPS propio con Docker Compose y Nginx Proxy Manager. WCAG accesible, 100% cobertura unitaria con Vitest y 91.66% de ramas, tests e2e automáticos con Playwright y CI/CD con despliegue automático."
+                                       },
+                         "tags":  [
+                                      "Astro",
+                                      "TypeScript",
+                                      "Clean Architecture",
+                                      "Docker",
+                                      "Vitest",
+                                      "Playwright"
+                                  ],
+                         "github":  "https://github.com/Sebas1705Carreer/carreerV1",
+                         "demo":  null
+                     },
+                     {
+                         "id":  "codewars",
+                         "name":  "Codewars Katas",
+                         "context":  "personal",
+                         "desc":  {
+                                      "en":  "Codewars katas in multiple languages.",
+                                      "es":  "Katas de Codewars en multiples lenguajes."
+                                  },
+                         "long_desc":  {
+                                           "en":  "Ongoing personal repo focused on sharpening algorithmic thinking. Covers sorting, dynamic programming, graph traversal, string manipulation and more across Kotlin, C#, Java, JavaScript, Python, Bash and TypeScript.",
+                                           "es":  "Repositorio personal en curso centrado en agudizar el pensamiento algorítmico. Cubre ordenación, programación dinámica, recorrido de grafos, manipulación de cadenas y más en Kotlin, C#, Java, JavaScript, Python, Bash y TypeScript."
+                                       },
+                         "tags":  [
+                                      "Kotlin",
+                                      "C#",
+                                      "Java",
+                                      "JavaScript",
+                                      "Python",
+                                      "Bash",
+                                      "TypeScript"
+                                  ],
+                         "github":  "https://github.com/Sebas1705/Codewars",
+                         "demo":  null
+                     },
+                     {
+                         "id":  "templetry",
+                         "name":  "Templetry",
+                         "context":  "personal",
+                         "desc":  {
+                                      "en":  "Project scaffolding for every platform: pure Go engine + CLI, native desktop app (Wails) and a CI-verified template catalog.",
+                                      "es":  "Scaffolding de proyectos multiplataforma: engine en Go + CLI, app de escritorio nativa (Wails) y catálogo de plantillas verificado por CI."
+                                  },
+                         "long_desc":  {
+                                           "en":  "Open-source project scaffolding ecosystem. A pure Go engine + CLI renders ready-to-work repositories from compilable templates: all framework knowledge lives in each template\u0027s template.yml manifest (identity renaming, comment directives, structured JSON patches), rendering is deterministic — same inputs, byte-identical output — and \u0027templetry verify\u0027 compiles the result in Docker. Around the engine: a CI-verified template catalog (Kotlin Multiplatform and native Android parents with combinable features), a meta-template that scaffolds new templates, a native desktop app built with Wails (browse GitHub and local repos, render previews, three-way-merge template updates, auto-update) and a wiki with ADRs and normative specs. Released as multi-platform binaries with SHA256 checksums.",
+                                           "es":  "Ecosistema open-source de scaffolding de proyectos. Un engine en Go puro + CLI genera repositorios listos para trabajar desde plantillas compilables: todo el conocimiento del framework vive en el manifiesto template.yml de cada plantilla (renombrado por identidad, directivas en comentarios, parches JSON estructurados), el renderizado es determinista — mismas entradas, salida idéntica byte a byte — y \u0027templetry verify\u0027 compila el resultado en Docker. Alrededor del engine: un catálogo de plantillas verificado por CI (parents de Kotlin Multiplatform y Android nativo con features combinables), una meta-plantilla que genera nuevas plantillas, una app de escritorio nativa con Wails (explora repos de GitHub y locales, previsualiza renders, actualiza plantillas con three-way merge, auto-update) y una wiki con ADRs y especificaciones normativas. Publicado como binarios multiplataforma con checksums SHA256."
+                                       },
+                         "tags":  [
+                                      "Go",
+                                      "Wails",
+                                      "React",
+                                      "TypeScript",
+                                      "Kotlin Multiplatform",
+                                      "CI/CD"
+                                  ],
+                         "github":  "https://github.com/Templetry",
+                         "demo":  null
+                     },
+                     {
+                         "id":  "career-ecosystem",
+                         "name":  "Career Ecosystem (Folio)",
+                         "context":  "personal",
+                         "desc":  {
+                                      "en":  "Portfolio as a product: Cloudflare Workers API as single source of truth, React portfolio and a KMP editor for Android and Desktop.",
+                                      "es":  "Portfolio como producto: API en Cloudflare Workers como fuente única de verdad, portfolio en React y editor KMP para Android y Escritorio."
+                                  },
+                         "long_desc":  {
+                                           "en":  "A portfolio built as a product. One REST API (Cloudflare Workers + KV, TypeScript, OpenAPI/Swagger, language-map i18n model) is the single source of truth for all career data; this React 19 site consumes it live with an offline fallback snapshot; Folio, a Kotlin Multiplatform editor (Android + Desktop, Compose, Ktor, encrypted token storage), writes to it with Bearer auth; and an in-browser generator produces role-tailored CVs in two variants — visual for human readers and single-column ATS-optimised for parsers and AI screening. Secrets managed in Doppler, CI/CD on GitHub Actions, documentation as a living state-of-the-art wiki.",
+                                           "es":  "Un portfolio construido como producto. Una API REST (Cloudflare Workers + KV, TypeScript, OpenAPI/Swagger, modelo i18n por idioma) es la fuente única de verdad de todos los datos de carrera; esta web en React 19 la consume en vivo con un fallback offline; Folio, un editor Kotlin Multiplatform (Android + Escritorio, Compose, Ktor, almacenamiento cifrado del token), escribe en ella con autenticación Bearer; y un generador in-browser produce CVs adaptados por rol en dos variantes — visual para personas y columna única optimizada para ATS e IA. Secretos gestionados en Doppler, CI/CD con GitHub Actions y documentación como wiki de estado del arte viva."
+                                       },
+                         "tags":  [
+                                      "Cloudflare Workers",
+                                      "TypeScript",
+                                      "React",
+                                      "Kotlin Multiplatform",
+                                      "Ktor"
+                                  ],
+                         "github":  "https://github.com/Sebas1705Carreer",
+                         "demo":  null
+                     },
+                     {
+                         "id":  "kmp-native-base",
+                         "name":  "KMP Native Base",
+                         "context":  "personal",
+                         "desc":  {
+                                      "en":  "Kotlin Multiplatform template — Android + Desktop + iOS — modular clean architecture, convention plugins and CI.",
+                                      "es":  "Plantilla Kotlin Multiplatform — Android + Desktop + iOS — arquitectura limpia modular, convention plugins y CI."
+                                  },
+                         "long_desc":  {
+                                           "en":  "Production-grade Kotlin Multiplatform template targeting Android, Desktop and iOS: modular clean architecture (core/data/domain/feature layers), Gradle convention plugins, CI verification and AI context docs so assistants understand the codebase. Later folded into the Templetry template catalog as the foundation of its KMP parent.",
+                                           "es":  "Plantilla Kotlin Multiplatform de nivel producción para Android, Escritorio e iOS: arquitectura limpia modular (capas core/data/domain/feature), convention plugins de Gradle, verificación en CI y documentación de contexto para IA. Posteriormente integrada en el catálogo de Templetry como base de su parent KMP."
+                                       },
+                         "tags":  [
+                                      "Kotlin Multiplatform",
+                                      "Compose Multiplatform",
+                                      "Clean Architecture",
+                                      "CI/CD"
+                                  ],
+                         "github":  "https://github.com/Sebas1705/KMPNativeBase",
+                         "demo":  null
+                     },
+                     {
+                         "id":  "profesores-a-casa",
+                         "name":  "TutorsAtHome",
+                         "context":  "academic",
+                         "desc":  {
+                                      "en":  "Distributed web app connecting private tutors with students — Spring Boot, RabbitMQ, HAProxy, Docker.",
+                                      "es":  "App web distribuida que conecta profesores particulares con alumnos — Spring Boot, RabbitMQ, HAProxy, Docker."
+                                  },
+                         "long_desc":  {
+                                           "en":  "Distributed web application connecting private tutors with students, built as a university distributed-systems project: Spring Boot services behind HAProxy load balancing, asynchronous messaging with RabbitMQ, MySQL persistence and Thymeleaf server-rendered UI, all containerised with Docker.",
+                                           "es":  "Aplicación web distribuida que conecta profesores particulares con alumnos, construida como proyecto universitario de sistemas distribuidos: servicios Spring Boot tras balanceo de carga con HAProxy, mensajería asíncrona con RabbitMQ, persistencia MySQL e interfaz renderizada en servidor con Thymeleaf, todo contenedorizado con Docker."
+                                       },
+                         "tags":  [
+                                      "Java",
+                                      "Spring Boot",
+                                      "RabbitMQ",
+                                      "HAProxy",
+                                      "Docker",
+                                      "MySQL"
+                                  ],
+                         "github":  "https://github.com/Sebas1705/ProfesoresACasa",
+                         "demo":  null
+                     },
+                     {
+                         "id":  "computer-vision-labs",
+                         "name":  "Computer Vision Labs",
+                         "context":  "academic",
+                         "desc":  {
+                                      "en":  "Road sign detection (MSER + HSV) and OCR pipeline (LDA/PCA + sklearn) in Python/OpenCV.",
+                                      "es":  "Detección de señales de tráfico (MSER + HSV) y pipeline OCR (LDA/PCA + sklearn) en Python/OpenCV."
+                                  },
+                         "long_desc":  {
+                                           "en":  "Two university Computer Vision labs in Python/OpenCV. Lab 1: road-sign detection combining MSER region proposals, HSV color masking and CLAHE preprocessing. Lab 2: an OCR pipeline for road-sign panels — character segmentation, LDA/PCA dimensionality reduction and scikit-learn classifiers — evaluated on real images in Jupyter notebooks.",
+                                           "es":  "Dos laboratorios universitarios de Visión por Computador en Python/OpenCV. Lab 1: detección de señales de tráfico combinando propuestas de regiones MSER, máscaras de color HSV y preprocesado CLAHE. Lab 2: pipeline OCR para paneles de señalización — segmentación de caracteres, reducción de dimensionalidad LDA/PCA y clasificadores de scikit-learn — evaluado sobre imágenes reales en notebooks de Jupyter."
+                                       },
+                         "tags":  [
+                                      "Python",
+                                      "OpenCV",
+                                      "Machine Learning",
+                                      "scikit-learn"
+                                  ],
+                         "github":  "https://github.com/Sebas1705/ComputerVisionLab1",
+                         "demo":  null
+                     },
+                     {
+                         "id":  "enigma",
+                         "name":  "Enigma HPC",
+                         "context":  "academic",
+                         "desc":  {
+                                      "en":  "Parallel Enigma machine decryption in C++ — MPI master-slave vs sequential/OpenMP.",
+                                      "es":  "Descifrado paralelo de la máquina Enigma en C++ — MPI maestro-esclavo vs secuencial/OpenMP."
+                                  },
+                         "long_desc":  {
+                                           "en":  "Parallel decryption of the Enigma machine in C++ for an HPC course: a master-slave MPI implementation explores the key space across nodes, benchmarked against sequential and OpenMP shared-memory versions with speedup and scalability analysis.",
+                                           "es":  "Descifrado paralelo de la máquina Enigma en C++ para una asignatura de HPC: una implementación MPI maestro-esclavo explora el espacio de claves entre nodos, comparada con versiones secuencial y OpenMP de memoria compartida mediante análisis de speedup y escalabilidad."
+                                       },
+                         "tags":  [
+                                      "C++",
+                                      "MPI",
+                                      "OpenMP",
+                                      "HPC"
+                                  ],
+                         "github":  "https://github.com/Sebas1705/Enigma",
+                         "demo":  null
+                     }
+                 ]
 }

@@ -34,6 +34,9 @@ export default function JobCard({ job, index }: Props) {
 
   const achievements = localizeArr(job.achievements, lang)
   const projects     = localizeArr(job.projects, lang)
+  const longDesc     = localize(job.long_desc, lang)
+  const isEs         = lang === 'es'
+  const hasDetail    = achievements.length > 0 || longDesc.length > 0
 
   return (
     <motion.div
@@ -87,13 +90,15 @@ export default function JobCard({ job, index }: Props) {
             ))}
           </div>
 
-          {achievements.length > 0 && (
+          {hasDetail && (
             <button
               onClick={() => setOpen(o => !o)}
               className="mt-3 sm:mt-4 flex items-center gap-1.5 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors cursor-pointer touch-manipulation"
             >
               <ChevronIcon open={open} />
-              {open ? t('experience.hide_achievements') : t('experience.see_achievements')}
+              {open
+                ? (isEs ? 'Ocultar detalle' : 'Hide details')
+                : (isEs ? 'Ver detalle completo' : 'See full details')}
             </button>
           )}
         </div>
@@ -109,23 +114,37 @@ export default function JobCard({ job, index }: Props) {
               className="overflow-hidden"
             >
               <div className="border-t border-slate-100 dark:border-slate-800 px-4 sm:px-6 pb-4 sm:pb-6 pt-3 sm:pt-4">
-                <p className="text-[10px] font-semibold uppercase tracking-widest text-violet-600 dark:text-violet-400 mb-2 sm:mb-3">
-                  {t('experience.achievements_label')}
-                </p>
-                <ul className="space-y-1.5 sm:space-y-2">
-                  {achievements.map((ach, j) => (
-                    <motion.li
-                      key={j}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: j * 0.05, duration: 0.2 }}
-                      className="flex items-start gap-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400"
-                    >
-                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-violet-400 dark:bg-violet-500 shrink-0" />
-                      {ach}
-                    </motion.li>
-                  ))}
-                </ul>
+                {longDesc && (
+                  <>
+                    <p className="font-mono text-[10px] tracking-wide text-violet-600 dark:text-violet-400 mb-1.5">
+                      {isEs ? '~ en detalle' : '~ in detail'}
+                    </p>
+                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-3 sm:mb-4">
+                      {longDesc}
+                    </p>
+                  </>
+                )}
+                {achievements.length > 0 && (
+                  <>
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-violet-600 dark:text-violet-400 mb-2 sm:mb-3">
+                      {t('experience.achievements_label')}
+                    </p>
+                    <ul className="space-y-1.5 sm:space-y-2">
+                      {achievements.map((ach, j) => (
+                        <motion.li
+                          key={j}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: j * 0.05, duration: 0.2 }}
+                          className="flex items-start gap-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400"
+                        >
+                          <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-violet-400 dark:bg-violet-500 shrink-0" />
+                          {ach}
+                        </motion.li>
+                      ))}
+                    </ul>
+                  </>
+                )}
               </div>
             </motion.div>
           )}

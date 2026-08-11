@@ -1,100 +1,136 @@
 {
-  "items": [
-    {
-      "degree": { "en": "Master's in AI Development",           "es": "Máster en Desarrollo con IA" },
-      "school":  "BigSchool & Isabel I University",
-      "period":  { "en": "Oct 2025 – June 2026",               "es": "Oct 2025 – Junio 2026" },
-      "detail":  {
-        "en": "11-module postgraduate program: Software Engineering (SOLID, design patterns, SDLC), Software Architecture (Clean Architecture with TypeScript, Microservices, Event-Driven, Hexagonal, Outbox pattern), AI Fundamentals (LLMs, RAG, AI Agents, Fine-Tuning, LangChain, LLMOps), AI-Assisted Dev Flow (Prompt Engineering, GitHub Copilot, Cursor, n8n, CodeRabbit, Claude Code), Quality & Testing (TDD with AI, Playwright E2E, Sentry, OWASP Top 10, Docs-as-Code, ADRs), Cloud & DevOps (Docker, Kubernetes, CI/CD, GitHub Actions), DevSecOps (SSDLC, Shift-Left, CodeQL SAST, Trivy SCA, Snyk, STRIDE threat model). TFM: AxiomNode — 16-repo production microservices platform with AI engine (Python/LangChain/LLM), DevSecOps pipeline, 90% test coverage across 8 repos. Online, Spain.",
-        "es": "Posgrado de 11 módulos: Ingeniería de Software (SOLID, patrones de diseño, ciclo de vida), Arquitectura de Software (Clean Architecture con TypeScript, Microservicios, Event-Driven, Hexagonal, patrón Outbox), Fundamentos de IA (LLMs, RAG, Agentes IA, Fine-Tuning, LangChain, LLMOps), Flujo de Desarrollo con IA (Prompt Engineering, GitHub Copilot, Cursor, n8n, CodeRabbit, Claude Code), Calidad y Testing (TDD con IA, Playwright E2E, Sentry, OWASP Top 10, Docs-as-Code, ADRs), Cloud y DevOps (Docker, Kubernetes, CI/CD, GitHub Actions), DevSecOps (SSDLC, Shift-Left, CodeQL SAST, Trivy SCA, Snyk, modelo de amenazas STRIDE). TFM: AxiomNode — plataforma de 16 repositorios con motor de IA (Python/LangChain/LLM), pipeline DevSecOps, 90% de cobertura en 8 repos. Online, España."
-      },
-      "icon": "🎓"
-    },
-    {
-      "degree": { "en": "Bachelor's in Computer Engineering",   "es": "Grado en Ingeniería Informática" },
-      "school":  "Rey Juan Carlos University",
-      "period":  { "en": "Sept 2020 – June 2025",              "es": "Sept 2020 – Junio 2025" },
-      "detail":  { "en": "Móstoles, Madrid, Spain.",            "es": "Móstoles, Madrid, España." },
-      "icon": "🎓"
-    },
-    {
-      "degree": { "en": "Baccalaureate – Technology",           "es": "Bachillerato – Tecnológico" },
-      "school":  "IES Maestro Matías Bravo",
-      "period":  { "en": "Sept 2018 – June 2020",              "es": "Sept 2018 – Junio 2020" },
-      "detail":  { "en": "Valdemoro, Madrid, Spain.",           "es": "Valdemoro, Madrid, España." },
-      "icon": "📚"
-    }
-  ],
-  "certs": [
-    {
-      "name":    { "en": "Jetpack Compose: Definitive Course from Scratch",                  "es": "Jetpack Compose: Curso Definitivo desde 0" },
-      "issuer":  "AppCademy",
-      "date":    "Dec 2025",
-      "desc":    { "en": "Building native Android interfaces with Jetpack Compose and modern UI patterns.", "es": "Creación de interfaces nativas con Jetpack Compose y patrones modernos de UI." },
-      "url":     "https://www.appcademy.dev/certificates/cert_JGzFpajl"
-    },
-    {
-      "name":    { "en": "Firebase for Android with Kotlin: Definitive Course",              "es": "Firebase para Android con Kotlin: Curso Definitivo" },
-      "issuer":  "AppCademy",
-      "date":    "Dec 2025",
-      "desc":    { "en": "Firebase integration with Android/Kotlin: auth, Firestore database and deployment.", "es": "Integración de Firebase con Android/Kotlin: autenticación, Firestore y despliegue." },
-      "url":     "https://www.appcademy.dev/certificates/cert_ZKrT1jVn"
-    },
-    {
-      "name":    { "en": "iOS App Development with SwiftUI and UIKit",                        "es": "Desarrollo de Apps iOS con SwiftUI y UIKit" },
-      "issuer":  "Udemy",
-      "date":    "In progress",
-      "desc":    { "en": "Native iOS app development with SwiftUI and UIKit.", "es": "Desarrollo de apps iOS nativas con SwiftUI y UIKit." },
-      "url":     null
-    },
-    {
-      "name":    { "en": "Kotlin Multiplatform: Intensive Course for Android and iOS",        "es": "Kotlin Multiplatform: Curso Intensivo para Android e iOS" },
-      "issuer":  "Udemy",
-      "date":    "Apr 2026",
-      "desc":    { "en": "Sharing code between Android and iOS with Kotlin Multiplatform.", "es": "Compartir código entre Android e iOS con Kotlin Multiplatform." },
-      "url":     "https://www.udemy.com/certificate/UC-8c52c3ca-a258-410f-b126-5c1e1a43f0e5/"
-    },
-    {
-      "name":    { "en": "Master Android with Kotlin, Compose & Gemini AI",                 "es": "Domina Android con Kotlin, Compose y Gemini AI" },
-      "issuer":  "Udemy",
-      "date":    "Aug 2025",
-      "desc":    { "en": "Advanced Android development with Kotlin, Jetpack Compose and Gemini AI for modern apps.", "es": "Android avanzado con Kotlin, Jetpack Compose y Gemini AI para apps modernas." },
-      "url":     "https://www.udemy.com/certificate/UC-71fadc11-b2f1-4176-a7d4-a8bd2c316471/"
-    },
-    {
-      "name":    { "en": "Master RESTful APIs with ASP.NET Core Web API (.NET 9)",           "es": "Master API RESTful con ASP.NET Core Web API (.NET 9)" },
-      "issuer":  "Udemy",
-      "date":    "Aug 2025",
-      "desc":    { "en": "Building REST APIs with ASP.NET Core 9, best practices and cloud deployment.", "es": "Construcción de APIs REST con ASP.NET Core 9, buenas prácticas y despliegue." },
-      "url":     "https://www.udemy.com/certificate/UC-2e061584-9523-4aca-a702-ae19fa3d740f/"
-    },
-    {
-      "name":    { "en": "Master AI with Gemini",                                            "es": "Domina la IA con Gemini" },
-      "issuer":  "Google Skillshop",
-      "date":    "Aug 2025",
-      "desc":    { "en": "Foundations and hands-on practice with Gemini to build AI-assisted solutions.", "es": "Fundamentos y práctica con Gemini para crear soluciones asistidas por IA." },
-      "url":     "https://skillshop.exceedlms.com/student/award/AABEEJWZFTCii853HLjNBGsR"
-    },
-    {
-      "name":    { "en": "Mobile App Development Course",                                    "es": "Curso de Desarrollo de Apps Móviles" },
-      "issuer":  "Google Skillshop",
-      "date":    "Jun 2024",
-      "desc":    { "en": "Fundamentals of mobile app development and application lifecycle.", "es": "Bases del desarrollo de aplicaciones móviles y ciclo de vida de una app." },
-      "url":     "https://skillshop.exceedlms.com/student/award/ZSJhx2VgJ4RNYaPHz7DfZaZw"
-    },
-    {
-      "name":    { "en": "Cloud Computing",                                                  "es": "Cloud Computing" },
-      "issuer":  "Google Skillshop",
-      "date":    "Jun 2024",
-      "desc":    { "en": "Core cloud concepts, key cloud services and deployment models.", "es": "Conceptos de nube, servicios clave y modelos de despliegue en la nube." },
-      "url":     "https://skillshop.exceedlms.com/student/award/uKLeK9o3mMLXUCxotp5xB6S8"
-    },
-    {
-      "name":    { "en": "E-commerce",                                                       "es": "Comercio Electrónico" },
-      "issuer":  "Google Skillshop",
-      "date":    "Jul 2023",
-      "desc":    { "en": "E-commerce strategies, digital presence and product catalog optimization.", "es": "Estrategias de e-commerce, presencia digital y optimización de catálogo." },
-      "url":     "https://skillshop.exceedlms.com/student/award/jyHmnH2Di4hoWC9LgKDXWKfp"
-    }
-  ]
+    "items":  [
+                  {
+                      "degree":  {
+                                     "en":  "Master\u0027s in AI Development",
+                                     "es":  "Master de Desarrollo con IA"
+                                 },
+                      "school":  "BigSchool \u0026 Isabel I University",
+                      "period":  {
+                                     "en":  "October 2025 - June 2026",
+                                     "es":  "Octubre 2025 - Junio 2026"
+                                 },
+                      "detail":  {
+                                     "en":  "11-module postgraduate: Software Engineering, Architecture, AI, DevSecOps.",
+                                     "es":  "Posgrado de 11 modulos: Ingenieria de Software, Arquitectura, IA, DevSecOps."
+                                 },
+                      "long_desc":  {
+                                        "en":  "Intensive postgraduate programme (BigSchool \u0026 Universidad Isabel I) covering the modern delivery cycle across 11 modules: software engineering, architecture and design patterns, AI-assisted development, LLM integration, DevSecOps, cloud and observability. Final project (TFM): AxiomNode — a 16-repository microservices platform with an AI engine (Python/LLM with RAG), mobile client and full DevSecOps pipeline.",
+                                        "es":  "Posgrado intensivo (BigSchool \u0026 Universidad Isabel I) que cubre el ciclo de entrega moderno en 11 módulos: ingeniería de software, arquitectura y patrones de diseño, desarrollo asistido por IA, integración de LLMs, DevSecOps, cloud y observabilidad. Proyecto final (TFM): AxiomNode — una plataforma de microservicios de 16 repositorios con motor de IA (Python/LLM con RAG), cliente móvil y pipeline DevSecOps completo."
+                                    },
+                      "icon":  "🎓"
+                  },
+                  {
+                      "degree":  {
+                                     "en":  "Computer Engineering",
+                                     "es":  "Ingenieria de Computadores"
+                                 },
+                      "school":  "Universidad Rey Juan Carlos",
+                      "period":  {
+                                     "en":  "September 2020 - July 2025",
+                                     "es":  "Septiembre 2020 - Julio 2025"
+                                 },
+                      "detail":  {
+                                     "en":  "Information Technology degree. Mostoles, Madrid. TFG: YouKnow.",
+                                     "es":  "Grado en Informatica. Mostoles, Madrid. TFG: YouKnow."
+                                 },
+                      "long_desc":  {
+                                        "en":  "Computer Engineering degree (Information Technology track) at Universidad Rey Juan Carlos, Móstoles. Systems foundations: operating systems, networks, databases, distributed systems, high-performance computing (MPI/OpenMP labs), computer vision and software engineering. Final project (TFG): YouKnow — an Android social trivia app built with Kotlin, Jetpack Compose and Firebase.",
+                                        "es":  "Grado en Ingeniería de Computadores (itinerario de Tecnologías de la Información) en la Universidad Rey Juan Carlos, Móstoles. Fundamentos de sistemas: sistemas operativos, redes, bases de datos, sistemas distribuidos, computación de alto rendimiento (prácticas con MPI/OpenMP), visión por computador e ingeniería de software. Proyecto final (TFG): YouKnow — una app Android de trivial social construida con Kotlin, Jetpack Compose y Firebase."
+                                    },
+                      "icon":  "🎓"
+                  },
+                  {
+                      "degree":  {
+                                     "en":  "Baccalaureate - Technology",
+                                     "es":  "Bachillerato - Tecnologico"
+                                 },
+                      "school":  "IES Maestro Matias Bravo",
+                      "period":  {
+                                     "en":  "Sept 2018 - June 2020",
+                                     "es":  "Sept 2018 - Junio 2020"
+                                 },
+                      "detail":  {
+                                     "en":  "Valdemoro, Madrid, Spain.",
+                                     "es":  "Valdemoro, Madrid, Espana."
+                                 },
+                      "long_desc":  {
+                                        "en":  "Technology-track baccalaureate at IES Maestro Matías Bravo (Valdemoro, Madrid): mathematics, physics and technical drawing foundation that led into engineering.",
+                                        "es":  "Bachillerato tecnológico en el IES Maestro Matías Bravo (Valdemoro, Madrid): base de matemáticas, física y dibujo técnico que encaminó hacia la ingeniería."
+                                    },
+                      "icon":  "🏫"
+                  }
+              ],
+    "certs":  [
+                  {
+                      "id":  "jetpack-compose-appcademy",
+                      "name":  "Jetpack Compose: Definitive Course",
+                      "issuer":  "AppCademy",
+                      "date":  "Dec 2025",
+                      "url":  "https://www.appcademy.dev/certificates/cert_JGzFpajl"
+                  },
+                  {
+                      "id":  "firebase-kotlin-appcademy",
+                      "name":  "Firebase for Android with Kotlin",
+                      "issuer":  "AppCademy",
+                      "date":  "Dec 2025",
+                      "url":  "https://www.appcademy.dev/certificates/cert_ZKrT1jVn"
+                  },
+                  {
+                      "id":  "ios-swiftui-uikit-udemy",
+                      "name":  "iOS App Development with SwiftUI and UIKit",
+                      "issuer":  "Udemy",
+                      "date":  "In progress",
+                      "url":  null
+                  },
+                  {
+                      "id":  "kmp-android-ios-udemy",
+                      "name":  "Kotlin Multiplatform: Intensive Course for Android and iOS",
+                      "issuer":  "Udemy",
+                      "date":  "Apr 2026",
+                      "url":  "https://www.udemy.com/certificate/UC-8c52c3ca-a258-410f-b126-5c1e1a43f0e5/"
+                  },
+                  {
+                      "id":  "android-kotlin-compose-gemini",
+                      "name":  "Master Android with Kotlin and Compose",
+                      "issuer":  "Udemy",
+                      "date":  "Aug 2025",
+                      "url":  "https://www.udemy.com/certificate/UC-71fadc11-b2f1-4176-a7d4-a8bd2c316471/"
+                  },
+                  {
+                      "id":  "aspnet-rest-api",
+                      "name":  "Master RESTful APIs with ASP.NET Core",
+                      "issuer":  "Udemy",
+                      "date":  "Aug 2025",
+                      "url":  "https://www.udemy.com/certificate/UC-2e061584-9523-4aca-a702-ae19fa3d740f/"
+                  },
+                  {
+                      "id":  "gemini-google",
+                      "name":  "Master AI with Gemini",
+                      "issuer":  "Google Skillshop",
+                      "date":  "Aug 2025",
+                      "url":  "https://skillshop.exceedlms.com/student/award/AABEEJWZFTCii853HLjNBGsR"
+                  },
+                  {
+                      "id":  "mobile-dev-google",
+                      "name":  "Mobile App Development Course",
+                      "issuer":  "Google Skillshop",
+                      "date":  "Jun 2024",
+                      "url":  "https://skillshop.exceedlms.com/student/award/ZSJhx2VgJ4RNYaPHz7DfZaZw"
+                  },
+                  {
+                      "id":  "cloud-computing-google",
+                      "name":  "Cloud Computing",
+                      "issuer":  "Google Skillshop",
+                      "date":  "Jun 2024",
+                      "url":  "https://skillshop.exceedlms.com/student/award/uKLeK9o3mMLXUCxotp5xB6S8"
+                  },
+                  {
+                      "id":  "ecommerce-google",
+                      "name":  "E-commerce",
+                      "issuer":  "Google Skillshop",
+                      "date":  "Jul 2023",
+                      "url":  "https://skillshop.exceedlms.com/student/award/jyHmnH2Di4hoWC9LgKDXWKfp"
+                  }
+              ]
 }
