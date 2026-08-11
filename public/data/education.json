@@ -67,70 +67,110 @@
                       "name":  "Jetpack Compose: Definitive Course",
                       "issuer":  "AppCademy",
                       "date":  "Dec 2025",
-                      "url":  "https://www.appcademy.dev/certificates/cert_JGzFpajl"
+                      "url":  "https://www.appcademy.dev/certificates/cert_JGzFpajl",
+                      "long_desc":  {
+                                        "en":  "Deep dive into declarative UI on Android: composables, state management and recomposition, theming with Material 3, animations, navigation and testing with Jetpack Compose.",
+                                        "es":  "Inmersión en UI declarativa en Android: composables, gestión de estado y recomposición, theming con Material 3, animaciones, navegación y testing con Jetpack Compose."
+                                    }
                   },
                   {
                       "id":  "firebase-kotlin-appcademy",
                       "name":  "Firebase for Android with Kotlin",
                       "issuer":  "AppCademy",
                       "date":  "Dec 2025",
-                      "url":  "https://www.appcademy.dev/certificates/cert_ZKrT1jVn"
+                      "url":  "https://www.appcademy.dev/certificates/cert_ZKrT1jVn",
+                      "long_desc":  {
+                                        "en":  "Firebase services applied to Android with Kotlin: Authentication, Cloud Firestore, Realtime Database, Storage, Cloud Messaging and analytics, integrated into real app flows.",
+                                        "es":  "Servicios de Firebase aplicados a Android con Kotlin: Authentication, Cloud Firestore, Realtime Database, Storage, Cloud Messaging y analítica, integrados en flujos reales de app."
+                                    }
                   },
                   {
                       "id":  "ios-swiftui-uikit-udemy",
                       "name":  "iOS App Development with SwiftUI and UIKit",
                       "issuer":  "Udemy",
                       "date":  "In progress",
-                      "url":  null
+                      "url":  null,
+                      "long_desc":  {
+                                        "en":  "Native iOS development across both UI frameworks: SwiftUI\u0027s declarative model and UIKit fundamentals, view lifecycles, navigation patterns and app architecture. Currently in progress, reinforcing the production iOS work on Transportes Chinchón.",
+                                        "es":  "Desarrollo iOS nativo en ambos frameworks de UI: el modelo declarativo de SwiftUI y los fundamentos de UIKit, ciclos de vida de vistas, patrones de navegación y arquitectura de apps. Actualmente en curso, reforzando el trabajo iOS en producción de Transportes Chinchón."
+                                    }
                   },
                   {
                       "id":  "kmp-android-ios-udemy",
                       "name":  "Kotlin Multiplatform: Intensive Course for Android and iOS",
                       "issuer":  "Udemy",
                       "date":  "Apr 2026",
-                      "url":  "https://www.udemy.com/certificate/UC-8c52c3ca-a258-410f-b126-5c1e1a43f0e5/"
+                      "url":  "https://www.udemy.com/certificate/UC-8c52c3ca-a258-410f-b126-5c1e1a43f0e5/",
+                      "long_desc":  {
+                                        "en":  "Kotlin Multiplatform in practice: sharing business logic between Android and iOS, expect/actual declarations, Compose Multiplatform UIs, Ktor networking and multiplatform project structure.",
+                                        "es":  "Kotlin Multiplatform en la práctica: compartir lógica de negocio entre Android e iOS, declaraciones expect/actual, interfaces con Compose Multiplatform, red con Ktor y estructura de proyectos multiplataforma."
+                                    }
                   },
                   {
                       "id":  "android-kotlin-compose-gemini",
                       "name":  "Master Android with Kotlin and Compose",
                       "issuer":  "Udemy",
                       "date":  "Aug 2025",
-                      "url":  "https://www.udemy.com/certificate/UC-71fadc11-b2f1-4176-a7d4-a8bd2c316471/"
+                      "url":  "https://www.udemy.com/certificate/UC-71fadc11-b2f1-4176-a7d4-a8bd2c316471/",
+                      "long_desc":  {
+                                        "en":  "End-to-end modern Android development: Kotlin, Jetpack Compose, MVVM architecture, coroutines and flows, persistence, dependency injection and AI-assisted workflows with Gemini.",
+                                        "es":  "Desarrollo Android moderno de principio a fin: Kotlin, Jetpack Compose, arquitectura MVVM, corrutinas y flows, persistencia, inyección de dependencias y flujos de trabajo asistidos por IA con Gemini."
+                                    }
                   },
                   {
                       "id":  "aspnet-rest-api",
                       "name":  "Master RESTful APIs with ASP.NET Core",
                       "issuer":  "Udemy",
                       "date":  "Aug 2025",
-                      "url":  "https://www.udemy.com/certificate/UC-2e061584-9523-4aca-a702-ae19fa3d740f/"
+                      "url":  "https://www.udemy.com/certificate/UC-2e061584-9523-4aca-a702-ae19fa3d740f/",
+                      "long_desc":  {
+                                        "en":  "Designing and building production REST APIs with ASP.NET Core: routing and controllers, Entity Framework persistence, authentication and authorization, versioning, testing and deployment.",
+                                        "es":  "Diseño y construcción de APIs REST de producción con ASP.NET Core: enrutado y controladores, persistencia con Entity Framework, autenticación y autorización, versionado, testing y despliegue."
+                                    }
                   },
                   {
                       "id":  "gemini-google",
                       "name":  "Master AI with Gemini",
                       "issuer":  "Google Skillshop",
                       "date":  "Aug 2025",
-                      "url":  "https://skillshop.exceedlms.com/student/award/AABEEJWZFTCii853HLjNBGsR"
+                      "url":  "https://skillshop.exceedlms.com/student/award/AABEEJWZFTCii853HLjNBGsR",
+                      "long_desc":  {
+                                        "en":  "Google\u0027s programme on working effectively with Gemini: prompting techniques, integrating generative AI into products and daily workflows, and responsible AI practices.",
+                                        "es":  "Programa de Google sobre trabajar eficazmente con Gemini: técnicas de prompting, integración de IA generativa en productos y flujos de trabajo diarios, y prácticas de IA responsable."
+                                    }
                   },
                   {
                       "id":  "mobile-dev-google",
                       "name":  "Mobile App Development Course",
                       "issuer":  "Google Skillshop",
                       "date":  "Jun 2024",
-                      "url":  "https://skillshop.exceedlms.com/student/award/ZSJhx2VgJ4RNYaPHz7DfZaZw"
+                      "url":  "https://skillshop.exceedlms.com/student/award/ZSJhx2VgJ4RNYaPHz7DfZaZw",
+                      "long_desc":  {
+                                        "en":  "Google Skillshop foundations of mobile app development: the mobile ecosystem, app lifecycle, UX principles for small screens and mobile-first product thinking.",
+                                        "es":  "Fundamentos de desarrollo de apps móviles de Google Skillshop: el ecosistema móvil, ciclo de vida de las apps, principios de UX para pantallas pequeñas y pensamiento de producto mobile-first."
+                                    }
                   },
                   {
                       "id":  "cloud-computing-google",
                       "name":  "Cloud Computing",
                       "issuer":  "Google Skillshop",
                       "date":  "Jun 2024",
-                      "url":  "https://skillshop.exceedlms.com/student/award/uKLeK9o3mMLXUCxotp5xB6S8"
+                      "url":  "https://skillshop.exceedlms.com/student/award/uKLeK9o3mMLXUCxotp5xB6S8",
+                      "long_desc":  {
+                                        "en":  "Google Skillshop introduction to cloud computing: service models (IaaS/PaaS/SaaS), scalability and elasticity, cloud economics and migration considerations.",
+                                        "es":  "Introducción al cloud computing de Google Skillshop: modelos de servicio (IaaS/PaaS/SaaS), escalabilidad y elasticidad, economía del cloud y consideraciones de migración."
+                                    }
                   },
                   {
                       "id":  "ecommerce-google",
                       "name":  "E-commerce",
                       "issuer":  "Google Skillshop",
                       "date":  "Jul 2023",
-                      "url":  "https://skillshop.exceedlms.com/student/award/jyHmnH2Di4hoWC9LgKDXWKfp"
+                      "url":  "https://skillshop.exceedlms.com/student/award/jyHmnH2Di4hoWC9LgKDXWKfp",
+                      "long_desc":  {
+                                        "en":  "Google Skillshop e-commerce fundamentals: online store models, digital payments, conversion funnels and the role of data in online retail.",
+                                        "es":  "Fundamentos de e-commerce de Google Skillshop: modelos de tienda online, pagos digitales, embudos de conversión y el papel de los datos en el comercio electrónico."
+                                    }
                   }
               ]
 }

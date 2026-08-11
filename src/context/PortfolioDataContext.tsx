@@ -58,6 +58,8 @@ export interface RawCert {
   date: string
   /** null for in-progress certifications */
   url: string | null
+  /** Rich detail shown in the expandable panel */
+  long_desc?: ML
 }
 
 export interface RawSoftSkill {
@@ -140,7 +142,7 @@ const PortfolioContext = createContext<PortfolioContextValue>({
 const API_BASE = (import.meta.env.VITE_CAREER_API_URL as string | undefined)?.replace(/\/$/, '')
   ?? 'https://career-api.sebas1705.workers.dev'
 
-const CACHE_KEY = 'portfolio_data_v8'
+const CACHE_KEY = 'portfolio_data_v9'
 
 // ── API response → portfolio shape adapters ───────────────────────────────────
 
@@ -229,11 +231,12 @@ function adaptEducation(eduRows: any[], certRows: any[]): { items: RawEduItem[];
       icon:   ({ graduation: '🎓', university: '🎓', school: '🏫', master: '🎓' } as Record<string, string>)[r.icon] ?? r.icon ?? '🎓',
     })),
     certs: certRows.map(r => ({
-      id:     r.id,
-      name:   r.name,
-      issuer: r.issuer,
-      date:   r.date,
-      url:    r.url ?? null,
+      id:        r.id,
+      name:      r.name,
+      issuer:    r.issuer,
+      date:      r.date,
+      url:       r.url ?? null,
+      long_desc: r.long_desc ?? undefined,
     })),
   }
 }
