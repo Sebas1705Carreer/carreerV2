@@ -4,7 +4,7 @@ import { usePortfolioData } from '../context/PortfolioDataContext'
 import { localize } from '../lib/localize'
 import { useLang } from '../hooks/useLang'
 import {
-  Document, Page, Text, View, Link, StyleSheet,
+  Document, Page, Text, View, Link, Image, StyleSheet,
   pdf, type DocumentProps,
 } from '@react-pdf/renderer'
 
@@ -118,6 +118,7 @@ const s = StyleSheet.create({
   // header
   header:     { flexDirection: 'row', gap: 12, marginBottom: 10 },
   headerText: { flex: 1 },
+  photo:      { width: 62, height: 62, borderRadius: 31, borderWidth: 2, borderColor: PURPLE, objectFit: 'cover' },
   name:       { fontSize: 18, fontWeight: 700, color: DARK, letterSpacing: -0.5 },
   title:      { fontSize: 10, fontWeight: 700, color: PURPLE, marginTop: 2 },
   contactRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 2, marginTop: 5, fontSize: 7.5, color: MID, borderTopWidth: 1.5, borderTopColor: PURPLE, paddingTop: 4 },
@@ -176,9 +177,11 @@ interface CVDocProps {
   jobs: ReturnType<typeof usePortfolioData>['jobs']
   projects: ReturnType<typeof usePortfolioData>['projects']
   education: ReturnType<typeof usePortfolioData>['education']
+  /** Data-URL of the profile photo (HR variant only; ATS stays photo-free on purpose) */
+  avatar?: string
 }
 
-function CVDocument({ lang, role, personal, skills, jobs, projects, education }: CVDocProps) {
+function CVDocument({ lang, role, personal, skills, jobs, projects, education, avatar }: CVDocProps) {
   const profile = ROLES[role]
   const isEs = lang === 'es'
   const loc = (v: unknown) => localize(v as Parameters<typeof localize>[0], lang)
@@ -232,6 +235,7 @@ function CVDocument({ lang, role, personal, skills, jobs, projects, education }:
 
         {/* ── Header ── */}
         <View style={s.header}>
+          {avatar && <Image style={s.photo} src={avatar} />}
           <View style={s.headerText}>
             <Text style={s.name}>Sebastián Ramiro Entrerrios García</Text>
             <Text style={s.title}>{roleTitle}</Text>
@@ -560,6 +564,29 @@ export default function CVGenerator({ onClose }: Props) {
   const handleDownload = async () => {
     setGenerating(true)
     try {
+      // HR variant embeds the GitHub avatar as a data-URL; if the fetch fails
+      // the PDF still generates, just without photo. ATS stays photo-free.
+      let avatar: string | undefined
+      if (variant === 'hr' && personal.social?.github) {
+        const user = personal.social.github.split('/').pop()
+        if (user) {
+          try {
+            const blob = await fetch(`https://avatars.githubusercontent.com/${user}?size=240`).then(r => {
+              if (!r.ok) throw new Error(`avatar HTTP ${r.status}`)
+              return r.blob()
+            })
+            avatar = await new Promise<string>((resolve, reject) => {
+              const fr = new FileReader()
+              fr.onload = () => resolve(fr.result as string)
+              fr.onerror = reject
+              fr.readAsDataURL(blob)
+            })
+          } catch (e) {
+            console.warn('[CV] avatar no disponible, se genera sin foto', e)
+          }
+        }
+      }
+
       const Doc = variant === 'ats' ? AtsCVDocument : CVDocument
       const doc = (
         <Doc
@@ -570,6 +597,7 @@ export default function CVGenerator({ onClose }: Props) {
           jobs={jobs}
           projects={projects}
           education={education}
+          avatar={avatar}
         />
       )
       const slug = role === 'fullstack' ? 'fullstack-mobile'
