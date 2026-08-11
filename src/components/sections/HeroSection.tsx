@@ -25,7 +25,7 @@ export default function HeroSection({ onNext, onOpenCV }: SectionProps) {
   const allProjects = [...(projects.work ?? []), ...(projects.featured ?? [])]
   const starts = jobs.map(j => j.startDate).filter((s): s is string => !!s).sort()
   const years = starts.length
-    ? Math.max(1, Math.floor((NOW - new Date(`${starts[0]}-01`).getTime()) / (365.25 * 24 * 3600 * 1000)))
+    ? Math.max(1, Math.round((NOW - new Date(`${starts[0]}-01`).getTime()) / (365.25 * 24 * 3600 * 1000)))
     : 2
   const playApps = allProjects.filter(p => p.demo?.includes('play.google')).length || 2
 

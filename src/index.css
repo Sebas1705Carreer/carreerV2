@@ -59,3 +59,14 @@ body,
   outline-offset: 2px;
   border-radius: 4px;
 }
+
+/* Reduced motion: kill CSS transitions/animations. (Deliberately CSS-only —
+   framer-motion's MotionConfig reducedMotion interfered with mode="wait"
+   exit completion, freezing section/tab swaps.) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,4 +1,4 @@
-import { AnimatePresence, MotionConfig, motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { Suspense, lazy, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from './hooks/useTheme'
@@ -71,8 +71,6 @@ export default function App() {
   const isLast  = current === SECTIONS.length - 1
 
   return (
-    // reducedMotion="user": framer-motion honours prefers-reduced-motion globally
-    <MotionConfig reducedMotion="user">
     <div className="relative h-screen w-screen overflow-hidden bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
       <Background />
       <Controls theme={theme} onToggleTheme={toggleTheme} onToggleLang={toggleLang} lang={i18n.language} />
@@ -185,6 +183,5 @@ export default function App() {
         </Suspense>
       )}
     </div>
-    </MotionConfig>
   )
 }
