@@ -90,7 +90,7 @@ npm run lint     # ESLint
 
 | Variable | Description | Default |
 |---|---|---|
-| `VITE_CAREER_API_URL` | Base URL for career-api | `https://career-api.sebas1705.workers.dev` |
+| `VITE_CAREER_API_URL` | Base URL for career-api | `https://api.sebas1705.dev` |
 | `VITE_BASE_PATH` | GitHub Pages base path | `/carreerV2/` |
 
 Set in `.env` for local development or as CI secrets for production.

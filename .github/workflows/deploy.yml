@@ -35,7 +35,7 @@ jobs:
         run: npm run build
         env:
           VITE_BASE_PATH: /carreerV2/
-          VITE_CAREER_API_URL: https://career-api.sebas1705.workers.dev
+          VITE_CAREER_API_URL: https://api.sebas1705.dev
 
       - uses: actions/upload-pages-artifact@v3
         with:
