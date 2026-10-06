@@ -31,8 +31,8 @@ export default function Controls({ theme, onToggleTheme, onToggleLang, lang }: P
   const displayLang = lang.startsWith('es') ? 'EN' : 'ES'
 
   return (
-    // On mobile: top-3 right-4, on md+: top-5 right-14 (leave space for nav dots)
-    <div className="fixed top-3 right-4 md:top-5 md:right-14 z-50 flex items-center gap-2">
+    // On mobile: centred in the 48px top bar, on md+: top-5 right-14 (leave space for nav dots)
+    <div className="fixed top-2 right-4 md:top-5 md:right-14 z-50 flex items-center gap-2">
       <button
         onClick={onToggleLang}
         className="text-xs font-semibold px-2.5 py-1.5 md:px-3 rounded-full border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm text-slate-700 dark:text-slate-300 hover:border-violet-400 dark:hover:border-violet-500 hover:text-violet-600 dark:hover:text-violet-400 transition-all duration-200 cursor-pointer touch-manipulation"

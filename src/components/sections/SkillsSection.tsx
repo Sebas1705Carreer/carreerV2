@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { usePortfolioData } from '../../context/PortfolioDataContext'
@@ -133,6 +133,13 @@ export default function SkillsSection() {
   const isEs = lang === 'es'
   const [expandedGroup, setExpandedGroup] = useState<GroupId | null>(null)
 
+  useEffect(() => {
+    if (!expandedGroup) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setExpandedGroup(null) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [expandedGroup])
+
   const openGroup = expandedGroup ? GROUPS.find(g => g.id === expandedGroup) ?? null : null
   const allGroupSkills = openGroup
     ? skills.filter(s => (openGroup.cats as readonly string[]).includes(s.category)).sort((a, b) => b.level - a.level)
@@ -149,7 +156,7 @@ export default function SkillsSection() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.08, duration: 0.35 }}
-          className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 mb-5 sm:mb-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-5 sm:mb-6"
         >
           {GROUPS.map(({ id, cats, labelEn, labelEs, header, border, top, low, accent }) => {
             const grouped = skills
@@ -166,7 +173,7 @@ export default function SkillsSection() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: GROUPS.findIndex(g => g.id === id) * 0.05 + 0.1, duration: 0.3, ease: EASE }}
-                className={`rounded-xl sm:rounded-2xl border bg-white/80 dark:bg-slate-900/70 shadow-sm hover:shadow-md transition-shadow duration-200 ${border}`}
+                className={`min-w-0 rounded-xl sm:rounded-2xl border bg-white/80 dark:bg-slate-900/70 shadow-sm hover:shadow-md transition-shadow duration-200 ${border}`}
               >
                 {/* Colored top accent bar */}
                 <div className={`h-1 w-full rounded-t-xl sm:rounded-t-2xl ${accent}`} />
@@ -174,10 +181,10 @@ export default function SkillsSection() {
                 <div className="p-3 sm:p-4">
                   {/* Header row */}
                   <div className="flex items-center justify-between mb-2.5">
-                    <h3 className={`text-[9px] sm:text-[10px] font-bold uppercase tracking-widest ${header}`}>
+                    <h3 className={`text-[11px] sm:text-[10px] font-bold uppercase tracking-widest ${header}`}>
                       {label}
                     </h3>
-                    <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded-full border ${top} opacity-80`}>
+                    <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full border ${top} opacity-80`}>
                       {total}
                     </span>
                   </div>
@@ -194,7 +201,7 @@ export default function SkillsSection() {
                     {hiddenCount > 0 && (
                       <button
                         onClick={() => setExpandedGroup(id as GroupId)}
-                        className={`inline-flex items-center gap-1 px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg border text-[9px] sm:text-[10px] font-semibold cursor-pointer transition-all duration-150 hover:scale-105 active:scale-95 ${top}`}
+                        className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border text-[11px] sm:text-[10px] font-semibold cursor-pointer transition-all duration-150 hover:scale-105 active:scale-95 ${top}`}
                       >
                         +{hiddenCount} {isEs ? 'más' : 'more'}
                       </button>
@@ -239,7 +246,7 @@ export default function SkillsSection() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.18 }}
             data-modal
-            className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-8 bg-black/50 backdrop-blur-sm"
+            className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center sm:p-8 bg-black/50 backdrop-blur-sm"
             onClick={e => { if (e.target === e.currentTarget) setExpandedGroup(null) }}
           >
             <motion.div
@@ -247,12 +254,12 @@ export default function SkillsSection() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.94, y: 12 }}
               transition={{ duration: 0.22, ease: EASE }}
-              className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg border border-slate-200 dark:border-slate-700 overflow-hidden"
+              className="bg-white dark:bg-slate-900 rounded-t-2xl sm:rounded-2xl shadow-2xl w-full max-w-lg max-h-[85dvh] flex flex-col border border-slate-200 dark:border-slate-700 overflow-hidden"
             >
               {/* Accent bar */}
-              <div className={`h-1.5 w-full ${openGroup.accent}`} />
+              <div className={`h-1.5 w-full shrink-0 ${openGroup.accent}`} />
 
-              <div className="p-5 sm:p-6">
+              <div className="p-5 sm:p-6 pb-[calc(1.25rem+env(safe-area-inset-bottom))] overflow-y-auto overscroll-contain">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-4">
                   <div>
@@ -265,6 +272,7 @@ export default function SkillsSection() {
                   </div>
                   <button
                     onClick={() => setExpandedGroup(null)}
+                    aria-label={isEs ? 'Cerrar' : 'Close'}
                     className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">

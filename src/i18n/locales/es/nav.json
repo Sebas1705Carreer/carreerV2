@@ -6,6 +6,12 @@
     "experience": "Experiencia",
     "projects": "Proyectos",
     "education": "Formación",
-    "contact": "Contacto"
+    "contact": "Contacto",
+    "prev_label": "Anterior",
+    "next_label": "Siguiente",
+    "prev": "Sección anterior",
+    "next": "Sección siguiente",
+    "home": "Ir al inicio",
+    "explore": "Explorar"
   }
 }

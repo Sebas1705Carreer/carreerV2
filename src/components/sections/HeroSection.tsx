@@ -89,29 +89,30 @@ export default function HeroSection({ onNext, onOpenCV }: SectionProps) {
       {/* Stats bar */}
       <motion.div
         {...item(0.55)}
-        className="inline-flex flex-wrap gap-6 sm:gap-10 justify-center px-6 sm:px-10 py-4 rounded-2xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-800 backdrop-blur-sm"
+        className="grid grid-cols-2 gap-x-6 gap-y-4 max-w-[280px] mx-auto sm:max-w-none sm:inline-flex sm:flex-wrap sm:gap-10 justify-center px-6 sm:px-10 py-4 rounded-2xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-800 backdrop-blur-sm"
       >
         {stats.map(s => (
-          <div key={s.num} className="text-center min-w-[48px]">
+          <div key={s.label} className="text-center min-w-[48px]">
             <div className="text-xl sm:text-2xl font-extrabold text-violet-600 dark:text-violet-400 leading-none">{s.num}</div>
             <div className="text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 mt-1 leading-tight">{s.label}</div>
           </div>
         ))}
       </motion.div>
 
-      <motion.div
+      <motion.button
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.6, duration: 0.8 }}
-        className="mt-8 sm:mt-10 flex flex-col items-center gap-2 text-slate-400 dark:text-slate-600"
+        onClick={onNext}
+        className="mt-8 sm:mt-10 mx-auto flex flex-col items-center gap-2 px-4 py-2 text-slate-400 dark:text-slate-600 hover:text-violet-600 dark:hover:text-violet-400 transition-colors cursor-pointer touch-manipulation"
       >
-        <span className="text-xs tracking-widest uppercase">explore</span>
+        <span className="text-xs tracking-widest uppercase">{t('nav.explore')}</span>
         <motion.div animate={{ y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M7 10l5 5 5-5" />
           </svg>
         </motion.div>
-      </motion.div>
+      </motion.button>
     </SectionWrapper>
   )
 }

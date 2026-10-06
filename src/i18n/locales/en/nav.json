@@ -6,6 +6,12 @@
     "experience": "Experience",
     "projects": "Projects",
     "education": "Education",
-    "contact": "Contact"
+    "contact": "Contact",
+    "prev_label": "Prev",
+    "next_label": "Next",
+    "prev": "Previous section",
+    "next": "Next section",
+    "home": "Go to start",
+    "explore": "Explore"
   }
 }

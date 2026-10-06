@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import type { RawSkill } from '../../context/PortfolioDataContext'
 import { useLang } from '../../hooks/useLang'
 
@@ -23,6 +24,9 @@ const CAT_LABEL: Record<string, { en: string; es: string }> = {
   os:            { en: 'OS',          es: 'SO' },
 }
 
+/** Gap kept between the tooltip and the viewport edges (px). */
+const EDGE = 8
+
 interface Props {
   skill: RawSkill
   chipClass: string
@@ -32,16 +36,63 @@ export default function SkillChip({ skill, chipClass }: Props) {
   const lang = useLang()
   const [imgOk, setImgOk] = useState(true)
   const [show, setShow] = useState(false)
+  const chipRef = useRef<HTMLSpanElement>(null)
+  const tipRef = useRef<HTMLSpanElement>(null)
+  const arrowRef = useRef<HTMLSpanElement>(null)
+  const pointerType = useRef('mouse')
 
   const levelLabel = LEVEL_LABEL[skill.level]?.[lang] ?? ''
   const catLabel   = CAT_LABEL[skill.category]?.[lang] ?? skill.category
 
+  // The tooltip is portalled to <body> and placed in viewport coordinates, so it is never
+  // clipped by a card or a scrolling modal, and it is clamped so it never leaves the screen.
+  // Placement writes straight to the DOM before paint (no extra render).
+  useLayoutEffect(() => {
+    const tipEl = tipRef.current
+    const chip = chipRef.current?.getBoundingClientRect()
+    if (!show || !tipEl || !chip) return
+    const tip = tipEl.getBoundingClientRect()
+    const centre = chip.left + chip.width / 2
+    const left = Math.min(Math.max(centre - tip.width / 2, EDGE), window.innerWidth - tip.width - EDGE)
+    const below = chip.top - tip.height - 10 < EDGE
+    tipEl.style.left = `${left}px`
+    tipEl.style.top = `${below ? chip.bottom + 10 : chip.top - tip.height - 10}px`
+    tipEl.style.visibility = 'visible'
+    const arrow = arrowRef.current
+    if (arrow) {
+      arrow.style.left = `${centre - left}px`
+      arrow.className = `absolute -translate-x-1/2 border-[5px] border-transparent ${below ? 'bottom-full -mb-px border-b-slate-900' : 'top-full -mt-px border-t-slate-900'}`
+    }
+  }, [show])
+
+  // Touch: a tap elsewhere, a scroll or a resize closes the open tooltip
+  useEffect(() => {
+    if (!show) return
+    const close = (e: Event) => {
+      if (e.type === 'pointerdown' && chipRef.current?.contains(e.target as Node)) return
+      setShow(false)
+    }
+    window.addEventListener('pointerdown', close)
+    window.addEventListener('scroll', close, true)
+    window.addEventListener('resize', close)
+    return () => {
+      window.removeEventListener('pointerdown', close)
+      window.removeEventListener('scroll', close, true)
+      window.removeEventListener('resize', close)
+    }
+  }, [show])
+
   return (
     <span
-      className={`relative inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-medium select-none cursor-pointer transition-all duration-150 hover:scale-105 active:scale-95 hover:shadow-md ${chipClass}`}
-      onMouseEnter={() => setShow(true)}
-      onMouseLeave={() => setShow(false)}
-      onClick={e => { e.stopPropagation(); setShow(s => !s) }}
+      ref={chipRef}
+      className={`relative inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-medium select-none cursor-pointer transition-all duration-150 hover:scale-105 active:scale-95 hover:shadow-md max-w-full ${chipClass}`}
+      // Hover only for real mice: on touch the emulated hover fired before the click and the
+      // click's toggle closed the tooltip straight away
+      onPointerEnter={e => { if (e.pointerType === 'mouse') setShow(true) }}
+      onPointerLeave={e => { if (e.pointerType === 'mouse') setShow(false) }}
+      onPointerDown={e => { pointerType.current = e.pointerType }}
+      // A mouse already opened it on hover, so its click keeps it open; touch and pen toggle
+      onClick={e => { e.stopPropagation(); setShow(s => pointerType.current === 'mouse' || !s) }}
     >
       {/* Icon */}
       {skill.iconUrl && imgOk ? (
@@ -57,10 +108,10 @@ export default function SkillChip({ skill, chipClass }: Props) {
         </span>
       )}
 
-      <span className="truncate max-w-[110px] sm:max-w-none">{skill.name}</span>
+      <span className="truncate min-w-0">{skill.name}</span>
 
       {/* Level dots */}
-      <span className="flex gap-0.5 ml-0.5 shrink-0">
+      <span className="flex gap-0.5 ml-0.5 shrink-0" aria-hidden>
         {[1, 2, 3, 4].map(i => (
           <span
             key={i}
@@ -70,12 +121,13 @@ export default function SkillChip({ skill, chipClass }: Props) {
       </span>
 
       {/* Floating tooltip */}
-      {show && (
+      {show && createPortal(
         <span
-          className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2.5 z-[300]
-                     bg-slate-900 text-white rounded-xl px-3 py-2.5 shadow-2xl
+          ref={tipRef}
+          role="tooltip"
+          className="pointer-events-none fixed z-[300] bg-slate-900 text-white rounded-xl px-3 py-2.5 shadow-2xl
                      border border-slate-700/50 whitespace-nowrap min-w-[140px]"
-          style={{ fontSize: '11px' }}
+          style={{ fontSize: '11px', left: 0, top: 0, visibility: 'hidden' }}
         >
           {/* Name */}
           <span className="block font-semibold text-white text-xs mb-1.5">{skill.name}</span>
@@ -95,9 +147,10 @@ export default function SkillChip({ skill, chipClass }: Props) {
             {levelLabel} · {catLabel}
           </span>
 
-          {/* Arrow */}
-          <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-[5px] border-transparent border-t-slate-900" />
-        </span>
+          {/* Arrow, kept under the chip even when the tooltip is clamped to an edge */}
+          <span ref={arrowRef} />
+        </span>,
+        document.body,
       )}
     </span>
   )

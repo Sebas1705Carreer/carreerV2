@@ -71,7 +71,7 @@ export default function App() {
   const isLast  = current === SECTIONS.length - 1
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
+    <div className="relative h-dvh w-screen overflow-hidden bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
       <Background />
       <Controls theme={theme} onToggleTheme={toggleTheme} onToggleLang={toggleLang} lang={i18n.language} />
 
@@ -80,8 +80,19 @@ export default function App() {
         <NavDots total={SECTIONS.length} current={current} onNavigate={navigate} sectionKeys={SECTION_KEYS} />
       </div>
 
+      {/* ── Mobile top bar: a backdrop for the fixed controls, so scrolled content never runs under them ── */}
+      <div className="fixed top-0 inset-x-0 z-40 h-12 md:hidden flex items-center px-4 border-b border-slate-100 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/90 backdrop-blur-lg">
+        <button
+          onClick={() => navigate(0)}
+          aria-label={t('nav.home')}
+          className="font-mono text-xs font-semibold text-violet-600 dark:text-violet-400 px-1 py-3 touch-manipulation cursor-pointer"
+        >
+          ~/sebas1705
+        </button>
+      </div>
+
       {/* ── Section content ── */}
-      {/* On mobile: leave 56px at bottom for the bottom nav bar */}
+      {/* On mobile: leave room for the top bar (48px) and the bottom nav bar (56px + safe area) */}
       <AnimatePresence mode="wait" custom={direction}>
         <motion.div
           key={current}
@@ -95,7 +106,7 @@ export default function App() {
             opacity: { duration: 0.22 },
             scale: { duration: 0.22 },
           }}
-          className="absolute inset-x-0 top-0 bottom-0 md:inset-0 pb-14 md:pb-0"
+          className="absolute inset-x-0 top-12 bottom-0 md:inset-0 pb-[calc(3.5rem+env(safe-area-inset-bottom))] md:pb-0"
         >
           <SectionDecor sectionKey={SECTION_KEYS[current]} />
           <CurrentSection onNext={next} onPrev={prev} onOpenCV={() => setShowCV(true)} />
@@ -108,7 +119,7 @@ export default function App() {
           <button
             onClick={prev}
             disabled={isFirst}
-            aria-label={t('nav.prev', 'Previous section')}
+            aria-label={t('nav.prev')}
             className="w-9 h-9 flex items-center justify-center transition-all duration-200 cursor-pointer disabled:opacity-20 disabled:cursor-not-allowed text-slate-500 dark:text-slate-400 enabled:hover:text-violet-600 dark:enabled:hover:text-violet-400 enabled:hover:bg-violet-50 dark:enabled:hover:bg-violet-950/30"
           >
             <ChevronUp />
@@ -116,7 +127,7 @@ export default function App() {
           <button
             onClick={next}
             disabled={isLast}
-            aria-label={t('nav.next', 'Next section')}
+            aria-label={t('nav.next')}
             className="w-9 h-9 flex items-center justify-center transition-all duration-200 cursor-pointer disabled:opacity-20 disabled:cursor-not-allowed text-slate-500 dark:text-slate-400 enabled:hover:text-violet-600 dark:enabled:hover:text-violet-400 enabled:hover:bg-violet-50 dark:enabled:hover:bg-violet-950/30"
           >
             <ChevronDown />
@@ -136,16 +147,16 @@ export default function App() {
       </div>
 
       {/* ── Mobile bottom navigation bar ── */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 flex md:hidden items-center justify-between px-4 h-14 border-t border-slate-100 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/90 backdrop-blur-lg">
+      <div className="fixed bottom-0 left-0 right-0 z-50 flex md:hidden items-center justify-between px-2 h-[calc(3.5rem+env(safe-area-inset-bottom))] pb-[env(safe-area-inset-bottom)] border-t border-slate-100 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/90 backdrop-blur-lg">
         {/* Prev button */}
         <button
           onClick={prev}
           disabled={isFirst}
-          aria-label="Previous"
-          className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-slate-500 dark:text-slate-400 disabled:opacity-25 disabled:cursor-not-allowed touch-manipulation transition-colors active:bg-slate-100 dark:active:bg-slate-800"
+          aria-label={t('nav.prev')}
+          className="flex items-center gap-1.5 px-3 min-h-11 rounded-xl text-slate-500 dark:text-slate-400 disabled:opacity-25 disabled:cursor-not-allowed touch-manipulation transition-colors active:bg-slate-100 dark:active:bg-slate-800"
         >
           <ChevronLeft />
-          <span className="text-xs font-medium">{t('nav.prev_label', 'Prev')}</span>
+          <span className="text-xs font-medium">{t('nav.prev_label')}</span>
         </button>
 
         {/* Section indicator */}
@@ -168,10 +179,10 @@ export default function App() {
         <button
           onClick={next}
           disabled={isLast}
-          aria-label="Next"
-          className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-slate-500 dark:text-slate-400 disabled:opacity-25 disabled:cursor-not-allowed touch-manipulation transition-colors active:bg-slate-100 dark:active:bg-slate-800"
+          aria-label={t('nav.next')}
+          className="flex items-center gap-1.5 px-3 min-h-11 rounded-xl text-slate-500 dark:text-slate-400 disabled:opacity-25 disabled:cursor-not-allowed touch-manipulation transition-colors active:bg-slate-100 dark:active:bg-slate-800"
         >
-          <span className="text-xs font-medium">{t('nav.next_label', 'Next')}</span>
+          <span className="text-xs font-medium">{t('nav.next_label')}</span>
           <ChevronRight />
         </button>
       </div>
