@@ -1,14 +1,86 @@
 [
-  { "icon": "🤝", "name": { "en": "Teamwork",            "es": "Trabajo en equipo" } },
-  { "icon": "💬", "name": { "en": "Communication",       "es": "Comunicación" } },
-  { "icon": "🧩", "name": { "en": "Problem Solving",     "es": "Resolución de problemas" } },
-  { "icon": "🔄", "name": { "en": "Adaptability",        "es": "Adaptabilidad" } },
-  { "icon": "🚀", "name": { "en": "Proactivity",         "es": "Proactividad" } },
-  { "icon": "⏰", "name": { "en": "Time Management",     "es": "Gestión del tiempo" } },
-  { "icon": "🤔", "name": { "en": "Critical Thinking",   "es": "Pensamiento crítico" } },
-  { "icon": "📚", "name": { "en": "Continuous Learning",  "es": "Aprendizaje continuo" } },
-  { "icon": "🔍", "name": { "en": "Attention to Detail", "es": "Atención al detalle" } },
-  { "icon": "💡", "name": { "en": "Creativity",          "es": "Creatividad" } },
-  { "icon": "❤️", "name": { "en": "Empathy",             "es": "Empatía" } },
-  { "icon": "💪", "name": { "en": "Resilience",          "es": "Resiliencia" } }
+  {
+    "icon": "✦",
+    "name": {
+      "en": "Adaptability",
+      "es": "Adaptabilidad"
+    }
+  },
+  {
+    "icon": "✦",
+    "name": {
+      "en": "Attention to Detail",
+      "es": "Atención al detalle"
+    }
+  },
+  {
+    "icon": "✦",
+    "name": {
+      "en": "Communication",
+      "es": "Comunicación"
+    }
+  },
+  {
+    "icon": "✦",
+    "name": {
+      "en": "Continuous Learning",
+      "es": "Aprendizaje continuo"
+    }
+  },
+  {
+    "icon": "✦",
+    "name": {
+      "en": "Creativity",
+      "es": "Creatividad"
+    }
+  },
+  {
+    "icon": "✦",
+    "name": {
+      "en": "Critical Thinking",
+      "es": "Pensamiento crítico"
+    }
+  },
+  {
+    "icon": "✦",
+    "name": {
+      "en": "Empathy",
+      "es": "Empatía"
+    }
+  },
+  {
+    "icon": "✦",
+    "name": {
+      "en": "Proactivity",
+      "es": "Proactividad"
+    }
+  },
+  {
+    "icon": "✦",
+    "name": {
+      "en": "Problem Solving",
+      "es": "Resolución de problemas"
+    }
+  },
+  {
+    "icon": "✦",
+    "name": {
+      "en": "Resilience",
+      "es": "Resiliencia"
+    }
+  },
+  {
+    "icon": "✦",
+    "name": {
+      "en": "Teamwork",
+      "es": "Trabajo en equipo"
+    }
+  },
+  {
+    "icon": "✦",
+    "name": {
+      "en": "Time Management",
+      "es": "Gestión del tiempo"
+    }
+  }
 ]
