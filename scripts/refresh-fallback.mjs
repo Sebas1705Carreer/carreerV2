@@ -18,10 +18,11 @@ const get = async path => {
 const vite = await createServer({ server: { middlewareMode: true }, appType: 'custom', logLevel: 'error' })
 try {
   const { adaptAll } = await vite.ssrLoadModule('/src/lib/adapters.ts')
-  const [personal, softSkills, skills, jobs, projects, education, certifications] = await Promise.all(
-    ['/personal', '/soft-skills', '/skills', '/jobs', '/projects', '/education', '/certifications'].map(get),
-  )
-  const data = adaptAll({ personal, softSkills, skills, jobs, projects, education, certifications })
+  const all = await get('/all')
+  const data = adaptAll({
+    personal: all.personal, softSkills: all['soft-skills'], skills: all.skills, jobs: all.jobs,
+    projects: all.projects, education: all.education, certifications: all.certifications,
+  })
   const files = {
     personal: data.personal,
     'soft-skills': data.softSkills,

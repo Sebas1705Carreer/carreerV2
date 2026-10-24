@@ -170,9 +170,11 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     // First render already hydrated from cache; only fetch on reload() or cold start
     if (tick === 0 && readCache() !== null) return
 
-    const get = (path: string) =>
-      fetch(`${API_BASE}${path}`).then(r => {
-        if (!r.ok) throw new Error(`${path}: HTTP ${r.status}`)
+    // One request for everything (GET /all). The first load may come from the browser cache;
+    // the reload button asks the API to revalidate (an unchanged answer is an empty 304).
+    const getAll = () =>
+      fetch(`${API_BASE}/all`, tick > 0 ? { cache: 'no-cache' } : undefined).then(r => {
+        if (!r.ok) throw new Error(`/all: HTTP ${r.status}`)
         return r.json()
       })
 
@@ -184,19 +186,11 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
         return r.json()
       })
 
-    Promise.all([
-      get('/personal'),
-      get('/soft-skills'),
-      get('/skills'),
-      get('/jobs'),
-      get('/projects'),
-      get('/education'),
-      get('/certifications'),
-    ])
-      .then(([personal, softSkillsRaw, skillsRaw, jobsRaw, projectsRaw, eduRaw, certsRaw]) => {
+    getAll()
+      .then(all => {
         const loaded = adaptAll({
-          personal, softSkills: softSkillsRaw, skills: skillsRaw, jobs: jobsRaw,
-          projects: projectsRaw, education: eduRaw, certifications: certsRaw,
+          personal: all.personal, softSkills: all['soft-skills'], skills: all.skills, jobs: all.jobs,
+          projects: all.projects, education: all.education, certifications: all.certifications,
         })
         sessionStorage.setItem(CACHE_KEY, JSON.stringify(loaded))
         setData(loaded)
