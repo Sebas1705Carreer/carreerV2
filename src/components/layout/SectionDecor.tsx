@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 
 interface DecoItem {
   content: string
@@ -74,6 +74,8 @@ interface Props { sectionKey: string }
 
 export default function SectionDecor({ sectionKey }: Props) {
   const items = DECOR[sectionKey]
+  // Looping ambient motion is exactly what prefers-reduced-motion asks to stop
+  const reduceMotion = useReducedMotion()
   if (!items) return null
 
   return (
@@ -81,7 +83,7 @@ export default function SectionDecor({ sectionKey }: Props) {
       {items.map((item, i) => (
         <motion.div
           key={i}
-          animate={{ x: [0, item.floatX, 0], y: [0, item.floatY, 0] }}
+          animate={reduceMotion ? undefined : { x: [0, item.floatX, 0], y: [0, item.floatY, 0] }}
           transition={{ duration: item.duration, delay: item.delay, repeat: Infinity, ease: 'easeInOut' }}
           style={{
             position: 'absolute',
@@ -98,10 +100,11 @@ export default function SectionDecor({ sectionKey }: Props) {
             fontWeight: 700,
             color: '#4A5AF0',
           }}
-          className="dark:brightness-150"
-        >
-          {item.content}
-        </motion.div>
+          // The glyph is drawn by CSS (::before, see index.css): it is texture, not
+          // text, so it never shows up in Ctrl+F, screen readers or contrast audits.
+          className="decor-glyph dark:brightness-150"
+          data-glyph={item.content}
+        />
       ))}
     </div>
   )

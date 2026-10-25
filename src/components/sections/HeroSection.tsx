@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import type { SectionProps } from '../../types'
 import { usePortfolioData } from '../../context/PortfolioDataContext'
@@ -18,6 +18,7 @@ const item = (delay: number) => ({
 export default function HeroSection({ onNext, onOpenCV }: SectionProps) {
   const { t } = useTranslation()
   const lang = useLang()
+  const reduceMotion = useReducedMotion()
   const { personal, jobs, projects } = usePortfolioData()
   const isEs = lang === 'es'
 
@@ -87,7 +88,7 @@ export default function HeroSection({ onNext, onOpenCV }: SectionProps) {
 
       {/* Secondary: the in-browser generator (role-specific and ATS variants) */}
       {onOpenCV && (
-        <motion.p {...item(0.5)} className="-mt-5 sm:-mt-6 mb-8 sm:mb-10 text-xs sm:text-sm text-slate-400 dark:text-slate-500">
+        <motion.p {...item(0.5)} className="-mt-5 sm:-mt-6 mb-8 sm:mb-10 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
           <button
             onClick={onOpenCV}
             className="underline underline-offset-4 decoration-slate-300 dark:decoration-slate-700 hover:text-violet-600 dark:hover:text-violet-400 transition-colors cursor-pointer touch-manipulation"
@@ -105,7 +106,7 @@ export default function HeroSection({ onNext, onOpenCV }: SectionProps) {
         {stats.map(s => (
           <div key={s.label} className="text-center min-w-[48px]">
             <div className="text-xl sm:text-2xl font-extrabold text-violet-600 dark:text-violet-400 leading-none">{s.num}</div>
-            <div className="text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 mt-1 leading-tight">{s.label}</div>
+            <div className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1 leading-tight">{s.label}</div>
           </div>
         ))}
       </motion.div>
@@ -118,8 +119,8 @@ export default function HeroSection({ onNext, onOpenCV }: SectionProps) {
         className="mt-8 sm:mt-10 mx-auto flex flex-col items-center gap-2 px-4 py-2 text-slate-400 dark:text-slate-600 hover:text-violet-600 dark:hover:text-violet-400 transition-colors cursor-pointer touch-manipulation"
       >
         <span className="text-xs tracking-widest uppercase">{t('nav.explore')}</span>
-        <motion.div animate={{ y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <motion.div animate={reduceMotion ? undefined : { y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
             <path d="M7 10l5 5 5-5" />
           </svg>
         </motion.div>

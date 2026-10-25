@@ -9,7 +9,10 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "refresh-fallback": "node scripts/refresh-fallback.mjs",
-    "build-cv": "node scripts/build-cv.mjs"
+    "build-cv": "node scripts/build-cv.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.5.1",
@@ -21,7 +24,9 @@
     "react-i18next": "^17.0.8"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/vite": "^4.3.0",
     "@types/node": "^24.12.3",
     "@types/react": "^19.2.14",
@@ -34,6 +39,7 @@
     "tailwindcss": "^4.3.0",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.59.2",
-    "vite": "^8.0.12"
+    "vite": "^8.0.12",
+    "vitest": "^5.0.5"
   }
 }

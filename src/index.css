@@ -60,9 +60,45 @@ body,
   border-radius: 4px;
 }
 
-/* Reduced motion: kill CSS transitions/animations. (Deliberately CSS-only —
-   framer-motion's MotionConfig reducedMotion interfered with mode="wait"
-   exit completion, freezing section/tab swaps.) */
+/* Skip link: visually hidden until it receives keyboard focus, then a brand pill */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 60;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  background: var(--color-violet-600);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transform: translateY(-200%);
+  opacity: 0;
+}
+.skip-link:focus-visible {
+  transform: none;
+  opacity: 1;
+  outline-color: #fff;
+}
+
+/* Ambient section glyphs (SectionDecor): drawn as generated content so they are
+   texture rather than text — invisible to Ctrl+F, assistive tech and contrast audits. */
+.decor-glyph::before {
+  content: attr(data-glyph);
+}
+
+/* Print: the single-page view (`?view=all`) is the printable one — let the
+   document flow instead of the viewport-locked scroll container. */
+@media print {
+  html, body, #root { height: auto; overflow: visible; }
+  #main-content[data-view="all"] { position: static; overflow: visible; height: auto; padding: 0; }
+}
+
+/* Reduced motion: kill CSS transitions/animations. framer-motion animations are
+   JS-driven, so this does not reach them: the deck slide, the nav dots and the
+   floating glyphs check useReducedMotion() themselves. (MotionConfig
+   reducedMotion was avoided on purpose — it interfered with mode="wait" exit
+   completion, freezing section/tab swaps.) */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

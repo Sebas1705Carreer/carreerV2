@@ -12,6 +12,11 @@
     "prev": "Previous section",
     "next": "Next section",
     "home": "Go to start",
-    "explore": "Explore"
+    "explore": "Explore",
+    "skip": "Skip to content",
+    "sections": "Sections",
+    "view_all": "View as a single page",
+    "view_deck": "View as slides",
+    "toggle_theme": "Toggle dark mode"
   }
 }
