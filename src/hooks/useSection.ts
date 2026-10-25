@@ -1,15 +1,34 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 
+// ── Pure routing helpers (unit-tested in useSection.test.ts) ──────────────────
+
+/** Maps a location hash ('#projects' or 'projects') to a section index; unknown → 0 (hero). */
+export function sectionIndexFromHash(hash: string, sectionKeys: readonly string[]): number {
+  const key = hash.startsWith('#') ? hash.slice(1) : hash
+  const i = sectionKeys.indexOf(key)
+  return i >= 0 ? i : 0
+}
+
+/** URL to push for a section: the hero keeps a clean URL, the rest use a hash deep link. */
+export function sectionUrl(index: number, sectionKeys: readonly string[], pathname: string, search = ''): string {
+  return index === 0 ? pathname + search : `#${sectionKeys[index]}`
+}
+
+/** Clamps a relative step (+1 / -1) to the deck bounds. */
+export function stepIndex(current: number, delta: number, total: number): number {
+  return Math.min(Math.max(current + delta, 0), total - 1)
+}
+
 /**
  * Slide-deck section state with hash deep links: #projects opens the projects
  * section directly, navigation pushes history entries so browser back/forward
  * walk the deck, and the hero keeps a clean URL (no hash).
+ *
+ * `enabled = false` (single-page view) keeps the state but detaches the global
+ * key / wheel / swipe / popstate handlers, so the document scrolls natively.
  */
-export function useSection(sectionKeys: readonly string[]) {
-  const initial = () => {
-    const i = sectionKeys.indexOf(window.location.hash.slice(1))
-    return i >= 0 ? i : 0
-  }
+export function useSection(sectionKeys: readonly string[], enabled = true) {
+  const initial = () => sectionIndexFromHash(window.location.hash, sectionKeys)
   const [current, setCurrent] = useState(initial)
   const [direction, setDirection] = useState(1)
   const locked = useRef(false)
@@ -21,12 +40,7 @@ export function useSection(sectionKeys: readonly string[]) {
       if (index === currentRef.current) return
       setDirection(index > currentRef.current ? 1 : -1)
       setCurrent(index)
-      if (push) {
-        const url = index === 0
-          ? window.location.pathname + window.location.search
-          : `#${sectionKeys[index]}`
-        history.pushState(null, '', url)
-      }
+      if (push) history.pushState(null, '', sectionUrl(index, sectionKeys, window.location.pathname, window.location.search))
     },
     [sectionKeys],
   )
@@ -41,20 +55,19 @@ export function useSection(sectionKeys: readonly string[]) {
     [go],
   )
 
-  const next = useCallback(() => navigate(Math.min(currentRef.current + 1, sectionKeys.length - 1)), [navigate, sectionKeys])
-  const prev = useCallback(() => navigate(Math.max(currentRef.current - 1, 0)), [navigate])
+  const next = useCallback(() => navigate(stepIndex(currentRef.current, 1, sectionKeys.length)), [navigate, sectionKeys])
+  const prev = useCallback(() => navigate(stepIndex(currentRef.current, -1, sectionKeys.length)), [navigate, sectionKeys])
 
   // Browser back/forward (and manual hash edits) drive the deck
   useEffect(() => {
-    const onPop = () => {
-      const i = sectionKeys.indexOf(window.location.hash.slice(1))
-      go(i >= 0 ? i : 0, false)
-    }
+    if (!enabled) return
+    const onPop = () => go(sectionIndexFromHash(window.location.hash, sectionKeys), false)
     window.addEventListener('popstate', onPop)
     return () => window.removeEventListener('popstate', onPop)
-  }, [go, sectionKeys])
+  }, [go, sectionKeys, enabled])
 
   useEffect(() => {
+    if (!enabled) return
     const onKey = (e: KeyboardEvent) => {
       if (document.querySelector('[data-modal]')) return
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next()
@@ -62,9 +75,10 @@ export function useSection(sectionKeys: readonly string[]) {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [next, prev])
+  }, [next, prev, enabled])
 
   useEffect(() => {
+    if (!enabled) return
     const onWheel = (e: WheelEvent) => {
       if (Math.abs(e.deltaY) < 30) return
       if (document.querySelector('[data-modal]')) return
@@ -79,9 +93,10 @@ export function useSection(sectionKeys: readonly string[]) {
     }
     window.addEventListener('wheel', onWheel, { passive: true })
     return () => window.removeEventListener('wheel', onWheel)
-  }, [next, prev])
+  }, [next, prev, enabled])
 
   useEffect(() => {
+    if (!enabled) return
     let startX = 0
     let startY = 0
     const onTouchStart = (e: TouchEvent) => {
@@ -103,7 +118,7 @@ export function useSection(sectionKeys: readonly string[]) {
       window.removeEventListener('touchstart', onTouchStart)
       window.removeEventListener('touchend', onTouchEnd)
     }
-  }, [next, prev])
+  }, [next, prev, enabled])
 
   return { current, direction, navigate, next, prev }
 }

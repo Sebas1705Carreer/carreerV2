@@ -12,6 +12,11 @@
     "prev": "Sección anterior",
     "next": "Sección siguiente",
     "home": "Ir al inicio",
-    "explore": "Explorar"
+    "explore": "Explorar",
+    "skip": "Saltar al contenido",
+    "sections": "Secciones",
+    "view_all": "Ver como una sola página",
+    "view_deck": "Ver como diapositivas",
+    "toggle_theme": "Cambiar modo oscuro"
   }
 }

@@ -92,8 +92,19 @@ npm run dev      # Dev server with hot reload
 npm run build    # Production build
 npm run preview  # Preview production build locally
 npm run lint     # ESLint
+npm test         # Vitest unit tests (adapters, localize, section routing, language pick, static snapshot)
+npm run test:e2e # Playwright smoke + axe accessibility checks against `vite preview` of the built site
 npm run build-cv # Render public/cv/cv-{en,es}.pdf from the API (fallback: public/data)
 ```
+
+First e2e run: `npm run build && npx playwright install chromium`. The e2e suite serves `dist/` with the same `VITE_BASE_PATH` the build used (unset locally, `/carreerV2/` in CI).
+
+### Accessibility
+
+- `<main>` landmark with a skip link, `aria-current` on the section nav, and an `aria-live` region announcing the section that comes into view.
+- `prefers-reduced-motion`: the slide transition, nav dots and ambient glyphs switch to instant/static (framer-motion `useReducedMotion`), CSS transitions are disabled in `index.css`.
+- **Single-page view** (`?view=all`, toggle in the top-right controls): every section stacked in a normal scrolling document for Ctrl+F, screen-reader reading order and printing.
+- Every CI run executes axe-core (WCAG 2.1 A/AA) on both views and fails on serious/critical violations.
 
 ---
 
@@ -112,8 +123,8 @@ Set in `.env` for local development or as CI secrets for production.
 
 Runs on every push to `main`:
 
-1. **build** - `npm ci` + `npm run lint` + `npm run build` (with `VITE_BASE_PATH=/carreerV2/`): type-check, render `public/cv/*.pdf` from the API, Vite build
-2. **deploy** - GitHub Pages
+1. **build** - `npm ci` + `npm run lint` + `npm test` + `npm run build` (with `VITE_BASE_PATH=/carreerV2/`): type-check, render `public/cv/*.pdf` from the API, Vite build; then `npm run test:e2e` (Playwright Chromium, cached per version) against the built site
+2. **deploy** - GitHub Pages (push to `main` only; pull requests run the build job alone)
 
 ---
 

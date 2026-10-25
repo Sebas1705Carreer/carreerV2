@@ -18,8 +18,14 @@ export const PILLARS: RawPillar[] = [
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ml = (en: any, es: any): ML => ({ en: en ?? '', es: es ?? '' })
+/** Accepts a JSON-encoded array or a plain array; anything else (undefined, bad JSON, objects) → [] */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const parse = (v: any) => { try { return typeof v === 'string' ? JSON.parse(v) : v } catch { return [] } }
+const parse = (v: any): any[] => {
+  try {
+    const out = typeof v === 'string' ? JSON.parse(v) : v
+    return Array.isArray(out) ? out : []
+  } catch { return [] }
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function adaptPersonal(raw: any): RawPersonal {
