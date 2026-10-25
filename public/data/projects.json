@@ -253,20 +253,20 @@
       "name": "Local VPS Orchestrator",
       "context": "academic",
       "desc": {
-        "en": "REST API to orchestrate VPS resources with RBAC and 555 automated tests.",
-        "es": "API REST para orquestar recursos VPS con RBAC y 555 tests."
+        "en": "Self-hosted REST API to orchestrate VPS resources with RBAC, AES-256-GCM encryption and 555 automated tests.",
+        "es": "API REST autoalojada para orquestar recursos de un VPS con RBAC, cifrado AES-256-GCM y 555 tests automáticos."
       },
       "long_desc": {
-        "en": "Built for the AI Development Master's. A Node.js + Express + TypeScript REST API (v1.0.3, 106 commits) that monitors CPU, memory and disk metrics, manages Docker containers and schedules automated tasks. Features RBAC, AES encryption, audit logging, distributed tracing, and 555 automated tests across 23 suites. Persists data in MongoDB and is fully containerised with Docker Compose or deployable as a systemd service.",
-        "es": "Desarrollado para el Máster en Desarrollo con IA. API REST en Node.js + Express + TypeScript (v1.0.3, 106 commits) que monitoriza métricas de CPU, memoria y disco, gestiona contenedores Docker y programa tareas automatizadas. Incluye RBAC, cifrado AES, auditoría, trazabilidad distribuida y 555 tests en 23 suites. Persiste datos en MongoDB y está completamente contenedorizado con Docker Compose o desplegable como servicio systemd."
+        "en": "Built for the AI Development Master's. A self-hosted REST API in Node.js + Express 5 + TypeScript (v1.2.0, 27 route modules, one per feature domain) that monitors CPU, memory and disk metrics, manages Docker containers and systemd services, runs queries and migrations on databases and schedules automated tasks. Features role-based access control, AES-256-GCM encryption, audit logging and distributed tracing, with 555 automated tests across 23 suites (Jest + Supertest). Fully containerised with Docker Compose or deployable as a systemd service.",
+        "es": "Desarrollado para el Máster en Desarrollo con IA. API REST autoalojada en Node.js + Express 5 + TypeScript (v1.2.0, 27 módulos de rutas, uno por dominio funcional) que monitoriza métricas de CPU, memoria y disco, gestiona contenedores Docker y servicios systemd, ejecuta consultas y migraciones en bases de datos y programa tareas automatizadas. Incluye control de acceso por roles, cifrado AES-256-GCM, auditoría y trazabilidad distribuida, con 555 tests automáticos en 23 suites (Jest + Supertest). Completamente contenedorizada con Docker Compose o desplegable como servicio systemd."
       },
       "tags": [
         "Node.js",
         "Express",
         "TypeScript",
         "Docker",
-        "MongoDB",
-        "RBAC"
+        "RBAC",
+        "Jest"
       ],
       "github": "https://github.com/Sebas1705/VPSLocalOrchestrator",
       "demo": null
@@ -276,12 +276,12 @@
       "name": "Personal Portfolio v1",
       "context": "personal",
       "desc": {
-        "en": "Previous portfolio: Astro + Clean Architecture, 14 locales.",
-        "es": "Portafolio anterior: Astro + Arquitectura Limpia, 14 idiomas."
+        "en": "Previous portfolio: Astro + Clean Architecture, 10 languages.",
+        "es": "Portfolio anterior: Astro + Arquitectura Limpia, 10 idiomas."
       },
       "long_desc": {
-        "en": "Multi-language Astro website (14 locales) built with Clean Architecture (Domain, Application, Infrastructure, Presentation layers). Deployed on a self-hosted VPS with Docker Compose and Nginx Proxy Manager. Features WCAG accessibility compliance, 100% Vitest unit coverage and 91.66% branch coverage, automated Playwright e2e tests, and CI/CD with auto-deploy on push.",
-        "es": "Web Astro multiidioma (14 idiomas) construida con Arquitectura Limpia (capas Domain, Application, Infrastructure, Presentation). Desplegada en VPS propio con Docker Compose y Nginx Proxy Manager. WCAG accesible, 100% cobertura unitaria con Vitest y 91.66% de ramas, tests e2e automáticos con Playwright y CI/CD con despliegue automático."
+        "en": "Multi-language Astro website (10 languages: ES, EN, FR, DE, IT, PT, NL, PL, RU and JA) built with Clean Architecture (Domain, Application, Infrastructure and Presentation layers), reading the career API at build time. It is served from GitHub Pages, with CI that type-checks, runs the unit tests and the Playwright end-to-end tests before every deploy; it used to run on a self-hosted VPS with Docker Compose and Nginx Proxy Manager. WCAG accessibility compliance, 100% Vitest unit coverage and 91.66% branch coverage.",
+        "es": "Web Astro multiidioma (10 idiomas: ES, EN, FR, DE, IT, PT, NL, PL, RU y JA) construida con Arquitectura Limpia (capas Domain, Application, Infrastructure y Presentation), que lee la API de carrera al compilar. Se sirve desde GitHub Pages, con una CI que comprueba tipos y ejecuta los tests unitarios y los e2e con Playwright antes de cada despliegue; antes corría en un VPS propio con Docker Compose y Nginx Proxy Manager. Accesibilidad WCAG, 100% de cobertura unitaria con Vitest y 91.66% de ramas."
       },
       "tags": [
         "Astro",
@@ -292,28 +292,27 @@
         "Playwright"
       ],
       "github": "https://github.com/Sebas1705Carreer/carreerV1",
-      "demo": null
+      "demo": "https://sebas1705carreer.github.io/carreerV1/"
     },
     {
       "id": "codewars",
       "name": "Codewars Katas",
       "context": "personal",
       "desc": {
-        "en": "Codewars katas in multiple languages.",
-        "es": "Katas de Codewars en múltiples lenguajes."
+        "en": "17 Codewars katas solved in 6 languages: same problem, different idioms.",
+        "es": "17 katas de Codewars resueltos en 6 lenguajes: mismo problema, distintos idiomas."
       },
       "long_desc": {
-        "en": "Ongoing personal repo focused on sharpening algorithmic thinking. Covers sorting, dynamic programming, graph traversal, string manipulation and more across Kotlin, C#, Java, JavaScript, Python, Bash and TypeScript.",
-        "es": "Repositorio personal en curso centrado en agudizar el pensamiento algorítmico. Cubre ordenación, programación dinámica, recorrido de grafos, manipulación de cadenas y más en Kotlin, C#, Java, JavaScript, Python, Bash y TypeScript."
+        "en": "Personal repo to sharpen algorithmic thinking: 17 katas, from 4-kyu to 7-kyu, each one solved in the same six languages (C, Java, Kotlin, JavaScript, TypeScript and Python) with the same structure and tests, to see how every language expresses the same algorithm. Topics include string arithmetic, dynamic programming, recursion and linear algebra, tree traversal and bit manipulation.",
+        "es": "Repositorio personal para agudizar el pensamiento algorítmico: 17 katas, de 4-kyu a 7-kyu, cada uno resuelto en los mismos seis lenguajes (C, Java, Kotlin, JavaScript, TypeScript y Python) con la misma estructura y tests, para ver cómo cada lenguaje expresa el mismo algoritmo. Incluye aritmética con cadenas, programación dinámica, recursión y álgebra lineal, recorrido de árboles y manipulación de bits."
       },
       "tags": [
-        "Kotlin",
-        "C#",
+        "C",
         "Java",
+        "Kotlin",
         "JavaScript",
-        "Python",
-        "Bash",
-        "TypeScript"
+        "TypeScript",
+        "Python"
       ],
       "github": "https://github.com/Sebas1705/Codewars",
       "demo": null
@@ -362,7 +361,7 @@
         "Ktor"
       ],
       "github": "https://github.com/Sebas1705Carreer",
-      "demo": null
+      "demo": "https://sebas1705carreer.github.io/carreerV2/"
     },
     {
       "id": "kmp-native-base",

@@ -1020,5 +1020,75 @@
     "iconUrl": null,
     "level": 1,
     "category": "tools"
+  },
+  {
+    "id": "kotlin-coroutines",
+    "name": "Kotlin Coroutines",
+    "iconUrl": null,
+    "level": 3,
+    "category": "frameworks"
+  },
+  {
+    "id": "kotlinx-serialization",
+    "name": "kotlinx.serialization",
+    "iconUrl": null,
+    "level": 3,
+    "category": "frameworks"
+  },
+  {
+    "id": "navigation-3",
+    "name": "Navigation 3",
+    "iconUrl": null,
+    "level": 2,
+    "category": "frameworks"
+  },
+  {
+    "id": "room",
+    "name": "Room",
+    "iconUrl": null,
+    "level": 2,
+    "category": "databases"
+  },
+  {
+    "id": "retrofit",
+    "name": "Retrofit",
+    "iconUrl": null,
+    "level": 2,
+    "category": "frameworks"
+  },
+  {
+    "id": "coil",
+    "name": "Coil",
+    "iconUrl": null,
+    "level": 2,
+    "category": "frameworks"
+  },
+  {
+    "id": "datastore",
+    "name": "DataStore",
+    "iconUrl": null,
+    "level": 2,
+    "category": "frameworks"
+  },
+  {
+    "id": "firebase-crashlytics",
+    "name": "Firebase Crashlytics",
+    "iconUrl": null,
+    "level": 2,
+    "category": "tools"
+  },
+  {
+    "id": "leakcanary",
+    "name": "LeakCanary",
+    "iconUrl": null,
+    "level": 2,
+    "category": "tools"
+  },
+  {
+    "id": "junit",
+    "name": "JUnit",
+    "iconUrl": null,
+    "level": 2,
+    "category": "tools"
   }
 ]
