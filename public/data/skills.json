@@ -999,5 +999,26 @@
     "iconUrl": null,
     "level": 1,
     "category": "ai"
+  },
+  {
+    "id": "sqldelight",
+    "name": "SQLDelight",
+    "iconUrl": null,
+    "level": 2,
+    "category": "databases"
+  },
+  {
+    "id": "koin",
+    "name": "Koin",
+    "iconUrl": null,
+    "level": 2,
+    "category": "frameworks"
+  },
+  {
+    "id": "esp32",
+    "name": "ESP32",
+    "iconUrl": null,
+    "level": 1,
+    "category": "tools"
   }
 ]
