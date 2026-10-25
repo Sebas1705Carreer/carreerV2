@@ -864,7 +864,7 @@
     "id": "cloudflare",
     "name": "Cloudflare",
     "iconUrl": "https://img.icons8.com/color/100/cloudflare.png",
-    "level": 1,
+    "level": 3,
     "category": "cloud"
   },
   {
