@@ -12,7 +12,9 @@ Personal portfolio v2 built with **React 19**, **TypeScript**, **Vite**, and **T
 - **Tailwind CSS v4** - Utility-first styling with zero config
 - **Framer Motion** - Smooth section animations
 - **i18next** - Internationalization with browser language detection
-- **PDF CV generator** - Export your CV as a PDF directly from the browser (react-pdf)
+- **CV PDF** - Static `cv/cv-en.pdf` and `cv/cv-es.pdf` rendered at build time (`scripts/build-cv.mjs`) from the same react-pdf document as the in-browser generator
+- **PDF CV generator** - Role-specific and ATS variants exported directly from the browser (react-pdf)
+- **SEO** - robots.txt, sitemap.xml, JSON-LD Person schema and a static HTML snapshot of the main sections injected at build time (`scripts/static-snapshot.ts`)
 - **Live API data** - All content loaded from career-api at runtime
 - **CI/CD** - GitHub Actions build + GitHub Pages deploy
 
@@ -29,7 +31,7 @@ Personal portfolio v2 built with **React 19**, **TypeScript**, **Vite**, and **T
 | Animations | Framer Motion |
 | i18n | i18next + react-i18next |
 | PDF export | @react-pdf/renderer |
-| Data source | career-api (Cloudflare Workers + D1) |
+| Data source | career-api (Cloudflare Workers + KV) |
 | Hosting | GitHub Pages |
 
 ---
@@ -45,7 +47,10 @@ carreerV2/
       projects.json
       skills.json
       soft-skills.json
-      education.json
+      education.json       # items + certifications
+    cv/                    # cv-en.pdf, cv-es.pdf (generated, git-ignored)
+    robots.txt
+    sitemap.xml
     favicon.svg
     icons.svg
   src/
@@ -57,7 +62,12 @@ carreerV2/
                            #   EducationSection, ProjectsSection, SkillsSection,
                            #   ContactSection
       ui/                  # Reusable cards and modals (JobCard, ProjectCard ...)
-      CVGenerator.tsx      # PDF CV generator (react-pdf)
+      cv/                  # CVDocument.tsx (react-pdf documents), profiles.ts (role profiles)
+      CVGenerator.tsx      # In-browser PDF CV generator modal
+  scripts/
+    build-cv.mjs           # Static CV PDFs (runs inside `npm run build`)
+    static-snapshot.ts     # Vite plugin: crawlable HTML snapshot in index.html
+    refresh-fallback.mjs   # Regenerates public/data/*.json from the API
   .github/workflows/
     deploy.yml             # Build + GitHub Pages deploy
 ```
@@ -82,6 +92,7 @@ npm run dev      # Dev server with hot reload
 npm run build    # Production build
 npm run preview  # Preview production build locally
 npm run lint     # ESLint
+npm run build-cv # Render public/cv/cv-{en,es}.pdf from the API (fallback: public/data)
 ```
 
 ---
@@ -101,7 +112,7 @@ Set in `.env` for local development or as CI secrets for production.
 
 Runs on every push to `main`:
 
-1. **build** - `npm ci` + `npm run build` (with `VITE_BASE_PATH=/carreerV2/`)
+1. **build** - `npm ci` + `npm run lint` + `npm run build` (with `VITE_BASE_PATH=/carreerV2/`): type-check, render `public/cv/*.pdf` from the API, Vite build
 2. **deploy** - GitHub Pages
 
 ---

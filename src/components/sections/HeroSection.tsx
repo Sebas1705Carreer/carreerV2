@@ -70,21 +70,32 @@ export default function HeroSection({ onNext, onOpenCV }: SectionProps) {
         >
           {t('hero.cta_contact')}
         </a>
-        {/* Abre el generador de CV (el cv_url estático de la API apuntaba a un PDF inexistente → 404) */}
-        {onOpenCV && (
+        {/* Static PDF rendered at build time by scripts/build-cv.mjs (same document as the generator) */}
+        <a
+          href={`${import.meta.env.BASE_URL}cv/cv-${lang}.pdf`}
+          download={`CV_Sebastian_Entrerrios_${lang.toUpperCase()}.pdf`}
+          className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 border border-violet-300 dark:border-violet-700 text-violet-600 dark:text-violet-400 rounded-full font-semibold hover:bg-violet-50 dark:hover:bg-violet-950/40 transition-all duration-200 hover:scale-105 active:scale-95 text-sm sm:text-base touch-manipulation cursor-pointer"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          {isEs ? 'Descargar CV (PDF)' : 'Download CV (PDF)'}
+        </a>
+      </motion.div>
+
+      {/* Secondary: the in-browser generator (role-specific and ATS variants) */}
+      {onOpenCV && (
+        <motion.p {...item(0.5)} className="-mt-5 sm:-mt-6 mb-8 sm:mb-10 text-xs sm:text-sm text-slate-400 dark:text-slate-500">
           <button
             onClick={onOpenCV}
-            className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 border border-violet-300 dark:border-violet-700 text-violet-600 dark:text-violet-400 rounded-full font-semibold hover:bg-violet-50 dark:hover:bg-violet-950/40 transition-all duration-200 hover:scale-105 active:scale-95 text-sm sm:text-base touch-manipulation cursor-pointer"
+            className="underline underline-offset-4 decoration-slate-300 dark:decoration-slate-700 hover:text-violet-600 dark:hover:text-violet-400 transition-colors cursor-pointer touch-manipulation"
           >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            {isEs ? 'Descargar CV' : 'Download CV'}
+            {isEs ? 'Otras versiones del CV (por rol, ATS)' : 'Other CV versions (by role, ATS)'}
           </button>
-        )}
-      </motion.div>
+        </motion.p>
+      )}
 
       {/* Stats bar */}
       <motion.div

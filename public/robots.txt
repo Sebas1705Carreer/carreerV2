@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sebas1705carreer.github.io/carreerV2/sitemap.xml

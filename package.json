@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && node scripts/build-cv.mjs && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "refresh-fallback": "node scripts/refresh-fallback.mjs"
+    "refresh-fallback": "node scripts/refresh-fallback.mjs",
+    "build-cv": "node scripts/build-cv.mjs"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.5.1",
