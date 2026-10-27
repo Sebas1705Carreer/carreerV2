@@ -34,7 +34,7 @@ export default function HeroSection({ onNext, onOpenCV }: SectionProps) {
     { num: `${years}+`, label: isEs ? 'años exp.' : 'years exp.' },
     { num: String(playApps), label: isEs ? 'apps Play Store' : 'Play Store apps' },
     { num: allProjects.length ? String(allProjects.length) : '20', label: isEs ? 'proyectos' : 'projects' },
-    { num: '90%', label: isEs ? 'cobertura tests' : 'test coverage' },
+    { num: String(allProjects.filter(p => p.github).length), label: isEs ? 'repos públicos' : 'public repos' },
   ]
 
   return (
@@ -59,30 +59,30 @@ export default function HeroSection({ onNext, onOpenCV }: SectionProps) {
       </motion.p>
 
       <motion.div {...item(0.45)} className="flex flex-wrap gap-3 sm:gap-4 justify-center mb-8 sm:mb-10">
-        <button
-          onClick={onNext}
-          className="px-6 sm:px-8 py-3 sm:py-3.5 bg-violet-600 hover:bg-violet-700 text-white rounded-full font-semibold transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg shadow-violet-500/30 cursor-pointer text-sm sm:text-base touch-manipulation"
-        >
-          {t('hero.cta_work')}
-        </button>
-        <a
-          href={`mailto:${personal.email}`}
-          className="px-6 sm:px-8 py-3 sm:py-3.5 border border-slate-200 dark:border-slate-700 rounded-full font-semibold hover:border-violet-400 dark:hover:border-violet-500 hover:text-violet-600 dark:hover:text-violet-400 transition-all duration-200 hover:scale-105 active:scale-95 text-sm sm:text-base touch-manipulation"
-        >
-          {t('hero.cta_contact')}
-        </a>
-        {/* Static PDF rendered at build time by scripts/build-cv.mjs (same document as the generator) */}
+        {/* Primary: the static PDF rendered at build time by scripts/build-cv.mjs (same document as the generator) */}
         <a
           href={`${import.meta.env.BASE_URL}cv/cv-${lang}.pdf`}
           download={`CV_Sebastian_Entrerrios_${lang.toUpperCase()}.pdf`}
-          className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 border border-violet-300 dark:border-violet-700 text-violet-600 dark:text-violet-400 rounded-full font-semibold hover:bg-violet-50 dark:hover:bg-violet-950/40 transition-all duration-200 hover:scale-105 active:scale-95 text-sm sm:text-base touch-manipulation cursor-pointer"
+          className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 bg-violet-600 hover:bg-violet-700 text-white rounded-full font-semibold transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg shadow-violet-500/30 text-sm sm:text-base touch-manipulation cursor-pointer"
         >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
             <polyline points="7 10 12 15 17 10" />
             <line x1="12" y1="15" x2="12" y2="3" />
           </svg>
           {isEs ? 'Descargar CV (PDF)' : 'Download CV (PDF)'}
+        </a>
+        <button
+          onClick={onNext}
+          className="px-6 sm:px-8 py-3 sm:py-3.5 border border-violet-300 dark:border-violet-700 text-violet-700 dark:text-violet-300 rounded-full font-semibold hover:bg-violet-50 dark:hover:bg-violet-950/40 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer text-sm sm:text-base touch-manipulation"
+        >
+          {t('hero.cta_work')}
+        </button>
+        <a
+          href={`mailto:${personal.email}`}
+          className="px-6 sm:px-8 py-3 sm:py-3.5 border border-slate-200 dark:border-slate-700 rounded-full font-semibold hover:border-violet-400 dark:hover:border-violet-500 hover:text-violet-700 dark:hover:text-violet-300 transition-all duration-200 hover:scale-105 active:scale-95 text-sm sm:text-base touch-manipulation"
+        >
+          {t('hero.cta_contact')}
         </a>
       </motion.div>
 

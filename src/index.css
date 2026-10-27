@@ -106,3 +106,66 @@ body,
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Case-study Markdown (sanitised HTML from src/lib/markdown.ts): a compact reading measure in the
+   site's own type — Space Grotesk headings, Inter body, JetBrains Mono for code. */
+.case-study {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--color-slate-700);
+  max-width: 68ch;
+}
+.dark .case-study { color: var(--color-slate-300); }
+.case-study > * + * { margin-top: 0.9em; }
+.case-study h1, .case-study h2, .case-study h3, .case-study h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--color-slate-900);
+  margin-top: 1.6em;
+}
+.dark .case-study :is(h1, h2, h3, h4) { color: #fff; }
+.case-study h1 { font-size: 1.5rem; }
+.case-study h2 { font-size: 1.25rem; }
+.case-study h3 { font-size: 1.05rem; }
+.case-study h4 { font-size: 0.95rem; }
+.case-study > :first-child { margin-top: 0; }
+.case-study a { color: var(--color-violet-700); text-decoration: underline; text-underline-offset: 3px; }
+.dark .case-study a { color: var(--color-violet-300); }
+.case-study ul, .case-study ol { padding-left: 1.25rem; }
+.case-study ul { list-style: disc; }
+.case-study ol { list-style: decimal; }
+.case-study li + li { margin-top: 0.3em; }
+.case-study li::marker { color: var(--color-violet-500); }
+.case-study strong { color: var(--color-slate-900); font-weight: 600; }
+.dark .case-study strong { color: #fff; }
+.case-study code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: var(--color-slate-100);
+}
+.dark .case-study code { background: var(--color-slate-800); }
+.case-study pre {
+  font-size: 0.8125rem;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  overflow-x: auto;
+  background: var(--color-slate-100);
+}
+.dark .case-study pre { background: var(--color-slate-800); }
+.case-study pre code { padding: 0; background: none; }
+.case-study blockquote {
+  border-left: 3px solid var(--color-violet-400);
+  padding-left: 1rem;
+  color: var(--color-slate-600);
+}
+.dark .case-study blockquote { color: var(--color-slate-400); }
+.case-study img { max-width: 100%; height: auto; border-radius: 10px; }
+.case-study hr { border: 0; border-top: 1px solid var(--color-slate-200); }
+.dark .case-study hr { border-top-color: var(--color-slate-800); }
+.case-study table { width: 100%; border-collapse: collapse; font-size: 0.875rem; display: block; overflow-x: auto; }
+.case-study th, .case-study td { border: 1px solid var(--color-slate-200); padding: 0.4rem 0.6rem; text-align: left; }
+.dark .case-study :is(th, td) { border-color: var(--color-slate-700); }

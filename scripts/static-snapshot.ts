@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import type { Plugin } from 'vite'
-import { PROJECT_IMAGE_HEIGHT, PROJECT_IMAGE_WIDTH, safeImageUrl } from '../src/lib/projectImage'
+import { ASSET_FILES, BANNER_HEIGHT, BANNER_WIDTH, assetRepo, assetUrl, MANIFEST_ELEMENT_ID, resolveBanner, type AssetManifest } from '../src/lib/projectAssets'
+
 
 /*
  * Vite plugin: injects a static, crawlable HTML snapshot of the main sections
@@ -21,20 +22,65 @@ export type SnapshotProject = {
   imageUrl?: string | null; imageAlt?: ML | null
 }
 
-/** Lazy, size-reserved cover image; empty when the project has none */
-export const projectImage = (p: SnapshotProject) => {
-  const src = safeImageUrl(p.imageUrl)
-  if (!src) return ''
-  const alt = loc(p.imageAlt ?? undefined).trim() || p.name
-  return `<img src="${esc(src)}" alt="${esc(alt)}" width="${PROJECT_IMAGE_WIDTH}" height="${PROJECT_IMAGE_HEIGHT}" loading="lazy" decoding="async" style="display:block;max-width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;margin:.25rem 0">`
+/** The static HTML only shows repo banners the build confirmed: an unchecked repo counts as missing */
+const confirmedOnly = (manifest: AssetManifest, p: SnapshotProject): AssetManifest => {
+  const repo = assetRepo(p.github)
+  return repo && !manifest[repo] ? { ...manifest, [repo]: [] } : manifest
 }
 
-export const projectItem = (p: SnapshotProject) => {
+/**
+ * Lazy, size-reserved 2:1 banner: API image_url, else the repo's banner.png when the build-time
+ * manifest confirmed it exists; empty when the project has neither.
+ */
+export const projectImage = (p: SnapshotProject, manifest: AssetManifest = {}) => {
+  const banner = resolveBanner(p, { lang: 'en', manifest: confirmedOnly(manifest, p) })
+  if (!banner.src) return ''
+  return `<img src="${esc(banner.src)}" alt="${esc(banner.alt)}" width="${BANNER_WIDTH}" height="${BANNER_HEIGHT}" loading="lazy" decoding="async" style="display:block;max-width:100%;height:auto;aspect-ratio:2/1;object-fit:cover;margin:.25rem 0">`
+}
+
+// ── Build-time asset manifest ────────────────────────────────────────────────
+
+type Fetch = typeof fetch
+
+/** HEAD one URL: true (2xx), false (404/410), null (anything else: timeout, network, 5xx, 429) */
+async function head(url: string, fetchFn: Fetch, timeoutMs: number): Promise<boolean | null> {
+  try {
+    const res = await fetchFn(url, { method: 'HEAD', signal: AbortSignal.timeout(timeoutMs) })
+    if (res.ok) return true
+    if (res.status === 404 || res.status === 410) return false
+    return null
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Checks which portfolio asset files each project's repo has. A repo whose checks were not all
+ * conclusive is left out (the runtime then treats it as unknown and tries optimistically).
+ */
+export async function checkAssets(
+  projects: Array<{ github: string | null }>,
+  { fetchFn = fetch, timeoutMs = 4000 }: { fetchFn?: Fetch; timeoutMs?: number } = {},
+): Promise<AssetManifest> {
+  const repos = [...new Set(projects.map(p => assetRepo(p.github)).filter((r): r is string => !!r))]
+  const entries = await Promise.all(repos.map(async repo => {
+    const results = await Promise.all(ASSET_FILES.map(f => head(assetUrl(repo, f), fetchFn, timeoutMs)))
+    if (results.some(r => r === null)) return null
+    return [repo, ASSET_FILES.filter((_, i) => results[i])] as const
+  }))
+  return Object.fromEntries(entries.filter((e): e is NonNullable<typeof e> => !!e))
+}
+
+/** Inline JSON for index.html; `<` is escaped so the payload can never close the script element */
+export const manifestScript = (manifest: AssetManifest) =>
+  `<script type="application/json" id="${MANIFEST_ELEMENT_ID}">${JSON.stringify(manifest).replace(/</g, '\\u003c')}</script>`
+
+export const projectItem = (p: SnapshotProject, manifest: AssetManifest = {}) => {
   const links = [p.github && link(p.github, 'GitHub'), p.demo && link(p.demo, 'Demo')].filter(Boolean).join(' · ')
-  return `<li>${projectImage(p)}<strong>${esc(p.name)}</strong> — ${esc(loc(p.desc))} <em>(${esc((p.tags ?? []).slice(0, 6).join(', '))})</em>${links ? ` ${links}` : ''}</li>`
+  return `<li>${projectImage(p, manifest)}<strong>${esc(p.name)}</strong> — ${esc(loc(p.desc))} <em>(${esc((p.tags ?? []).slice(0, 6).join(', '))})</em>${links ? ` ${links}` : ''}</li>`
 }
 
-export function buildSnapshot(base: string): string {
+export function buildSnapshot(base: string, manifest: AssetManifest = {}): string {
   const personal = read('personal')
   const jobs = read('jobs') as Array<{ role: ML; company: string; companyUrl?: string; period: ML; desc: ML }>
   const projects = read('projects') as { work: SnapshotProject[]; featured: SnapshotProject[] }
@@ -70,11 +116,11 @@ export function buildSnapshot(base: string): string {
     <h2>Projects</h2>
     <h3>Work</h3>
     <ul>
-      ${projects.work.map(projectItem).join('\n      ')}
+      ${projects.work.map(p => projectItem(p, manifest)).join('\n      ')}
     </ul>
     <h3>Personal &amp; academic</h3>
     <ul>
-      ${projects.featured.map(projectItem).join('\n      ')}
+      ${projects.featured.map(p => projectItem(p, manifest)).join('\n      ')}
     </ul>
   </section>
   <section id="education-static">
@@ -90,13 +136,35 @@ export function buildSnapshot(base: string): string {
 </div>`
 }
 
+/**
+ * Production builds HEAD-check every project's .github/portfolio/ files (short timeout) and inline
+ * the result as a manifest, so the site only requests assets that exist. Dev skips the checks
+ * (empty manifest: assets are tried optimistically), as does PORTFOLIO_ASSETS_CHECK=0.
+ */
 export function staticSnapshot(): Plugin {
   let base = '/'
+  let isBuild = false
+  let manifest: Promise<AssetManifest> | null = null
+  const getManifest = (): Promise<AssetManifest> => {
+    if (!isBuild || process.env.PORTFOLIO_ASSETS_CHECK === '0') return Promise.resolve({})
+    if (!manifest) {
+      const projects = read('projects') as { work: SnapshotProject[]; featured: SnapshotProject[] }
+      manifest = checkAssets([...projects.work, ...projects.featured]).then(m => {
+        const found = Object.values(m).reduce((n, files) => n + files.length, 0)
+        console.log(`[static-snapshot] portfolio assets: ${Object.keys(m).length} repos checked, ${found} files found`)
+        return m
+      })
+    }
+    return manifest
+  }
   return {
     name: 'static-snapshot',
-    configResolved(config) { base = config.base },
-    transformIndexHtml(html) {
-      return html.replace('<div id="root"></div>', `<div id="root">${buildSnapshot(base)}</div>`)
+    configResolved(config) { base = config.base; isBuild = config.command === 'build' },
+    async transformIndexHtml(html) {
+      const m = await getManifest()
+      return html
+        .replace('<div id="root"></div>', `<div id="root">${buildSnapshot(base, m)}</div>`)
+        .replace('</head>', `  ${manifestScript(m)}\n  </head>`)
     },
   }
 }
