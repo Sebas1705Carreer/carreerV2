@@ -18,12 +18,12 @@
       "es": "Híbrido"
     },
     "desc": {
-      "en": "Leading development and architectural decisions.",
-      "es": "Liderazgo técnico y de decisiones arquitectónicas."
+      "en": "Technical lead for mobile and full-stack delivery: architecture, native Android/iOS and the .NET APIs behind them.",
+      "es": "Referente técnico de entrega móvil y full-stack: arquitectura, Android/iOS nativo y las APIs .NET que los sostienen."
     },
     "long_desc": {
-      "en": "Technical lead of the mobile and full-stack side of Solusoft's client products. I own architectural decisions across AGEDI, Sisley, Iberext and EPDM — driving refactors towards clean, multimodular architecture — and lead the Transportes Chinchón programme: native Android (Kotlin/Jetpack Compose) and native iOS (Swift/SwiftUI) apps backed by ApiMovil and Wemob, internal .NET REST APIs I design and maintain. Day to day: architecture reviews, delivery planning in agile cycles and hands-on development across the stack.",
-      "es": "Referente técnico del lado móvil y full-stack de los productos de cliente de Solusoft. Llevo las decisiones de arquitectura en AGEDI, Sisley, Iberext y EPDM — impulsando refactorizaciones hacia arquitectura limpia multimodular — y lidero el programa de Transportes Chinchón: apps nativas Android (Kotlin/Jetpack Compose) e iOS (Swift/SwiftUI) sobre ApiMovil y Wemob, APIs REST .NET internas que diseño y mantengo. En el día a día: revisiones de arquitectura, planificación de entregas en ciclos ágiles y desarrollo directo en toda la pila."
+      "en": "Technical lead of the mobile and full-stack side of Solusoft's client products. I own the architectural decisions across AGEDI, Sisley, Iberext and EPDM, driving refactors towards a clean, multimodular architecture that shortens onboarding and makes features independently releasable. I lead the Transportes Chinchón programme end to end: native Android (Kotlin/Jetpack Compose) and native iOS (Swift/SwiftUI) apps shipped in feature parity on top of ApiMovil and Wemob, the internal .NET REST APIs I design and maintain. Day to day: architecture reviews, delivery planning in agile cycles and hands-on development across the stack.",
+      "es": "Referente técnico del lado móvil y full-stack de los productos de cliente de Solusoft. Llevo las decisiones de arquitectura en AGEDI, Sisley, Iberext y EPDM, impulsando refactorizaciones hacia una arquitectura limpia y multimodular que acorta el onboarding y permite publicar funcionalidades de forma independiente. Lidero de principio a fin el programa de Transportes Chinchón: apps nativas Android (Kotlin/Jetpack Compose) e iOS (Swift/SwiftUI) entregadas con paridad de funcionalidades sobre ApiMovil y Wemob, las APIs REST .NET internas que diseño y mantengo. En el día a día: revisiones de arquitectura, planificación de entregas en ciclos ágiles y desarrollo directo en toda la pila."
     },
     "projects": [
       {
@@ -57,20 +57,24 @@
     ],
     "achievements": [
       {
-        "en": "Promoted to Senior within the same team",
-        "es": "Promoción a Senior dentro del mismo equipo"
+        "en": "Promoted to Senior within the same team after 15 months; now the technical reference for 2–3 production apps and 2 internal APIs",
+        "es": "Promoción a Senior dentro del mismo equipo tras 15 meses; referente técnico de 2–3 apps en producción y 2 APIs internas"
       },
       {
-        "en": "Led architectural refactors across multiple projects",
-        "es": "Lideré refactorizaciones arquitectónicas en múltiples proyectos"
+        "en": "Led the Transportes Chinchón programme: native Android and iOS apps delivered in feature parity over a shared .NET backend (ApiMovil), my first production iOS release",
+        "es": "Lideré el programa de Transportes Chinchón: apps nativas Android e iOS entregadas con paridad de funcionalidades sobre un backend .NET compartido (ApiMovil), mi primera publicación iOS en producción"
       },
       {
-        "en": "Drove adoption of clean multimodular architecture",
-        "es": "Impulsé la arquitectura limpia y multimodular"
+        "en": "Designed and maintain ApiMovil and the Wemob .NET REST APIs, the single backend shared by web and both native mobile clients",
+        "es": "Diseño y mantengo ApiMovil y la API REST .NET de Wemob, el backend único compartido por la web y ambos clientes móviles nativos"
       },
       {
-        "en": "Continued full ownership of EPDM and Iberext lifecycle",
-        "es": "Ownership completo de EPDM e Iberext"
+        "en": "Drove the migration of AGEDI, Sisley, Iberext and EPDM towards clean multimodular architecture, enabling a bi-weekly release cadence",
+        "es": "Impulsé la migración de AGEDI, Sisley, Iberext y EPDM hacia arquitectura limpia multimodular, habilitando una cadencia de publicación quincenal"
+      },
+      {
+        "en": "Established architecture reviews and delivery planning for the mobile team",
+        "es": "Establecí revisiones de arquitectura y planificación de entregas para el equipo móvil"
       }
     ]
   },
@@ -93,12 +97,12 @@
       "es": "Híbrido"
     },
     "desc": {
-      "en": "Development and maintenance following agile methodologies.",
-      "es": "Desarrollo y mantenimiento siguiendo metodologías ágiles."
+      "en": "Shipped two Android apps from zero to production (EPDM on Google Play, Iberext in the field) while maintaining the .NET platforms.",
+      "es": "Llevé dos apps Android de cero a producción (EPDM en Google Play, Iberext en campo) mientras mantenía las plataformas .NET."
     },
     "long_desc": {
-      "en": "Development and maintenance across Solusoft's product portfolio following agile methodologies. Built the EPDM Music Portal Android app from scratch (Kotlin, Jetpack Compose, Firebase) and published it on Google Play; built the Iberext fire-prevention app from scratch, migrating a legacy Windows tablet application to native Android; full-stack maintenance of AGEDI and Sisley (C#/.NET, SQL Server, Azure).",
-      "es": "Desarrollo y mantenimiento del porfolio de productos de Solusoft siguiendo metodologías ágiles. Construí desde cero la app Android EPDM Portal Musical (Kotlin, Jetpack Compose, Firebase) y la publiqué en Google Play; desarrollé desde cero la app de prevención de incendios Iberext, migrando una aplicación legacy de tablet Windows a Android nativo; mantenimiento full-stack de AGEDI y Sisley (C#/.NET, SQL Server, Azure)."
+      "en": "Development and maintenance across Solusoft's product portfolio in agile cycles. Built the EPDM Music Portal Android app from scratch (Kotlin, Jetpack Compose, Firebase) and published it on Google Play, where it has passed 1,000 installs from users managing AGEDI-protected music content. Took the Iberext fire-prevention app from the groundwork laid during my internship to a production release: a legacy Windows tablet application migrated to native Android on a multimodular clean architecture with Firebase, connected to a C#/.NET + SQL Server backend and used on 100+ devices. In parallel, full-stack maintenance and feature work on AGEDI and Sisley (C#/.NET, SQL Server, Azure).",
+      "es": "Desarrollo y mantenimiento del porfolio de productos de Solusoft en ciclos ágiles. Construí desde cero la app Android EPDM Portal Musical (Kotlin, Jetpack Compose, Firebase) y la publiqué en Google Play, donde supera las 1.000 instalaciones de usuarios que gestionan contenido musical protegido por AGEDI. Llevé la app de prevención de incendios Iberext desde las bases sentadas en mis prácticas hasta su publicación en producción: una aplicación legacy de tablet Windows migrada a Android nativo con arquitectura limpia multimodular y Firebase, conectada a un backend C#/.NET + SQL Server y usada en más de 100 dispositivos. En paralelo, mantenimiento full-stack y nuevas funcionalidades en AGEDI y Sisley (C#/.NET, SQL Server, Azure)."
     },
     "projects": [
       {
@@ -120,12 +124,20 @@
     ],
     "achievements": [
       {
-        "en": "Full development of EPDM mobile app published on Play Store",
-        "es": "Desarrollo completo de la app EPDM publicada en Play Store"
+        "en": "Built and published the EPDM Music Portal Android app end to end (Kotlin, Jetpack Compose, Firebase) on Google Play, with 1,000+ installs",
+        "es": "Construí y publiqué de principio a fin la app Android EPDM Portal Musical (Kotlin, Jetpack Compose, Firebase) en Google Play, con más de 1.000 instalaciones"
       },
       {
-        "en": "Built Iberext mobile app from scratch",
-        "es": "Desarrollo desde cero de Iberext"
+        "en": "Delivered Iberext to production: migrated a legacy Windows tablet app to native Android on a multimodular clean architecture, deployed on 100+ field devices",
+        "es": "Llevé Iberext a producción: migré una app legacy de tablet Windows a Android nativo con arquitectura limpia multimodular, desplegada en más de 100 dispositivos de campo"
+      },
+      {
+        "en": "Shipped dozens of features and fixes across AGEDI and Sisley (C#/.NET, SQL Server, Azure) alongside the mobile work",
+        "es": "Entregué decenas de funcionalidades y correcciones en AGEDI y Sisley (C#/.NET, SQL Server, Azure) en paralelo al trabajo móvil"
+      },
+      {
+        "en": "Introduced clean, multimodular Android architecture to the team as the baseline for new mobile projects",
+        "es": "Introduje la arquitectura Android limpia y multimodular en el equipo como base para los nuevos proyectos móviles"
       }
     ]
   },
@@ -148,12 +160,12 @@
       "es": "Híbrido"
     },
     "desc": {
-      "en": "Supervised learning and development.",
-      "es": "Aprendizaje y desarrollo bajo supervisión."
+      "en": "First enterprise role: features and maintenance on .NET platforms and the technical groundwork of the Iberext Android app.",
+      "es": "Primer puesto en empresa: funcionalidades y mantenimiento en plataformas .NET y las bases técnicas de la app Android Iberext."
     },
     "long_desc": {
-      "en": "Supervised learning and development inside the AGEDI and Sisley teams: implemented features across AGEDI projects, maintained the Sisley frontend and backend (C#/.NET, SQL Server) and laid the ground work of the Iberext mobile app. First contact with enterprise agile delivery.",
-      "es": "Aprendizaje y desarrollo supervisado dentro de los equipos de AGEDI y Sisley: implementé funcionalidades en los proyectos de AGEDI, mantuve el frontend y backend de Sisley (C#/.NET, SQL Server) y puse las bases de la app móvil de Iberext. Primer contacto con la entrega ágil en entorno empresarial."
+      "en": "Supervised development inside the AGEDI and Sisley teams, my first contact with enterprise agile delivery. Implemented 10+ features across the AGEDI projects and maintained the Sisley frontend and backend (C#/.NET, SQL Server), and laid the technical groundwork of the Iberext Android app: project setup, architecture proposal and the first screens that the production version was later built on.",
+      "es": "Desarrollo supervisado dentro de los equipos de AGEDI y Sisley, mi primer contacto con la entrega ágil en entorno empresarial. Implementé más de 10 funcionalidades en los proyectos de AGEDI, mantuve el frontend y backend de Sisley (C#/.NET, SQL Server) y puse las bases técnicas de la app Android Iberext: configuración del proyecto, propuesta de arquitectura y las primeras pantallas sobre las que después se construyó la versión de producción."
     },
     "projects": [
       {
@@ -171,16 +183,20 @@
     ],
     "achievements": [
       {
-        "en": "Implemented new features across AGEDI projects",
-        "es": "Implementé nuevas funcionalidades en AGEDI"
+        "en": "Implemented 10+ new features across the AGEDI projects (C#/.NET, SQL Server) within the first months",
+        "es": "Implementé más de 10 nuevas funcionalidades en los proyectos de AGEDI (C#/.NET, SQL Server) en los primeros meses"
       },
       {
-        "en": "Maintenance of Sisley frontend and backend",
-        "es": "Mantenimiento de Sisley"
+        "en": "Maintained the Sisley frontend and backend, resolving production issues under supervision",
+        "es": "Mantuve el frontend y backend de Sisley, resolviendo incidencias de producción bajo supervisión"
       },
       {
-        "en": "Built Iberext mobile app from scratch",
-        "es": "Desarrollo desde cero de Iberext"
+        "en": "Laid the groundwork of the Iberext Android app (project setup, architecture proposal, first screens), which became the base of the production release",
+        "es": "Puse las bases de la app Android Iberext (configuración, propuesta de arquitectura, primeras pantallas), que fue la base de la versión de producción"
+      },
+      {
+        "en": "Offered a junior contract at the end of the internship",
+        "es": "Contrato junior ofrecido al terminar las prácticas"
       }
     ]
   }

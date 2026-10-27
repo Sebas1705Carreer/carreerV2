@@ -18,7 +18,8 @@
         "SQL Server",
         "Azure",
         "Power BI",
-        "JavaScript"
+        "JavaScript",
+        "NDA"
       ],
       "github": null,
       "demo": null
@@ -40,7 +41,8 @@
         ".NET",
         "SQL Server",
         "Azure",
-        "MVC"
+        "MVC",
+        "NDA"
       ],
       "github": null,
       "demo": null
@@ -63,7 +65,8 @@
         "C#",
         ".NET",
         "Firebase",
-        "Clean Architecture"
+        "Clean Architecture",
+        "NDA"
       ],
       "github": null,
       "demo": null
@@ -86,7 +89,8 @@
         "C#",
         ".NET",
         "Firebase",
-        "SQL Server"
+        "SQL Server",
+        "NDA"
       ],
       "github": null,
       "demo": "https://play.google.com/store/apps/details?id=es.solusoft.epdm"
@@ -107,7 +111,8 @@
         "C#",
         ".NET",
         "REST",
-        "SQL Server"
+        "SQL Server",
+        "NDA"
       ],
       "github": null,
       "demo": null
@@ -128,7 +133,8 @@
         "C#",
         ".NET",
         "REST",
-        "SQL Server"
+        "SQL Server",
+        "NDA"
       ],
       "github": null,
       "demo": null
@@ -148,7 +154,8 @@
       "tags": [
         "Kotlin",
         "Jetpack Compose",
-        "Android"
+        "Android",
+        "NDA"
       ],
       "github": null,
       "demo": null
@@ -168,7 +175,8 @@
       "tags": [
         "Swift",
         "SwiftUI",
-        "iOS"
+        "iOS",
+        "NDA"
       ],
       "github": null,
       "demo": null
@@ -339,7 +347,7 @@
         "CI/CD"
       ],
       "github": "https://github.com/Templetry",
-      "demo": null
+      "demo": "https://templetry.github.io/wiki/"
     },
     {
       "id": "career-ecosystem",
@@ -564,7 +572,7 @@
         "iOS"
       ],
       "github": "https://github.com/Sebas1705/Haltera",
-      "demo": null
+      "demo": "https://haltera.web.app"
     },
     {
       "id": "parking-mpi",

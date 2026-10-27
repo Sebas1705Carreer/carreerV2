@@ -5,8 +5,8 @@
     "es": "Hola, soy"
   },
   "role": {
-    "en": "Full Stack & Mobile Developer",
-    "es": "Desarrollador Full Stack & Móvil"
+    "en": "Senior Full Stack & Mobile Developer",
+    "es": "Desarrollador Full Stack & Móvil Senior"
   },
   "tagline": {
     "en": "Full stack and mobile engineer: design fast frontends, solid APIs and production-ready mobile experiences.",
@@ -21,7 +21,7 @@
     "en": "Madrid, Spain",
     "es": "Madrid, España"
   },
-  "cvUrl": "https://sebas1705carreer.github.io/carreerV2/cv/cv-en.pdf",
+  "cvUrl": "/data/cv.pdf",
   "social": {
     "github": "https://github.com/Sebas1705",
     "linkedin": "https://www.linkedin.com/in/sebastian-ramiro-entrerrios-garcia-b1a713217/",
