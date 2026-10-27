@@ -150,4 +150,56 @@ test.describe('portfolio smoke', () => {
     await page.waitForTimeout(1200)
     await runAxe(page)
   })
+
+  test('axe: a project with a cover image (card and detail) has no serious/critical violations', async ({ page }) => {
+    const errors = collectErrors(page)
+    await withProjectImage(page)
+    await page.goto('./#projects')
+    await expect(page.getByRole('heading', { level: 2, name: /projects/i })).toBeVisible()
+
+    // Card: lazy, size-reserved, alt from image_alt in the current language, actually loaded
+    const cardImage = page.getByTestId('project-image').first()
+    await expect(cardImage).toBeVisible()
+    await expect(cardImage).toHaveAttribute('alt', IMAGE_ALT_EN)
+    await expect(cardImage).toHaveAttribute('loading', 'lazy')
+    await expect(cardImage).toHaveAttribute('width', /\d+/)
+    await expect(cardImage).toHaveAttribute('height', /\d+/)
+    await expect.poll(() => cardImage.evaluate(img => (img as HTMLImageElement).naturalWidth)).toBeGreaterThan(0)
+    // Only the project that has an image gets one (no empty frames on the others)
+    await expect(page.getByTestId('project-image')).toHaveCount(1)
+
+    await page.waitForTimeout(1200) // let the card entrance animations settle (opacity → 1)
+    await runAxe(page)
+
+    // Detail modal shows the same cover
+    await cardImage.click()
+    const modal = page.getByRole('dialog')
+    await expect(modal).toBeVisible()
+    await expect(modal.getByRole('button', { name: 'Close' })).toBeVisible()
+    await expect(modal.getByTestId('project-image')).toHaveAttribute('alt', IMAGE_ALT_EN)
+    await page.waitForTimeout(600)
+    await runAxe(page)
+
+    expect(errors).toEqual([])
+  })
 })
+
+const IMAGE_ALT_EN = 'Screenshot of the project dashboard'
+// 1×1 PNG: the image host is mocked too, so the test never depends on the real file existing
+const PIXEL_PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==', 'base64')
+
+/** Gives the first work project a cover image (as the adapters would produce from image_url / image_alt) */
+async function withProjectImage(page: Page) {
+  await page.route('https://sebas1705carreer.github.io/**', route =>
+    route.fulfill({ status: 200, contentType: 'image/png', body: PIXEL_PNG }))
+  await page.route('**/data/projects.json', async route => {
+    const response = await route.fetch()
+    const projects = await response.json()
+    projects.work[0] = {
+      ...projects.work[0],
+      imageUrl: `https://sebas1705carreer.github.io/carreerV2/projects/${projects.work[0].id}.webp`,
+      imageAlt: { en: IMAGE_ALT_EN, es: 'Captura del panel del proyecto' },
+    }
+    await route.fulfill({ response, json: projects })
+  })
+}

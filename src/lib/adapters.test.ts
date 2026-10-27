@@ -104,6 +104,32 @@ describe('adaptProjects', () => {
     expect(featured[0].github).toBeNull()
     expect(featured[0].demo).toBeNull()
   })
+
+  it('maps image_url / image_alt to imageUrl / imageAlt', () => {
+    const { featured } = adaptProjects([{
+      id: 'img', name: 'With image', context: 'personal', desc: 'd', long_desc: 'ld', tags: [],
+      image_url: 'https://sebas1705carreer.github.io/carreerV2/projects/img.webp',
+      image_alt: { en: 'Home screen', es: 'Pantalla de inicio' },
+    }])
+    expect(featured[0].imageUrl).toBe('https://sebas1705carreer.github.io/carreerV2/projects/img.webp')
+    expect(featured[0].imageAlt).toEqual({ en: 'Home screen', es: 'Pantalla de inicio' })
+  })
+
+  it('normalises a missing, empty, null or non-https image to null', () => {
+    const base = { name: 'P', context: 'personal', desc: 'd', long_desc: 'ld', tags: [] }
+    const { featured } = adaptProjects([
+      { ...base, id: 'omitted' },
+      { ...base, id: 'null', image_url: null, image_alt: null },
+      { ...base, id: 'empty', image_url: '', image_alt: 'not a map' },
+      { ...base, id: 'http', image_url: 'http://example.com/a.webp' },
+      { ...base, id: 'js', image_url: 'javascript:alert(1)' },
+      { ...base, id: 'relative', image_url: '/projects/a.webp' },
+    ])
+    for (const p of featured) {
+      expect(p.imageUrl, p.id).toBeNull()
+      expect(p.imageAlt, p.id).toBeNull()
+    }
+  })
 })
 
 describe('adaptEducation', () => {

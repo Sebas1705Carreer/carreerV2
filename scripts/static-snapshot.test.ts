@@ -1,5 +1,31 @@
 import { describe, expect, it } from 'vitest'
-import { buildSnapshot } from './static-snapshot'
+import { buildSnapshot, projectItem, type SnapshotProject } from './static-snapshot'
+
+describe('projectItem', () => {
+  const base: SnapshotProject = { name: 'YouKnow', context: 'academic', desc: { en: 'Quiz app' }, tags: ['Kotlin'], github: null, demo: null }
+
+  it('renders a lazy, size-reserved cover image with the localized alt', () => {
+    const html = projectItem({
+      ...base,
+      imageUrl: 'https://sebas1705carreer.github.io/carreerV2/projects/youknow.webp',
+      imageAlt: { en: 'Home "screen" & menu', es: 'Inicio' },
+    })
+    expect(html).toContain('src="https://sebas1705carreer.github.io/carreerV2/projects/youknow.webp"')
+    expect(html).toContain('alt="Home &quot;screen&quot; &amp; menu"')
+    expect(html).toContain('loading="lazy"')
+    expect(html).toMatch(/width="\d+" height="\d+"/)
+  })
+
+  it('falls back to the project name for the alt', () => {
+    expect(projectItem({ ...base, imageUrl: 'https://example.com/a.webp', imageAlt: null })).toContain('alt="YouKnow"')
+  })
+
+  it('renders no image when there is none or the URL is not https', () => {
+    expect(projectItem(base)).not.toContain('<img')
+    expect(projectItem({ ...base, imageUrl: null })).not.toContain('<img')
+    expect(projectItem({ ...base, imageUrl: 'javascript:alert(1)' })).not.toContain('<img')
+  })
+})
 
 describe('buildSnapshot', () => {
   const html = buildSnapshot('/carreerV2/')

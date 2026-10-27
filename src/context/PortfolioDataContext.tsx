@@ -39,6 +39,10 @@ export interface RawProject {
   tags: string[]
   github: string | null
   demo: string | null
+  /** Cover image (absolute https URL, API `image_url`); optional for fallback data predating it */
+  imageUrl?: string | null
+  /** Alt text for the cover (API `image_alt`); the project name is used when missing */
+  imageAlt?: ML | null
 }
 
 export interface RawEduItem {
