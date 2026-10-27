@@ -2,6 +2,7 @@ import AxeBuilder from '@axe-core/playwright'
 import { expect, test, type ConsoleMessage, type Page } from '@playwright/test'
 
 const API_HOST = 'api.sebas1705.dev'
+const ASSET_HOST = 'raw.githubusercontent.com'
 
 /**
  * Hermetic data: the live API is blocked so every run exercises the bundled
@@ -18,6 +19,7 @@ function collectErrors(page: Page) {
   page.on('console', (msg: ConsoleMessage) => {
     if (msg.type() !== 'error') return
     if (msg.location().url.includes(API_HOST)) return // the deliberately blocked API call
+    if (msg.location().url.includes(ASSET_HOST)) return // optional repo assets (404 until a repo adds them)
     errors.push(`console.error: ${msg.text()}`)
   })
   return errors
@@ -151,32 +153,34 @@ test.describe('portfolio smoke', () => {
     await runAxe(page)
   })
 
-  test('axe: a project with a cover image (card and detail) has no serious/critical violations', async ({ page }) => {
+  test('axe: a project with an API cover image (card and detail) has no serious/critical violations', async ({ page }) => {
     const errors = collectErrors(page)
     await withProjectImage(page)
     await page.goto('./#projects')
     await expect(page.getByRole('heading', { level: 2, name: /projects/i })).toBeVisible()
 
-    // Card: lazy, size-reserved, alt from image_alt in the current language, actually loaded
-    const cardImage = page.getByTestId('project-image').first()
-    await expect(cardImage).toBeVisible()
+    // Featured card: the API image_url wins, lazy, size-reserved, alt from image_alt, actually loaded
+    const card = page.getByTestId('project-card').filter({ hasText: 'Owlsplit' }).first()
+    const banner = card.getByTestId('project-banner')
+    await expect(banner).toHaveAttribute('data-source', 'api')
+    const cardImage = banner.getByRole('img')
     await expect(cardImage).toHaveAttribute('alt', IMAGE_ALT_EN)
     await expect(cardImage).toHaveAttribute('loading', 'lazy')
-    await expect(cardImage).toHaveAttribute('width', /\d+/)
-    await expect(cardImage).toHaveAttribute('height', /\d+/)
+    await expect(cardImage).toHaveAttribute('width', '1280')
+    await expect(cardImage).toHaveAttribute('height', '640')
     await expect.poll(() => cardImage.evaluate(img => (img as HTMLImageElement).naturalWidth)).toBeGreaterThan(0)
-    // Only the project that has an image gets one (no empty frames on the others)
-    await expect(page.getByTestId('project-image')).toHaveCount(1)
+    // Only that project has an image; the other featured cards show the generated plate
+    await expect(page.locator('[data-testid="project-banner"][data-source="api"]')).toHaveCount(1)
 
     await page.waitForTimeout(1200) // let the card entrance animations settle (opacity → 1)
     await runAxe(page)
 
-    // Detail modal shows the same cover
-    await cardImage.click()
-    const modal = page.getByRole('dialog')
+    // Detail dialog shows the same cover
+    await card.getByRole('button', { name: 'Details of Owlsplit' }).click()
+    const modal = page.getByRole('dialog', { name: 'Owlsplit' })
     await expect(modal).toBeVisible()
-    await expect(modal.getByRole('button', { name: 'Close' })).toBeVisible()
-    await expect(modal.getByTestId('project-image')).toHaveAttribute('alt', IMAGE_ALT_EN)
+    await expect(modal.getByRole('button', { name: 'Close' })).toBeFocused()
+    await expect(modal.getByTestId('project-banner').getByRole('img')).toHaveAttribute('alt', IMAGE_ALT_EN)
     await page.waitForTimeout(600)
     await runAxe(page)
 
@@ -188,18 +192,18 @@ const IMAGE_ALT_EN = 'Screenshot of the project dashboard'
 // 1×1 PNG: the image host is mocked too, so the test never depends on the real file existing
 const PIXEL_PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==', 'base64')
 
-/** Gives the first work project a cover image (as the adapters would produce from image_url / image_alt) */
+/** Gives Owlsplit an API cover image (as the adapters would produce from image_url / image_alt) */
 async function withProjectImage(page: Page) {
   await page.route('https://sebas1705carreer.github.io/**', route =>
     route.fulfill({ status: 200, contentType: 'image/png', body: PIXEL_PNG }))
   await page.route('**/data/projects.json', async route => {
     const response = await route.fetch()
     const projects = await response.json()
-    projects.work[0] = {
-      ...projects.work[0],
-      imageUrl: `https://sebas1705carreer.github.io/carreerV2/projects/${projects.work[0].id}.webp`,
+    projects.featured = projects.featured.map((p: { id: string }) => p.id !== 'owlsplit' ? p : {
+      ...p,
+      imageUrl: 'https://sebas1705carreer.github.io/carreerV2/projects/owlsplit.webp',
       imageAlt: { en: IMAGE_ALT_EN, es: 'Captura del panel del proyecto' },
-    }
+    })
     await route.fulfill({ response, json: projects })
   })
 }

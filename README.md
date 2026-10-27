@@ -16,6 +16,7 @@ Personal portfolio v2 built with **React 19**, **TypeScript**, **Vite**, and **T
 - **PDF CV generator** - Role-specific and ATS variants exported directly from the browser (react-pdf)
 - **SEO** - robots.txt, sitemap.xml, JSON-LD Person schema and a static HTML snapshot of the main sections injected at build time (`scripts/static-snapshot.ts`)
 - **Live API data** - All content loaded from career-api at runtime
+- **Project assets from each repo** - Icons, 2:1 banners, `portfolio.json` (accent, alt text) and `case-study.<lang>.md` read from `.github/portfolio/` in every project repo (`src/lib/projectAssets.ts`). Precedence: API `image_url` → repo banner → generated plate. The production build HEAD-checks the files and inlines a manifest, so only existing assets are requested; case studies render through marked + DOMPurify, loaded on demand
 - **CI/CD** - GitHub Actions build + GitHub Pages deploy
 
 ---
@@ -114,6 +115,7 @@ First e2e run: `npm run build && npx playwright install chromium`. The e2e suite
 |---|---|---|
 | `VITE_CAREER_API_URL` | Base URL for career-api | `https://api.sebas1705.dev` |
 | `VITE_BASE_PATH` | GitHub Pages base path | `/carreerV2/` |
+| `PORTFOLIO_ASSETS_CHECK` | `0` skips the build-time HEAD checks of project assets (offline builds) | checks on |
 
 Set in `.env` for local development or as CI secrets for production.
 

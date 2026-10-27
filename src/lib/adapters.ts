@@ -10,9 +10,9 @@ import type {
  */
 
 export const PILLARS: RawPillar[] = [
-  { icon: '🔭', title: { en: 'Curiosity', es: 'Curiosidad' }, desc: { en: 'I stay current with the latest tech developments and love exploring new ideas and tools.', es: 'Me mantengo al día con los últimos avances tecnológicos y disfruto explorando nuevas ideas y herramientas.' } },
-  { icon: '⚡', title: { en: 'Constancy', es: 'Constancia' }, desc: { en: 'I sustain effort on complex, long-term projects, pushing through challenges with dedication.', es: 'Mantengo el esfuerzo en proyectos complejos y a largo plazo, superando desafíos con dedicación.' } },
-  { icon: '🎯', title: { en: 'Responsibility', es: 'Responsabilidad' }, desc: { en: 'I deliver professional work with commitment, meeting standards with attention to detail.', es: 'Entrego trabajo profesional con compromiso, cumpliendo estándares con atención al detalle.' } },
+  { icon: '🔭', title: { en: 'Curiosity', es: 'Curiosidad' }, desc: { en: 'New tools get a real project first: Kotlin Multiplatform, Wails, AI-assisted workflows. What proves itself moves into client work.', es: 'Las herramientas nuevas se prueban primero en un proyecto real: Kotlin Multiplatform, Wails, flujos con IA. Lo que funciona pasa al trabajo con clientes.' } },
+  { icon: '⚡', title: { en: 'Constancy', es: 'Constancia' }, desc: { en: 'Side projects that ship: Owlsplit went from a written spec to a public beta on Google Play, with CI, tests and docs along the way.', es: 'Proyectos personales que se publican: Owlsplit pasó de una especificación escrita a una beta pública en Google Play, con CI, tests y documentación.' } },
+  { icon: '🎯', title: { en: 'Responsibility', es: 'Responsabilidad' }, desc: { en: 'Client apps in production at Solusoft: reviewed, tested and documented so the next person can maintain them.', es: 'Apps de clientes en producción en Solusoft: revisadas, probadas y documentadas para que otra persona pueda mantenerlas.' } },
 ]
 
 // ── API response → portfolio shape adapters ───────────────────────────────────

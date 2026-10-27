@@ -157,10 +157,9 @@ export default function App() {
       <div className="fixed top-0 inset-x-0 z-40 h-12 md:hidden flex items-center px-4 border-b border-slate-100 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/90 backdrop-blur-lg print:hidden">
         <button
           onClick={() => navigate(0)}
-          aria-label={t('nav.home')}
           className="font-mono text-xs font-semibold text-violet-600 dark:text-violet-400 px-1 py-3 touch-manipulation cursor-pointer"
         >
-          ~/sebas1705
+          ~/sebas1705<span className="sr-only"> ({t('nav.home')})</span>
         </button>
       </div>
 
@@ -256,11 +255,11 @@ export default function App() {
           <button
             onClick={prev}
             disabled={isFirst}
-            aria-label={t('nav.prev')}
             className="flex items-center gap-1.5 px-3 min-h-11 rounded-xl text-slate-500 dark:text-slate-400 disabled:opacity-25 disabled:cursor-not-allowed touch-manipulation transition-colors active:bg-slate-100 dark:active:bg-slate-800"
           >
             <ChevronLeft />
             <span className="text-xs font-medium">{t('nav.prev_label')}</span>
+            <span className="sr-only"> ({t('nav.prev')})</span>
           </button>
 
           {/* Section indicator */}
@@ -284,10 +283,10 @@ export default function App() {
           <button
             onClick={next}
             disabled={isLast}
-            aria-label={t('nav.next')}
             className="flex items-center gap-1.5 px-3 min-h-11 rounded-xl text-slate-500 dark:text-slate-400 disabled:opacity-25 disabled:cursor-not-allowed touch-manipulation transition-colors active:bg-slate-100 dark:active:bg-slate-800"
           >
             <span className="text-xs font-medium">{t('nav.next_label')}</span>
+            <span className="sr-only"> ({t('nav.next')})</span>
             <ChevronRight />
           </button>
         </div>

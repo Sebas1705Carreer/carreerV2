@@ -3,12 +3,8 @@ import { localize, type ML } from './localize'
 /*
  * Project cover images. The API stores an absolute https URL in `image_url`
  * (hosted by this site under public/projects/<project-id>.webp) and a localized
- * `image_alt`. Both are optional.
+ * `image_alt`. Both are optional; the API image overrides the repo banner (see projectAssets.ts).
  */
-
-/** Intrinsic size the covers are exported at (16:9); used for width/height to avoid layout shift */
-export const PROJECT_IMAGE_WIDTH = 1280
-export const PROJECT_IMAGE_HEIGHT = 720
 
 /** The URL if it is an absolute https URL, otherwise null (empty, relative, http, javascript:, …) */
 export function safeImageUrl(value: unknown): string | null {

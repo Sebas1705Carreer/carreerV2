@@ -1,47 +1,99 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { RawProject } from '../../context/PortfolioDataContext'
 import { localize } from '../../lib/localize'
 import { useLang } from '../../hooks/useLang'
-import ProjectImage from './ProjectImage'
-
-const CONTEXT_CLASS: Record<string, string> = {
-  work:     'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-800/50',
-  personal: 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/50',
-  academic: 'bg-violet-50 dark:bg-violet-900/20 text-violet-600 dark:text-violet-400 border-violet-200 dark:border-violet-800/50',
-}
-
-const GitHubIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
-  </svg>
-)
-
-const ExternalIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-    <polyline points="15 3 21 3 21 9" />
-    <line x1="10" y1="14" x2="21" y2="3" />
-  </svg>
-)
+import { useProjectMeta } from '../../hooks/useProjectMeta'
+import { loadCaseStudy, type CaseStudy } from '../../lib/assetLoader'
+import { renderMarkdown } from '../../lib/markdown'
+import { isNda } from '../../lib/projectAssets'
+import { ExternalIcon, GitHubIcon, NdaBadge } from './ProjectCard'
+import { useDemoLabel } from '../../hooks/useDemoLabel'
+import { ProjectBanner, ProjectIcon } from './ProjectVisual'
 
 interface Props {
   project: RawProject | null
   onClose: () => void
 }
 
+/** The case study for the open project, in the UI language when available (null while unknown/absent) */
+function useCaseStudy(project: RawProject | null, lang: string) {
+  const [state, setState] = useState<{ key: string; study: CaseStudy | null } | null>(null)
+  const github = project?.github ?? null
+  const key = `${github}|${lang}`
+
+  useEffect(() => {
+    if (!github) return
+    let alive = true
+    loadCaseStudy(github, lang).then(study => { if (alive) setState({ key: `${github}|${lang}`, study }) })
+    return () => { alive = false }
+  }, [github, lang])
+
+  return state?.key === key ? state.study : null
+}
+
+/** Sanitised HTML of a case study, rendered lazily (marked + DOMPurify load on first use) */
+function CaseStudyBody({ study }: { study: CaseStudy }) {
+  const { t } = useTranslation()
+  const [result, setResult] = useState<{ source: CaseStudy; html: string | null } | null>(null)
+
+  useEffect(() => {
+    let alive = true
+    renderMarkdown(study.markdown, study.baseUrl)
+      .then(html => { if (alive) setResult({ source: study, html }) })
+      .catch(() => { if (alive) setResult({ source: study, html: null }) })
+    return () => { alive = false }
+  }, [study])
+
+  if (result?.source !== study) {
+    return <p className="text-sm text-slate-500 dark:text-slate-400" role="status">{t('projects.case_study_loading')}</p>
+  }
+  if (result.html === null) {
+    return <p className="text-sm text-slate-600 dark:text-slate-300" role="alert">{t('projects.case_study_error')}</p>
+  }
+  // Safe: renderMarkdown sanitises with DOMPurify and restricts URLs to http(s)/mailto
+  return <div className="case-study" data-testid="case-study-body" dangerouslySetInnerHTML={{ __html: result.html }} />
+}
+
 export default function ProjectModal({ project, onClose }: Props) {
   const { t } = useTranslation()
   const lang = useLang()
+  const demoLabel = useDemoLabel()
+  const meta = useProjectMeta(project?.github)
+  const study = useCaseStudy(project, lang)
+  const [readingFor, setReadingFor] = useState<string | null>(null)
+  const reading = !!project && !!study && readingFor === project.id
+  const closeRef = useRef<HTMLButtonElement>(null)
+  const backRef = useRef<HTMLButtonElement>(null)
+  const openerRef = useRef<Element | null>(null)
 
-  // Close on Escape
+  // Escape closes the case study first, then the dialog
   useEffect(() => {
     if (!project) return
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      if (reading) setReadingFor(null)
+      else onClose()
+    }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [project, onClose])
+  }, [project, onClose, reading])
+
+  // Focus: into the dialog on open, back to the card that opened it on close
+  useEffect(() => {
+    if (!project) return
+    openerRef.current = document.activeElement
+    closeRef.current?.focus()
+    return () => { (openerRef.current as HTMLElement | null)?.focus?.() }
+  }, [project])
+
+  useEffect(() => {
+    if (reading) backRef.current?.focus()
+  }, [reading])
+
+  const titleId = project ? `project-modal-title-${project.id}` : undefined
+  const pill = 'inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200'
 
   return (
     <AnimatePresence>
@@ -52,89 +104,135 @@ export default function ProjectModal({ project, onClose }: Props) {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.18 }}
           data-modal
-          className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-8 bg-black/50 backdrop-blur-sm"
+          className="fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-8 bg-slate-950/60 backdrop-blur-sm"
           onClick={e => { if (e.target === e.currentTarget) onClose() }}
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.94, y: 12 }}
+            initial={{ opacity: 0, scale: 0.96, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.94, y: 12 }}
+            exit={{ opacity: 0, scale: 0.96, y: 12 }}
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
             role="dialog"
             aria-modal="true"
-            aria-labelledby={`project-modal-title-${project.id}`}
-            className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg max-h-[calc(100dvh-2rem)] border border-slate-200 dark:border-slate-700 overflow-y-auto overscroll-contain"
+            aria-labelledby={titleId}
+            className={`relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full ${reading ? 'max-w-2xl' : 'max-w-xl'} max-h-[calc(100dvh-1.5rem)] sm:max-h-[calc(100dvh-4rem)] border border-slate-200 dark:border-slate-700 overflow-y-auto overscroll-contain`}
           >
-            {/* Cover image, edge to edge (only when the project has one) */}
-            <ProjectImage project={project} className="border-b border-slate-200 dark:border-slate-700" />
-
-            {/* Header */}
-            <div className="flex items-start justify-between gap-3 px-5 sm:px-6 pt-5 sm:pt-6 pb-4">
-              <div className="min-w-0">
-                <span className={`inline-flex text-[10px] px-2 py-0.5 rounded-full font-medium border mb-2 ${CONTEXT_CLASS[project.context] ?? CONTEXT_CLASS.academic}`}>
-                  {t(`projects.context_${project.context}`)}
-                </span>
-                <h2 id={`project-modal-title-${project.id}`} className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white leading-tight">
-                  {project.name}
-                </h2>
-              </div>
+            {/* Sticky top bar: back (case study) + close */}
+            <div data-dialog-bar className="sticky top-0 z-10 flex items-center justify-between gap-2 px-3 pt-3 pointer-events-none">
+              {reading ? (
+                <button
+                  ref={backRef}
+                  type="button"
+                  onClick={() => setReadingFor(null)}
+                  className="pointer-events-auto inline-flex items-center gap-1.5 h-8 px-3 rounded-full text-xs font-medium bg-white/90 dark:bg-slate-900/90 backdrop-blur border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:text-violet-700 dark:hover:text-violet-300 cursor-pointer"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6" /></svg>
+                  {t('projects.back')}
+                </button>
+              ) : <span />}
               <button
+                ref={closeRef}
+                type="button"
                 onClick={onClose}
                 aria-label={t('projects.close')}
-                className="flex-shrink-0 mt-0.5 w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                className="pointer-events-auto w-8 h-8 flex items-center justify-center rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100 transition-colors cursor-pointer"
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
                   <path d="M18 6L6 18M6 6l12 12" />
                 </svg>
               </button>
             </div>
 
-            {/* Body */}
-            <div className="px-5 sm:px-6 pb-5 sm:pb-6 space-y-4">
-              {/* Full description */}
-              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                {localize(project.long_desc ?? project.desc, lang)}
-              </p>
+            {reading && study ? (
+              <article className="px-5 sm:px-8 pb-6 sm:pb-8 -mt-2" aria-labelledby={titleId}>
+                <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-violet-700 dark:text-violet-300 mt-3">
+                  {t('projects.case_study_title')}
+                </p>
+                <h2 id={titleId} className="font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight mt-1 mb-1">
+                  {project.name}
+                </h2>
+                {study.lang !== lang && (
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">
+                    {t(study.lang === 'es' ? 'projects.case_study_lang_note_es' : 'projects.case_study_lang_note')}
+                  </p>
+                )}
+                <div className="h-px bg-slate-200 dark:bg-slate-800 my-4" />
+                <CaseStudyBody study={study} />
+              </article>
+            ) : (
+              <>
+                <ProjectBanner project={project} meta={meta} hideFallback className="-mt-11 border-b border-slate-200 dark:border-slate-700" />
 
-              {/* Tags */}
-              {project.tags?.length > 0 && (
-                <div className="flex flex-wrap gap-1.5">
-                  {project.tags.map(tag => (
-                    <span key={tag} className="text-[10px] sm:text-xs px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium border border-slate-200 dark:border-slate-700">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
+                <div className="px-5 sm:px-6 pt-4 pb-5 sm:pb-6 space-y-4 [[data-dialog-bar]+&]:-mt-9">
+                  <div className="flex items-center gap-3 pr-9">
+                    <ProjectIcon project={project} meta={meta} className="w-11 h-11 rounded-xl" />
+                    <div className="min-w-0">
+                      <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
+                        {t(`projects.context_${project.context}`)}
+                      </p>
+                      <h2 id={titleId} className="font-display text-xl sm:text-2xl font-bold text-slate-900 dark:text-white leading-tight tracking-tight">
+                        {project.name}
+                      </h2>
+                    </div>
+                  </div>
 
-              {/* Links */}
-              {(project.github || project.demo) && (
-                <div className="flex items-center gap-3 pt-1">
-                  {project.github && (
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-violet-400 dark:hover:border-violet-500 hover:text-violet-600 dark:hover:text-violet-400 transition-all duration-200 hover:scale-105 active:scale-95"
-                    >
-                      <GitHubIcon />
-                      {t('projects.view_code')}
-                    </a>
+                  <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    {localize(project.long_desc ?? project.desc, lang)}
+                  </p>
+
+                  {isNda(project) && (
+                    <p className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
+                      <NdaBadge />
+                      {t('projects.nda_detail')}
+                    </p>
                   )}
-                  {project.demo && (
-                    <a
-                      href={project.demo}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold bg-violet-600 hover:bg-violet-700 text-white shadow-md shadow-violet-500/25 transition-all duration-200 hover:scale-105 active:scale-95"
-                    >
-                      <ExternalIcon />
-                      {t('projects.view_demo')}
-                    </a>
+
+                  {project.tags?.length > 0 && (
+                    <ul className="flex flex-wrap gap-1.5" aria-label="Stack">
+                      {project.tags.map(tag => (
+                        <li key={tag} className="text-[11px] sm:text-xs px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">
+                          {tag}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {(project.github || project.demo || study) && (
+                    <div className="flex flex-wrap items-center gap-2 pt-1">
+                      {study && (
+                        <button
+                          type="button"
+                          onClick={() => setReadingFor(project.id)}
+                          data-testid="case-study-open"
+                          className={`${pill} font-semibold bg-violet-600 hover:bg-violet-700 text-white shadow-md shadow-violet-500/25 cursor-pointer`}
+                        >
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z" /><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z" />
+                          </svg>
+                          {t('projects.case_study')}
+                        </button>
+                      )}
+                      {project.demo && (
+                        <a href={project.demo} target="_blank" rel="noopener noreferrer"
+                          className={study
+                            ? `${pill} border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-violet-400 hover:text-violet-700 dark:hover:text-violet-300`
+                            : `${pill} font-semibold bg-violet-600 hover:bg-violet-700 text-white shadow-md shadow-violet-500/25`}>
+                          <ExternalIcon size={15} />
+                          {demoLabel(project.demo)}
+                        </a>
+                      )}
+                      {project.github && (
+                        <a href={project.github} target="_blank" rel="noopener noreferrer"
+                          className={`${pill} border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-violet-400 hover:text-violet-700 dark:hover:text-violet-300`}>
+                          <GitHubIcon size={15} />
+                          {t('projects.view_code')}
+                        </a>
+                      )}
+                    </div>
                   )}
                 </div>
-              )}
-            </div>
+              </>
+            )}
           </motion.div>
         </motion.div>
       )}
