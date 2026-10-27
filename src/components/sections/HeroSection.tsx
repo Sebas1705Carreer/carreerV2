@@ -34,7 +34,7 @@ export default function HeroSection({ onNext, onOpenCV }: SectionProps) {
     { num: `${years}+`, label: isEs ? 'años exp.' : 'years exp.' },
     { num: String(playApps), label: isEs ? 'apps Play Store' : 'Play Store apps' },
     { num: allProjects.length ? String(allProjects.length) : '20', label: isEs ? 'proyectos' : 'projects' },
-    { num: '90%', label: isEs ? 'cobertura tests' : 'test coverage' },
+    { num: String(allProjects.filter(p => p.github).length), label: isEs ? 'repos públicos' : 'public repos' },
   ]
 
   return (
