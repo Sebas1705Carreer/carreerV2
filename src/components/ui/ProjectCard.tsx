@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import type { RawProject } from '../../context/PortfolioDataContext'
 import { localize } from '../../lib/localize'
 import { useLang } from '../../hooks/useLang'
+import ProjectImage from './ProjectImage'
 
 const CONTEXT_CLASS: Record<string, string> = {
   work:     'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400',
@@ -42,6 +43,9 @@ export default function ProjectCard({ project, index, onOpen }: Props) {
       onClick={() => onOpen(project)}
       className="group bg-slate-50 dark:bg-slate-900 rounded-xl sm:rounded-2xl p-3.5 sm:p-5 border border-slate-100 dark:border-slate-800 hover:border-violet-300 dark:hover:border-violet-700 hover:shadow-lg hover:shadow-violet-500/10 transition-all duration-300 flex flex-col cursor-pointer select-none h-full"
     >
+      {/* Cover image (only when the project has one) */}
+      <ProjectImage project={project} className="rounded-lg sm:rounded-xl mb-2.5 sm:mb-3 border border-slate-100 dark:border-slate-800" />
+
       {/* Context badge */}
       <div className="mb-2 sm:mb-3">
         <span className={`text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full font-medium ${CONTEXT_CLASS[project.context] ?? CONTEXT_CLASS.academic}`}>

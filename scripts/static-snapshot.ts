@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs'
 import type { Plugin } from 'vite'
+import { PROJECT_IMAGE_HEIGHT, PROJECT_IMAGE_WIDTH, safeImageUrl } from '../src/lib/projectImage'
 
 /*
  * Vite plugin: injects a static, crawlable HTML snapshot of the main sections
@@ -13,18 +14,31 @@ const loc = (v: ML | undefined, lang = 'en') => (typeof v === 'string' ? v : v?.
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] as string))
 const read = (name: string) => JSON.parse(readFileSync(`public/data/${name}.json`, 'utf8'))
 
+const link = (href: string, text: string) => `<a href="${esc(href)}">${esc(text)}</a>`
+
+export type SnapshotProject = {
+  name: string; context: string; desc: ML; tags: string[]; github: string | null; demo: string | null
+  imageUrl?: string | null; imageAlt?: ML | null
+}
+
+/** Lazy, size-reserved cover image; empty when the project has none */
+export const projectImage = (p: SnapshotProject) => {
+  const src = safeImageUrl(p.imageUrl)
+  if (!src) return ''
+  const alt = loc(p.imageAlt ?? undefined).trim() || p.name
+  return `<img src="${esc(src)}" alt="${esc(alt)}" width="${PROJECT_IMAGE_WIDTH}" height="${PROJECT_IMAGE_HEIGHT}" loading="lazy" decoding="async" style="display:block;max-width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;margin:.25rem 0">`
+}
+
+export const projectItem = (p: SnapshotProject) => {
+  const links = [p.github && link(p.github, 'GitHub'), p.demo && link(p.demo, 'Demo')].filter(Boolean).join(' · ')
+  return `<li>${projectImage(p)}<strong>${esc(p.name)}</strong> — ${esc(loc(p.desc))} <em>(${esc((p.tags ?? []).slice(0, 6).join(', '))})</em>${links ? ` ${links}` : ''}</li>`
+}
+
 export function buildSnapshot(base: string): string {
   const personal = read('personal')
   const jobs = read('jobs') as Array<{ role: ML; company: string; companyUrl?: string; period: ML; desc: ML }>
-  const projects = read('projects') as { work: Project[]; featured: Project[] }
+  const projects = read('projects') as { work: SnapshotProject[]; featured: SnapshotProject[] }
   const education = read('education') as { items: Array<{ degree: ML; school: string; period: ML }>; certs: Array<{ name: ML; issuer: string; date: string; url: string | null }> }
-  type Project = { name: string; context: string; desc: ML; tags: string[]; github: string | null; demo: string | null }
-
-  const link = (href: string, text: string) => `<a href="${esc(href)}">${esc(text)}</a>`
-  const projectItem = (p: Project) => {
-    const links = [p.github && link(p.github, 'GitHub'), p.demo && link(p.demo, 'Demo')].filter(Boolean).join(' · ')
-    return `<li><strong>${esc(p.name)}</strong> — ${esc(loc(p.desc))} <em>(${esc((p.tags ?? []).slice(0, 6).join(', '))})</em>${links ? ` ${links}` : ''}</li>`
-  }
 
   const name = 'Sebastián Ramiro Entrerrios García'
   return `

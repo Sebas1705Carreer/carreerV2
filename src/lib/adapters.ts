@@ -1,4 +1,5 @@
 import type { ML } from './localize'
+import { safeImageUrl } from './projectImage'
 import type {
   PortfolioRawData, RawCert, RawEduItem, RawJob, RawPersonal, RawPillar, RawProject, RawSkill, RawSoftSkill,
 } from '../context/PortfolioDataContext'
@@ -88,6 +89,8 @@ export function adaptProjects(rows: any[]): { work: RawProject[]; featured: RawP
     tags:      Array.isArray(r.tags) ? r.tags : parse(r.tags),
     github:    r.github ?? null,
     demo:      r.demo ?? null,
+    imageUrl:  safeImageUrl(r.image_url),
+    imageAlt:  r.image_alt && typeof r.image_alt === 'object' ? r.image_alt : null,
   })
   return {
     work:     rows.filter(r => r.context === 'work').map(toProject),

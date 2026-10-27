@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import type { RawProject } from '../../context/PortfolioDataContext'
 import { localize } from '../../lib/localize'
 import { useLang } from '../../hooks/useLang'
+import ProjectImage from './ProjectImage'
 
 const CONTEXT_CLASS: Record<string, string> = {
   work:     'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-800/50',
@@ -59,23 +60,30 @@ export default function ProjectModal({ project, onClose }: Props) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.94, y: 12 }}
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg border border-slate-200 dark:border-slate-700 overflow-hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={`project-modal-title-${project.id}`}
+            className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg max-h-[calc(100dvh-2rem)] border border-slate-200 dark:border-slate-700 overflow-y-auto overscroll-contain"
           >
+            {/* Cover image, edge to edge (only when the project has one) */}
+            <ProjectImage project={project} className="border-b border-slate-200 dark:border-slate-700" />
+
             {/* Header */}
             <div className="flex items-start justify-between gap-3 px-5 sm:px-6 pt-5 sm:pt-6 pb-4">
               <div className="min-w-0">
                 <span className={`inline-flex text-[10px] px-2 py-0.5 rounded-full font-medium border mb-2 ${CONTEXT_CLASS[project.context] ?? CONTEXT_CLASS.academic}`}>
                   {t(`projects.context_${project.context}`)}
                 </span>
-                <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white leading-tight">
+                <h2 id={`project-modal-title-${project.id}`} className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white leading-tight">
                   {project.name}
                 </h2>
               </div>
               <button
                 onClick={onClose}
+                aria-label={t('projects.close')}
                 className="flex-shrink-0 mt-0.5 w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
                   <path d="M18 6L6 18M6 6l12 12" />
                 </svg>
               </button>

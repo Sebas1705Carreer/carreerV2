@@ -8,6 +8,7 @@
     "context_work": "Work",
     "context_academic": "Academic",
     "context_personal": "Personal",
-    "click_hint": "Tap a card to read more"
+    "click_hint": "Tap a card to read more",
+    "close": "Close"
   }
 }
