@@ -24,15 +24,21 @@ async function blockApi(page: Page) {
   await page.route('https://api.sebas1705.dev/**', route => route.abort('failed'))
 }
 
-/** Serves index.html with `manifest` inlined instead of the one the build produced */
+/**
+ * Serves index.html as if the build had found `manifest`: the inlined manifest is replaced and the
+ * repo images the real build baked into the static snapshot are dropped, so tests don't depend on
+ * which assets the project repos have today.
+ */
 async function withManifest(page: Page, manifest: Record<string, string[]>) {
   await page.route(url => url.pathname.endsWith('/') || url.pathname.endsWith('/index.html'), async route => {
     if (route.request().resourceType() !== 'document') return route.fallback()
     const response = await route.fetch()
-    const html = (await response.text()).replace(
-      /(<script type="application\/json" id="portfolio-assets">)[\s\S]*?(<\/script>)/,
-      `$1${JSON.stringify(manifest)}$2`,
-    )
+    const html = (await response.text())
+      .replace(
+        /(<script type="application\/json" id="portfolio-assets">)[\s\S]*?(<\/script>)/,
+        `$1${JSON.stringify(manifest)}$2`,
+      )
+      .replace(/<img\b[^>]*\bsrc="https:\/\/raw\.githubusercontent\.com\/[^"]*"[^>]*>/g, '')
     await route.fulfill({ response, body: html, headers: { ...response.headers(), 'content-type': 'text/html' } })
   })
 }
