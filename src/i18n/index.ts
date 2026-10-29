@@ -1,6 +1,6 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
-import LanguageDetector from 'i18next-browser-languagedetector'
+import { languageDetector } from './detector'
 
 // EN modules
 import enNav from './locales/en/nav.json'
@@ -26,7 +26,7 @@ const en = { ...enNav, ...enHero, ...enAbout, ...enSkills, ...enExperience, ...e
 const es = { ...esNav, ...esHero, ...esAbout, ...esSkills, ...esExperience, ...esProjects, ...esEducation, ...esContact }
 
 i18n
-  .use(LanguageDetector)
+  .use(languageDetector)
   .use(initReactI18next)
   .init({
     resources: {
@@ -36,10 +36,6 @@ i18n
     fallbackLng: 'en',
     supportedLngs: ['en', 'es'],
     interpolation: { escapeValue: false },
-    detection: {
-      order: ['localStorage', 'navigator'],
-      caches: ['localStorage'],
-    },
   })
 
 export default i18n

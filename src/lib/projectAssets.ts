@@ -256,3 +256,58 @@ export function demoKind(url: string | null | undefined): DemoKind {
 
 /** id of the inline `<script type="application/json">` holding the build-time manifest */
 export const MANIFEST_ELEMENT_ID = 'portfolio-assets'
+
+// ── Build-time responsive variants ───────────────────────────────────────────
+
+/**
+ * The repos keep full-size PNGs (the standard). At build time each confirmed banner/icon is
+ * downloaded once and re-encoded as small WebP files served by the site itself; this map says which
+ * ones exist: `{ "owner/repo": { banner: { "400": url, "800": url }, icon: { "96": url, … } } }`.
+ * A repo or kind missing from it (generation failed, offline build, dev) uses the raw PNG.
+ */
+export const IMAGES_ELEMENT_ID = 'portfolio-images'
+export const BANNER_WIDTHS = [400, 800] as const
+export const ICON_WIDTHS = [96, 192] as const
+export type ImageKind = 'banner' | 'icon'
+export type ImageVariants = Record<string, Partial<Record<ImageKind, Record<string, string>>>>
+
+/** Only same-site paths to .webp files (`/…/x.webp`), keyed by a positive integer width */
+const SAFE_VARIANT = /^\/(?!\/)[\w\-./]+\.webp$/
+
+/** Accepts only the shape above with safe, same-site URLs; anything else is dropped */
+export function parseImageVariants(value: unknown): ImageVariants {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return {}
+  const out: ImageVariants = {}
+  for (const [repo, kinds] of Object.entries(value as Record<string, unknown>)) {
+    if (!kinds || typeof kinds !== 'object' || Array.isArray(kinds)) continue
+    const entry: ImageVariants[string] = {}
+    for (const kind of ['banner', 'icon'] as const) {
+      const widths = (kinds as Record<string, unknown>)[kind]
+      if (!widths || typeof widths !== 'object' || Array.isArray(widths)) continue
+      const clean: Record<string, string> = {}
+      for (const [w, url] of Object.entries(widths as Record<string, unknown>)) {
+        if (/^[1-9]\d{0,4}$/.test(w) && typeof url === 'string' && SAFE_VARIANT.test(url) && !url.includes('..')) clean[w] = url
+      }
+      if (Object.keys(clean).length) entry[kind] = clean
+    }
+    if (Object.keys(entry).length) out[repo] = entry
+  }
+  return out
+}
+
+export interface ResponsiveSource { src: string; srcSet: string }
+
+/**
+ * The generated WebP set for a repo image, as `src` (largest width) + `srcSet` (`url 400w, …`);
+ * null when the build produced none.
+ */
+export function responsiveSource(variants: ImageVariants | null | undefined, repo: string, kind: ImageKind): ResponsiveSource | null {
+  const widths = variants?.[repo]?.[kind]
+  if (!widths) return null
+  const sorted = Object.entries(widths).map(([w, url]) => [Number(w), url] as const).sort((a, b) => a[0] - b[0])
+  if (!sorted.length) return null
+  return { src: sorted[sorted.length - 1][1], srcSet: sorted.map(([w, url]) => `${url} ${w}w`).join(', ') }
+}
+
+/** `sizes` for banners in the featured grid (1 → 2 → 3 → 5 columns inside max-w-6xl) */
+export const CARD_BANNER_SIZES = '(min-width: 1024px) 230px, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw'

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { usePortfolioData } from '../../context/PortfolioDataContext'
 import { useLang } from '../../hooks/useLang'
@@ -152,7 +152,7 @@ export default function SkillsSection() {
       {loading ? (
         <SkillChipsSkeleton />
       ) : (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.08, duration: 0.35 }}
@@ -168,7 +168,7 @@ export default function SkillsSection() {
             const label      = isEs ? labelEs : labelEn
 
             return (
-              <motion.div
+              <m.div
                 key={id}
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -208,14 +208,14 @@ export default function SkillsSection() {
                     )}
                   </div>
                 </div>
-              </motion.div>
+              </m.div>
             )
           })}
-        </motion.div>
+        </m.div>
       )}
 
       {/* Soft skills */}
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}>
+      <m.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}>
         <p className="text-[10px] font-semibold uppercase tracking-widest text-violet-600 dark:text-violet-400 mb-2 sm:mb-2.5 text-center">
           {t('skills.soft')}
         </p>
@@ -233,14 +233,14 @@ export default function SkillsSection() {
             )
           })}
         </div>
-      </motion.div>
+      </m.div>
 
       {t('nav.skills') && null}
 
       {/* Skills popup modal */}
       <AnimatePresence>
         {openGroup && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -249,7 +249,7 @@ export default function SkillsSection() {
             className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center sm:p-8 bg-black/50 backdrop-blur-sm"
             onClick={e => { if (e.target === e.currentTarget) setExpandedGroup(null) }}
           >
-            <motion.div
+            <m.div
               initial={{ opacity: 0, scale: 0.94, y: 12 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.94, y: 12 }}
@@ -292,8 +292,8 @@ export default function SkillsSection() {
                   ))}
                 </div>
               </div>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         )}
       </AnimatePresence>
     </SectionWrapper>

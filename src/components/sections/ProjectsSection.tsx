@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { usePortfolioData } from '../../context/PortfolioDataContext'
@@ -74,10 +74,10 @@ export default function ProjectsSection() {
         </div>
       )}
 
-      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
+      <m.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
         className="text-center text-[11px] text-slate-500 dark:text-slate-400 mt-5">
         {t('projects.click_hint')}
-      </motion.p>
+      </m.p>
 
       <ProjectModal project={selected} onClose={() => setSelected(null)} />
     </SectionWrapper>

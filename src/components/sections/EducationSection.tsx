@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence, LazyMotion, domMax, m } from 'framer-motion'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { usePortfolioData } from '../../context/PortfolioDataContext'
@@ -28,6 +28,9 @@ export default function EducationSection() {
   ]
 
   return (
+    // The tab pill is a shared-layout animation (layoutId): it needs domMax's layout features,
+    // which the app-wide LazyMotion (domAnimation) leaves out. They load with this lazy section.
+    <LazyMotion features={domMax}>
     <SectionWrapper maxWidth="max-w-6xl">
       <SectionHeader navKey="nav.education" titleKey="education.title" className="mb-6 sm:mb-8" meta={certs.length ? `${items.length}+${certs.length}` : undefined} />
 
@@ -43,7 +46,7 @@ export default function EducationSection() {
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
           >
             {tab === key && (
-              <motion.span
+              <m.span
                 layoutId="edu-tab-pill"
                 className="absolute inset-0 rounded-full bg-violet-100 dark:bg-violet-900/40"
                 transition={{ type: 'spring', stiffness: 380, damping: 32 }}
@@ -56,7 +59,7 @@ export default function EducationSection() {
 
       <AnimatePresence mode="wait">
         {tab === 'academic' && (
-          <motion.div
+          <m.div
             key="academic"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -68,11 +71,11 @@ export default function EducationSection() {
               ? [1, 2, 3].map(k => <EduCardSkeleton key={k} />)
               : items.map((item, i) => <EduCard key={i} item={item} index={i} />)
             }
-          </motion.div>
+          </m.div>
         )}
 
         {tab === 'certifications' && (
-          <motion.div
+          <m.div
             key="certifications"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -92,7 +95,7 @@ export default function EducationSection() {
 
                   <AnimatePresence initial={false}>
                     {showAllCerts && certs.slice(CERTS_VISIBLE).map((cert, i) => (
-                      <motion.div
+                      <m.div
                         key={cert.id ?? `cert-${CERTS_VISIBLE + i}`}
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
@@ -101,28 +104,29 @@ export default function EducationSection() {
                         className="overflow-hidden pt-2 sm:pt-2.5"
                       >
                         <CertCard cert={cert} delay={0} />
-                      </motion.div>
+                      </m.div>
                     ))}
                   </AnimatePresence>
                 </div>
 
                 {hiddenCount > 0 && (
-                  <motion.button
+                  <m.button
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.55 }}
                     onClick={() => setShowAllCerts(v => !v)}
                     className="mt-3 flex items-center gap-1.5 text-xs font-medium text-violet-500 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 transition-colors cursor-pointer touch-manipulation"
                   >
-                    <motion.span animate={{ rotate: showAllCerts ? 180 : 0 }} transition={{ duration: 0.2 }} className="inline-block">▾</motion.span>
+                    <m.span animate={{ rotate: showAllCerts ? 180 : 0 }} transition={{ duration: 0.2 }} className="inline-block">▾</m.span>
                     {showAllCerts ? t('education.show_less') : t('education.show_more', { count: hiddenCount })}
-                  </motion.button>
+                  </m.button>
                 )}
               </>
             )}
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </SectionWrapper>
+    </LazyMotion>
   )
 }

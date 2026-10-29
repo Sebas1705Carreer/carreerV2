@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { buildSnapshot, checkAssets, manifestScript, projectItem, type SnapshotProject } from './static-snapshot'
+import { buildImages, buildSnapshot, checkAssets, imagesScript, manifestScript, projectItem, type Resize, type SnapshotProject } from './static-snapshot'
 
 describe('projectItem', () => {
   const base: SnapshotProject = { name: 'YouKnow', context: 'academic', desc: { en: 'Quiz app' }, tags: ['Kotlin'], github: null, demo: null }
@@ -59,6 +59,17 @@ describe('repo banners in the snapshot', () => {
     expect(projectItem(owl, {})).not.toContain('<img') // unchecked → not in the static HTML
   })
 
+  it('serves the generated WebP set (srcset + sizes) when the build produced one', () => {
+    const v = { 'Sebas1705/Owlsplit': { banner: { 400: '/carreerV2/g/owl-400.webp', 800: '/carreerV2/g/owl-800.webp' } } }
+    const html = projectItem(owl, { 'Sebas1705/Owlsplit': ['banner.png'] }, v)
+    expect(html).toContain('src="/carreerV2/g/owl-800.webp"')
+    expect(html).toContain('srcset="/carreerV2/g/owl-400.webp 400w, /carreerV2/g/owl-800.webp 800w"')
+    expect(html).toContain('sizes="(min-width: 1024px) 230px')
+    expect(html).not.toContain(banner)
+    // Variants never resurrect a banner the manifest does not confirm
+    expect(projectItem(owl, {}, v)).not.toContain('<img')
+  })
+
   it('the API image_url still wins over the repo banner', () => {
     const html = projectItem({ ...owl, imageUrl: 'https://example.com/o.webp' }, { 'Sebas1705/Owlsplit': ['banner.png'] })
     expect(html).toContain('src="https://example.com/o.webp"')
@@ -104,5 +115,49 @@ describe('manifestScript', () => {
     expect(html.startsWith('<script type="application/json" id="portfolio-assets">')).toBe(true)
     expect(html.match(/<\/script>/g)).toHaveLength(1)
     expect(JSON.parse(html.replace(/^<script[^>]*>/, '').replace(/<\/script>$/, ''))).toEqual({ 'a/b': ['</script><script>alert(1)</script>'] })
+  })
+})
+
+describe('buildImages', () => {
+  const RAW = 'https://raw.githubusercontent.com'
+  const png = new Uint8Array([137, 80, 78, 71, 1, 2, 3, 4])
+  const resize: Resize = async (_png, width, kind) => new TextEncoder().encode(`${kind}:${width}`)
+
+  it('turns every confirmed banner/icon into hashed WebP widths and maps them under the base path', async () => {
+    const fetchFn = vi.fn(async () => new Response(png, { status: 200 })) as unknown as typeof fetch
+    const built = await buildImages(
+      { 'Sebas1705/Owlsplit': ['icon.png', 'banner.png', 'portfolio.json'], 'Templetry/.github': ['banner.png'], 'Sebas1705/Bare': [] },
+      { base: '/carreerV2/', resize, fetchFn },
+    )
+    expect(fetchFn).toHaveBeenCalledWith(`${RAW}/Sebas1705/Owlsplit/HEAD/.github/portfolio/banner.png`, expect.anything())
+    expect(fetchFn).toHaveBeenCalledTimes(3)
+    const owl = built.variants['Sebas1705/Owlsplit']
+    expect(Object.keys(owl.banner!)).toEqual(['400', '800'])
+    expect(Object.keys(owl.icon!)).toEqual(['96', '192'])
+    expect(owl.banner![400]).toMatch(/^\/carreerV2\/generated\/portfolio\/Sebas1705-Owlsplit-banner-400\.[0-9a-f]{8}\.webp$/)
+    expect(built.variants['Templetry/.github'].banner![800]).toMatch(/^\/carreerV2\/generated\/portfolio\/Templetry-\.github-banner-800\.[0-9a-f]{8}\.webp$/)
+    expect(built.variants['Sebas1705/Bare']).toBeUndefined()
+    expect(built.files).toHaveLength(2 + 2 + 2)
+    expect(built.files.map(f => `/carreerV2/${f.fileName}`)).toContain(owl.icon![192])
+    expect(built.stats.find(s => s.kind === 'banner')).toMatchObject({ count: 2, pngBytes: 2 * png.byteLength })
+  })
+
+  it('keeps the raw PNG (no variants) for an image that fails to download or convert', async () => {
+    const fetchFn = vi.fn(async (url: RequestInfo | URL) =>
+      String(url).includes('/Gone/') ? new Response(null, { status: 404 }) : new Response(png, { status: 200 })) as unknown as typeof fetch
+    const failing: Resize = async (p, w, kind) => { if (kind === 'icon' && w === 192) throw new Error('corrupt'); return resize(p, w, kind) }
+    const log = vi.fn()
+    const built = await buildImages({ 'Sebas1705/Gone': ['banner.png'], 'Sebas1705/Owlsplit': ['icon.png', 'banner.png'] }, { base: '/', resize: failing, fetchFn, log })
+    expect(built.variants).toEqual({ 'Sebas1705/Owlsplit': { banner: expect.any(Object) } })
+    expect(built.files.every(f => f.fileName.includes('-banner-'))).toBe(true) // no half-made icon set
+    expect(log).toHaveBeenCalledTimes(2)
+  })
+})
+
+describe('imagesScript', () => {
+  it('inlines the variants as JSON that cannot break out of the script element', () => {
+    const html = imagesScript({ 'a/b': { banner: { 400: '/x</script>.webp' } } })
+    expect(html.startsWith('<script type="application/json" id="portfolio-images">')).toBe(true)
+    expect(html.match(/<\/script>/g)).toHaveLength(1)
   })
 })

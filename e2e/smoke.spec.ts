@@ -59,6 +59,34 @@ test.describe('portfolio smoke', () => {
     expect(errors).toEqual([])
   })
 
+  test('hero says where I am open to work, in both languages', async ({ page }) => {
+    await page.goto('./')
+    const availability = page.getByTestId('hero-availability')
+    await expect(availability).toHaveText('Open to: remote · hybrid in Madrid')
+    await expect(availability).toBeVisible()
+    await page.getByRole('button', { name: /Cambiar a español/ }).click()
+    await expect(availability).toHaveText('Disponible: remoto · híbrido en Madrid')
+    await expect(page.locator('html')).toHaveAttribute('lang', 'es')
+    // The choice survives a reload (stored by the language detector)
+    await page.reload()
+    await expect(page.getByTestId('hero-availability')).toHaveText('Disponible: remoto · híbrido en Madrid')
+  })
+
+  test('self-hosted fonts: no Google Fonts requests, the hero faces are preloaded and used', async ({ page }) => {
+    const external: string[] = []
+    page.on('request', req => { if (/fonts\.(googleapis|gstatic)\.com/.test(req.url())) external.push(req.url()) })
+    await page.goto('./')
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+    const preloads = await page.locator('link[rel="preload"][as="font"]').evaluateAll(els => els.map(e => e.getAttribute('href')))
+    expect(preloads.some(h => /space-grotesk-latin-700-normal-[\w-]+\.woff2$/.test(h ?? ''))).toBe(true)
+    expect(preloads.some(h => /inter-latin-wght-normal-[\w-]+\.woff2$/.test(h ?? ''))).toBe(true)
+    await expect.poll(() => page.evaluate(async () => {
+      await document.fonts.ready
+      return document.fonts.check('700 16px "Space Grotesk"') && document.fonts.check('400 16px "Inter Variable"')
+    })).toBe(true)
+    expect(external).toEqual([])
+  })
+
   test('nav dots switch sections, update the hash, aria-current and the live region', async ({ page }) => {
     await page.goto('./')
     const nav = page.getByRole('navigation', { name: 'Sections' })

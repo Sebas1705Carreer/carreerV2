@@ -11,12 +11,13 @@ Personal portfolio v2 built with **React 19**, **TypeScript**, **Vite**, and **T
 - **React 19 + Vite** - Fast build tooling and modern React
 - **Tailwind CSS v4** - Utility-first styling with zero config
 - **Framer Motion** - Smooth section animations
-- **i18next** - Internationalization with browser language detection
+- **i18next** - Internationalization with browser language detection (a small built-in detector, `src/i18n/detector.ts`)
 - **CV PDF** - Static `cv/cv-en.pdf` and `cv/cv-es.pdf` rendered at build time (`scripts/build-cv.mjs`) from the same react-pdf document as the in-browser generator
 - **PDF CV generator** - Role-specific and ATS variants exported directly from the browser (react-pdf)
 - **SEO** - robots.txt, sitemap.xml, JSON-LD Person schema and a static HTML snapshot of the main sections injected at build time (`scripts/static-snapshot.ts`)
+- **Performance** - Self-hosted fonts (@fontsource: Inter variable, Space Grotesk 700, JetBrains Mono 400/700, `font-display: swap`, hero faces preloaded by `scripts/font-preload.ts`); only the hero ships in the main bundle, the other sections are lazy chunks prefetched when the page is idle (`src/sections.ts`); framer-motion runs through `LazyMotion` + `m`
 - **Live API data** - All content loaded from career-api at runtime
-- **Project assets from each repo** - Icons, 2:1 banners, `portfolio.json` (accent, alt text) and `case-study.<lang>.md` read from `.github/portfolio/` in every project repo (`src/lib/projectAssets.ts`). Precedence: API `image_url` → repo banner → generated plate. The production build HEAD-checks the files and inlines a manifest, so only existing assets are requested; case studies render through marked + DOMPurify, loaded on demand
+- **Project assets from each repo** - Icons, 2:1 banners, `portfolio.json` (accent, alt text) and `case-study.<lang>.md` read from `.github/portfolio/` in every project repo (`src/lib/projectAssets.ts`). Precedence: API `image_url` → repo banner → generated plate. The production build HEAD-checks the files and inlines a manifest, so only existing assets are requested, and re-encodes every confirmed banner/icon as responsive WebP (banners 400/800w, icons 96/192w, served from `dist/generated/portfolio/` with `srcset`/`sizes`; the raw PNG stays the fallback); case studies render through marked + DOMPurify, loaded on demand
 - **CI/CD** - GitHub Actions build + GitHub Pages deploy
 
 ---
@@ -116,6 +117,7 @@ First e2e run: `npm run build && npx playwright install chromium`. The e2e suite
 | `VITE_CAREER_API_URL` | Base URL for career-api | `https://api.sebas1705.dev` |
 | `VITE_BASE_PATH` | GitHub Pages base path | `/carreerV2/` |
 | `PORTFOLIO_ASSETS_CHECK` | `0` skips the build-time HEAD checks of project assets (offline builds) | checks on |
+| `PORTFOLIO_IMAGES` | `0` skips generating the WebP variants of repo banners/icons (the site then loads the raw PNGs) | generation on |
 
 Set in `.env` for local development or as CI secrets for production.
 

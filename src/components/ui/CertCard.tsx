@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import type { RawCert } from '../../context/PortfolioDataContext'
 import { localize } from '../../lib/localize'
@@ -13,7 +13,7 @@ const ExternalLinkIcon = () => (
 )
 
 const ChevronIcon = ({ open }: { open: boolean }) => (
-  <motion.svg
+  <m.svg
     animate={{ rotate: open ? 180 : 0 }}
     transition={{ duration: 0.2 }}
     width="12" height="12" viewBox="0 0 24 24" fill="none"
@@ -21,7 +21,7 @@ const ChevronIcon = ({ open }: { open: boolean }) => (
     className="shrink-0"
   >
     <path d="M6 9l6 6 6-6" />
-  </motion.svg>
+  </m.svg>
 )
 
 interface Props {
@@ -42,7 +42,7 @@ export default function CertCard({ cert, delay = 0 }: Props) {
   const longDesc = localize(cert.long_desc, lang)
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
@@ -86,7 +86,7 @@ export default function CertCard({ cert, delay = 0 }: Props) {
 
       <AnimatePresence initial={false}>
         {open && longDesc && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
@@ -101,9 +101,9 @@ export default function CertCard({ cert, delay = 0 }: Props) {
                 {longDesc}
               </p>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </m.div>
   )
 }

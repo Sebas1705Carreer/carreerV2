@@ -24,12 +24,14 @@ async function blockApi(page: Page) {
   await page.route('https://api.sebas1705.dev/**', route => route.abort('failed'))
 }
 
+type Variants = Record<string, { banner?: Record<string, string>; icon?: Record<string, string> }>
+
 /**
- * Serves index.html as if the build had found `manifest`: the inlined manifest is replaced and the
- * repo images the real build baked into the static snapshot are dropped, so tests don't depend on
- * which assets the project repos have today.
+ * Serves index.html as if the build had found `manifest` (and generated `variants`): the inlined
+ * manifest and WebP map are replaced and the repo images the real build baked into the static
+ * snapshot are dropped, so tests don't depend on which assets the project repos have today.
  */
-async function withManifest(page: Page, manifest: Record<string, string[]>) {
+async function withManifest(page: Page, manifest: Record<string, string[]>, variants: Variants = {}) {
   await page.route(url => url.pathname.endsWith('/') || url.pathname.endsWith('/index.html'), async route => {
     if (route.request().resourceType() !== 'document') return route.fallback()
     const response = await route.fetch()
@@ -38,6 +40,11 @@ async function withManifest(page: Page, manifest: Record<string, string[]>) {
         /(<script type="application\/json" id="portfolio-assets">)[\s\S]*?(<\/script>)/,
         `$1${JSON.stringify(manifest)}$2`,
       )
+      .replace(
+        /(<script type="application\/json" id="portfolio-images">)[\s\S]*?(<\/script>)/,
+        `$1${JSON.stringify(variants)}$2`,
+      )
+      .replace(/<img\b[^>]*\bsrc="[^"]*\/generated\/portfolio\/[^"]*"[^>]*>/g, '')
       .replace(/<img\b[^>]*\bsrc="https:\/\/raw\.githubusercontent\.com\/[^"]*"[^>]*>/g, '')
     await route.fulfill({ response, body: html, headers: { ...response.headers(), 'content-type': 'text/html' } })
   })
@@ -238,6 +245,69 @@ test.describe('projects slide fits the viewport', () => {
       if (vp.width < 768) await runAxe(page)
     })
   }
+})
+
+test.describe('build-time WebP variants', () => {
+  const BASE = process.env.VITE_BASE_PATH ?? '/'
+  const GEN = `${BASE}generated/portfolio/`
+  const OWL_ASSETS = { ...NOTHING_YET, 'Sebas1705/Owlsplit': ['icon.png', 'banner.png'] }
+  const OWL_VARIANTS: Variants = {
+    'Sebas1705/Owlsplit': {
+      banner: { 400: `${GEN}owl-banner-400.test.webp`, 800: `${GEN}owl-banner-800.test.webp` },
+      icon: { 96: `${GEN}owl-icon-96.test.webp`, 192: `${GEN}owl-icon-192.test.webp` },
+    },
+  }
+
+  test.beforeEach(async ({ page }) => { await blockApi(page) })
+
+  test('repo banners and icons are served as responsive WebP from the site, not the raw PNG', async ({ page }) => {
+    const errors = pageErrors(page)
+    await withManifest(page, OWL_ASSETS, OWL_VARIANTS)
+    const requested = await mockRepoAssets(page, {})
+    const generated: string[] = []
+    await page.route(`**${GEN}*.webp`, route => {
+      generated.push(new URL(route.request().url()).pathname)
+      return route.fulfill({ status: 200, contentType: 'image/png', body: PIXEL_PNG })
+    })
+    await page.goto('./#projects')
+
+    const owl = page.getByTestId('featured-projects').getByTestId('project-card').first()
+    const banner = owl.getByTestId('project-banner')
+    await expect(banner).toHaveAttribute('data-source', 'repo')
+    const img = banner.getByRole('img')
+    await expect(img).toHaveAttribute('src', `${GEN}owl-banner-800.test.webp`)
+    await expect(img).toHaveAttribute('srcset', `${GEN}owl-banner-400.test.webp 400w, ${GEN}owl-banner-800.test.webp 800w`)
+    await expect(img).toHaveAttribute('sizes', /230px/)
+    await expect(img).toHaveAttribute('width', '1280') // the 2:1 box is still reserved up front
+    // Loaded from the srcset (naturalWidth is useless here: a 1×1 test pixel at a w-descriptor density rounds to 0)
+    await expect.poll(() => img.evaluate(el => {
+      const i = el as HTMLImageElement
+      return i.complete && /owl-banner-(400|800)\.test\.webp$/.test(i.currentSrc)
+    })).toBe(true)
+    expect(generated.some(p => p.includes('owl-banner-'))).toBe(true)
+    await expect(img).toHaveAttribute('src', `${GEN}owl-banner-800.test.webp`) // still the WebP: no onError fallback
+
+    expect(requested.filter(u => u.endsWith('.png'))).toEqual([]) // no raw PNG downloads at all
+    expect(errors).toEqual([])
+  })
+
+  test('a WebP that fails to load falls back to the raw PNG in the repo', async ({ page }) => {
+    const errors = pageErrors(page)
+    await withManifest(page, OWL_ASSETS, OWL_VARIANTS)
+    const requested = await mockRepoAssets(page, {
+      [`${OWL_DIR}/banner.png`]: { type: 'image/png', body: PIXEL_PNG },
+      [`${OWL_DIR}/icon.png`]: { type: 'image/png', body: PIXEL_PNG },
+    })
+    await page.route(`**${GEN}*.webp`, route => route.fulfill({ status: 404, contentType: 'text/plain', body: 'gone' }))
+    await page.goto('./#projects')
+
+    const img = page.getByTestId('featured-projects').getByTestId('project-card').first().getByTestId('project-banner').getByRole('img')
+    await expect(img).toHaveAttribute('src', `${OWL_DIR}/banner.png`)
+    await expect(img).not.toHaveAttribute('srcset', /.+/)
+    await expect.poll(() => img.evaluate(el => (el as HTMLImageElement).naturalWidth)).toBeGreaterThan(0)
+    await expect.poll(() => requested.includes(`${OWL_DIR}/banner.png`)).toBe(true)
+    expect(errors).toEqual([])
+  })
 })
 
 function escapeRe(s: string) {

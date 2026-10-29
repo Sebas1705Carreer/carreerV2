@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { RawProject } from '../../context/PortfolioDataContext'
@@ -98,7 +98,7 @@ export default function ProjectModal({ project, onClose }: Props) {
   return (
     <AnimatePresence>
       {project && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -107,7 +107,7 @@ export default function ProjectModal({ project, onClose }: Props) {
           className="fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-8 bg-slate-950/60 backdrop-blur-sm"
           onClick={e => { if (e.target === e.currentTarget) onClose() }}
         >
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.96, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 12 }}
@@ -161,7 +161,7 @@ export default function ProjectModal({ project, onClose }: Props) {
               </article>
             ) : (
               <>
-                <ProjectBanner project={project} meta={meta} hideFallback className="-mt-11 border-b border-slate-200 dark:border-slate-700" />
+                <ProjectBanner project={project} meta={meta} hideFallback sizes="(min-width: 640px) 576px, 100vw" className="-mt-11 border-b border-slate-200 dark:border-slate-700" />
 
                 <div className="px-5 sm:px-6 pt-4 pb-5 sm:pb-6 space-y-4 [[data-dialog-bar]+&]:-mt-9">
                   <div className="flex items-center gap-3 pr-9">
@@ -233,8 +233,8 @@ export default function ProjectModal({ project, onClose }: Props) {
                 </div>
               </>
             )}
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       )}
     </AnimatePresence>
   )
