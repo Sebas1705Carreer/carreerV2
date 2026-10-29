@@ -1,9 +1,9 @@
 import { useState, type CSSProperties } from 'react'
 import { useLang } from '../../hooks/useLang'
-import { getManifest } from '../../lib/assetLoader'
+import { getImageVariants, getManifest } from '../../lib/assetLoader'
 import {
-  BANNER_HEIGHT, BANNER_WIDTH, ICON_SIZE, assetRepo, inkOn, isNda, projectInitials, resolveBanner, resolveIcon,
-  type AssetProject, type PortfolioMeta,
+  BANNER_HEIGHT, BANNER_WIDTH, CARD_BANNER_SIZES, ICON_SIZE, assetRepo, inkOn, isNda, projectInitials, resolveBanner, resolveIcon,
+  responsiveSource, type AssetProject, type ImageKind, type PortfolioMeta, type ResolvedImage,
 } from '../../lib/projectAssets'
 
 /*
@@ -19,6 +19,17 @@ function useFailed() {
   const [failed, setFailed] = useState<ReadonlySet<string>>(() => new Set())
   const markFailed = (url: string) => setFailed(prev => new Set(prev).add(url))
   return [failed, markFailed] as const
+}
+
+/**
+ * What an <img> loads for a resolved image: the build's WebP set for repo assets (unless it already
+ * failed, then the raw PNG), the resolved URL otherwise. `failKey` is what onError marks as failed.
+ */
+function imageSource(project: Project, image: ResolvedImage, kind: ImageKind, failed: ReadonlySet<string>) {
+  const repo = image.source === 'repo' ? assetRepo(project.github) : null
+  const variants = repo ? responsiveSource(getImageVariants(), repo, kind) : null
+  if (variants && !failed.has(variants.src)) return { src: variants.src, srcSet: variants.srcSet, failKey: variants.src }
+  return { src: image.src as string, srcSet: undefined, failKey: image.src as string }
 }
 
 function plateStyle(accent: string | undefined): CSSProperties | undefined {
@@ -72,14 +83,17 @@ interface BannerProps {
   className?: string
   /** Render nothing instead of the generated plate (the detail dialog already shows icon + name) */
   hideFallback?: boolean
+  /** Rendered-width hints for the responsive WebP set (defaults to the featured card grid) */
+  sizes?: string
 }
 
 /** 2:1 banner: API image_url → repo banner.png → generated plate */
-export function ProjectBanner({ project, meta, className = '', hideFallback = false }: BannerProps) {
+export function ProjectBanner({ project, meta, className = '', hideFallback = false, sizes = CARD_BANNER_SIZES }: BannerProps) {
   const lang = useLang()
   const [failed, markFailed] = useFailed()
   const banner = resolveBanner(project, { lang, meta, manifest: getManifest(), failed })
   if (hideFallback && !banner.src) return null
+  const img = banner.src ? imageSource(project, banner, 'banner', failed) : null
 
   return (
     <div
@@ -87,16 +101,18 @@ export function ProjectBanner({ project, meta, className = '', hideFallback = fa
       data-source={banner.source}
       className={`relative w-full aspect-[2/1] overflow-hidden bg-slate-100 dark:bg-slate-800 [container-type:inline-size] ${className}`}
     >
-      {banner.src ? (
+      {img ? (
         <img
-          key={banner.src}
-          src={banner.src}
+          key={img.src}
+          src={img.src}
+          srcSet={img.srcSet}
+          sizes={img.srcSet ? sizes : undefined}
           alt={banner.alt}
           width={BANNER_WIDTH}
           height={BANNER_HEIGHT}
           loading="lazy"
           decoding="async"
-          onError={() => markFailed(banner.src as string)}
+          onError={() => markFailed(img.failKey)}
           className="absolute inset-0 w-full h-full object-cover"
         />
       ) : (
@@ -118,6 +134,7 @@ export function ProjectIcon({ project, meta, className = 'w-10 h-10 rounded-lg' 
   const lang = useLang()
   const [failed, markFailed] = useFailed()
   const icon = resolveIcon(project, { lang, meta, manifest: getManifest(), failed })
+  const img = icon.src ? imageSource(project, icon, 'icon', failed) : null
 
   return (
     <div
@@ -125,16 +142,18 @@ export function ProjectIcon({ project, meta, className = 'w-10 h-10 rounded-lg' 
       data-source={icon.source}
       className={`relative shrink-0 aspect-square overflow-hidden border border-slate-200/80 dark:border-slate-700/80 ${className}`}
     >
-      {icon.src ? (
+      {img ? (
         <img
-          key={icon.src}
-          src={icon.src}
+          key={img.src}
+          src={img.src}
+          srcSet={img.srcSet}
+          sizes={img.srcSet ? '48px' : undefined}
           alt=""
           width={ICON_SIZE}
           height={ICON_SIZE}
           loading="lazy"
           decoding="async"
-          onError={() => markFailed(icon.src as string)}
+          onError={() => markFailed(img.failKey)}
           className="absolute inset-0 w-full h-full object-cover bg-white dark:bg-slate-900"
         />
       ) : (

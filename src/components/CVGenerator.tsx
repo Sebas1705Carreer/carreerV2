@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { usePortfolioData } from '../context/PortfolioDataContext'
 import { localize } from '../lib/localize'
 import { useLang } from '../hooks/useLang'
@@ -119,7 +119,7 @@ export default function CVGenerator({ onClose }: Props) {
 
   return (
     <AnimatePresence>
-      <motion.div
+      <m.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -127,7 +127,7 @@ export default function CVGenerator({ onClose }: Props) {
         className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6 bg-black/50 backdrop-blur-sm"
         onClick={e => { if (e.target === e.currentTarget) onClose() }}
       >
-        <motion.div
+        <m.div
           initial={{ opacity: 0, scale: 0.95, y: 16 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 16 }}
@@ -429,8 +429,8 @@ export default function CVGenerator({ onClose }: Props) {
               </button>
             </div>
           </div>
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
     </AnimatePresence>
   )
 }

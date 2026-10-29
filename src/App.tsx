@@ -1,4 +1,4 @@
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { AnimatePresence, m, useReducedMotion } from 'framer-motion'
 import { Suspense, lazy, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from './hooks/useTheme'
@@ -9,28 +9,10 @@ import NavDots from './components/layout/NavDots'
 import Controls from './components/layout/Controls'
 import Background from './components/layout/Background'
 import SectionDecor from './components/layout/SectionDecor'
-import HeroSection from './components/sections/HeroSection'
-import AboutSection from './components/sections/AboutSection'
-import SkillsSection from './components/sections/SkillsSection'
-import ExperienceSection from './components/sections/ExperienceSection'
-import ProjectsSection from './components/sections/ProjectsSection'
-import EducationSection from './components/sections/EducationSection'
-import ContactSection from './components/sections/ContactSection'
+import { SECTIONS, SECTION_KEYS, preloadAllSections } from './sections'
 
 // Lazy: @react-pdf pesa ~1MB minificado y solo hace falta al generar un CV
 const CVGenerator = lazy(() => import('./components/CVGenerator'))
-
-const SECTIONS = [
-  HeroSection,
-  AboutSection,
-  SkillsSection,
-  ExperienceSection,
-  ProjectsSection,
-  EducationSection,
-  ContactSection,
-]
-
-const SECTION_KEYS = ['hero', 'about', 'skills', 'experience', 'projects', 'education', 'contact']
 
 /**
  * `?view=all` renders every section stacked in a normal scrolling document
@@ -90,6 +72,16 @@ export default function App() {
 
   // Keep <html lang> in sync with the UI language (index.html ships lang="en")
   useEffect(() => { document.documentElement.lang = lang }, [lang])
+
+  // Prefetch the other sections' chunks once the hero is up, so navigating never waits on them
+  useEffect(() => {
+    if (typeof window.requestIdleCallback === 'function') {
+      const id = window.requestIdleCallback(() => { void preloadAllSections() }, { timeout: 2500 })
+      return () => window.cancelIdleCallback(id)
+    }
+    const timer = window.setTimeout(() => { void preloadAllSections() }, 1200)
+    return () => window.clearTimeout(timer)
+  }, [])
 
   // Single-page view: honour the hash deep link once React has rendered the targets,
   // and again when the portfolio data lands (sections grow and shift the target down).
@@ -180,7 +172,9 @@ export default function App() {
               id={SECTION_KEYS[i]}
               className="relative scroll-mt-12 md:scroll-mt-0 border-b border-slate-100 dark:border-slate-800/80 last:border-0 print:break-inside-avoid"
             >
-              <Section onNext={() => scrollToSection(i + 1)} onPrev={() => scrollToSection(i - 1)} onOpenCV={() => setShowCV(true)} />
+              <Suspense fallback={null}>
+                <Section onNext={() => scrollToSection(i + 1)} onPrev={() => scrollToSection(i - 1)} onOpenCV={() => setShowCV(true)} />
+              </Suspense>
             </div>
           ))}
         </main>
@@ -189,7 +183,7 @@ export default function App() {
         // On mobile: leave room for the top bar (48px) and the bottom nav bar (56px + safe area)
         <main id="main-content" ref={mainRef} tabIndex={-1} className="absolute inset-0 outline-none">
           <AnimatePresence mode="wait" custom={deck.direction}>
-            <motion.div
+            <m.div
               key={current}
               custom={deck.direction}
               variants={reduceMotion ? reducedVariants : variants}
@@ -206,8 +200,10 @@ export default function App() {
               className="absolute inset-x-0 top-12 bottom-0 md:inset-0 pb-[calc(3.5rem+env(safe-area-inset-bottom))] md:pb-0"
             >
               <SectionDecor sectionKey={SECTION_KEYS[current]} />
-              <CurrentSection onNext={next} onPrev={prev} onOpenCV={() => setShowCV(true)} />
-            </motion.div>
+              <Suspense fallback={null}>
+                <CurrentSection onNext={next} onPrev={prev} onOpenCV={() => setShowCV(true)} />
+              </Suspense>
+            </m.div>
           </AnimatePresence>
         </main>
       )}
@@ -234,7 +230,7 @@ export default function App() {
             </button>
           </div>
 
-          <motion.p
+          <m.p
             key={current}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -244,7 +240,7 @@ export default function App() {
             style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
           >
             {sectionTitle}
-          </motion.p>
+          </m.p>
         </div>
       )}
 
@@ -263,7 +259,7 @@ export default function App() {
           </button>
 
           {/* Section indicator */}
-          <motion.div
+          <m.div
             key={current}
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
@@ -277,7 +273,7 @@ export default function App() {
             <span className="text-[10px] text-slate-500 dark:text-slate-400">
               {current + 1} / {SECTIONS.length}
             </span>
-          </motion.div>
+          </m.div>
 
           {/* Next button */}
           <button

@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { RawJob } from '../../context/PortfolioDataContext'
@@ -6,7 +6,7 @@ import { localize, localizeArr } from '../../lib/localize'
 import { useLang } from '../../hooks/useLang'
 
 const ChevronIcon = ({ open }: { open: boolean }) => (
-  <motion.svg
+  <m.svg
     animate={{ rotate: open ? 180 : 0 }}
     transition={{ duration: 0.2 }}
     width="13" height="13" viewBox="0 0 24 24" fill="none"
@@ -14,7 +14,7 @@ const ChevronIcon = ({ open }: { open: boolean }) => (
     className="shrink-0"
   >
     <path d="M6 9l6 6 6-6" />
-  </motion.svg>
+  </m.svg>
 )
 
 interface Props {
@@ -39,7 +39,7 @@ export default function JobCard({ job, index }: Props) {
   const hasDetail    = achievements.length > 0 || longDesc.length > 0
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, x: -24 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 0.1 + index * 0.12, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
@@ -106,7 +106,7 @@ export default function JobCard({ job, index }: Props) {
         {/* ── Expandable achievements ── */}
         <AnimatePresence initial={false}>
           {open && (
-            <motion.div
+            <m.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
@@ -131,7 +131,7 @@ export default function JobCard({ job, index }: Props) {
                     </p>
                     <ul className="space-y-1.5 sm:space-y-2">
                       {achievements.map((ach, j) => (
-                        <motion.li
+                        <m.li
                           key={j}
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
@@ -140,17 +140,17 @@ export default function JobCard({ job, index }: Props) {
                         >
                           <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-violet-400 dark:bg-violet-500 shrink-0" />
                           {ach}
-                        </motion.li>
+                        </m.li>
                       ))}
                     </ul>
                   </>
                 )}
               </div>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
 
       </div>
-    </motion.div>
+    </m.div>
   )
 }

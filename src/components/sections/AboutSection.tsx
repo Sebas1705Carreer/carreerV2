@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { usePortfolioData } from '../../context/PortfolioDataContext'
 import { localize } from '../../lib/localize'
@@ -48,7 +48,7 @@ export default function AboutSection() {
       />
 
       {/* Profile snapshot */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1, duration: 0.4, ease: EASE }}
@@ -80,12 +80,12 @@ export default function AboutSection() {
             ))}
           </div>
         )}
-      </motion.div>
+      </m.div>
 
       {/* Pillar cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
         {personal.pillars.map((pillar, i) => (
-          <motion.div
+          <m.div
             key={i}
             initial={{ opacity: 0, y: 32 }}
             animate={{ opacity: 1, y: 0 }}
@@ -99,7 +99,7 @@ export default function AboutSection() {
             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
               {localize(pillar.desc, lang)}
             </p>
-          </motion.div>
+          </m.div>
         ))}
 
         {personal.pillars.length === 0 && [0, 1, 2].map(i => (

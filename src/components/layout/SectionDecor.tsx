@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from 'framer-motion'
+import { m, useReducedMotion } from 'framer-motion'
 
 interface DecoItem {
   content: string
@@ -81,7 +81,7 @@ export default function SectionDecor({ sectionKey }: Props) {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none select-none" aria-hidden>
       {items.map((item, i) => (
-        <motion.div
+        <m.div
           key={i}
           animate={reduceMotion ? undefined : { x: [0, item.floatX, 0], y: [0, item.floatY, 0] }}
           transition={{ duration: item.duration, delay: item.delay, repeat: Infinity, ease: 'easeInOut' }}

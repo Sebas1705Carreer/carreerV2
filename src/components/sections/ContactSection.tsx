@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { usePortfolioData } from '../../context/PortfolioDataContext'
 import { localize } from '../../lib/localize'
@@ -31,19 +31,19 @@ export default function ContactSection({ onOpenCV }: SectionProps) {
 
   return (
     <SectionWrapper maxWidth="max-w-2xl" className="text-center">
-      <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
+      <m.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] as const }} className="text-5xl sm:text-6xl mb-5 sm:mb-7">
         👋
-      </motion.div>
+      </m.div>
 
       <SectionHeader navKey="nav.contact" titleKey="contact.title" className="mb-3 sm:mb-4" />
 
-      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
+      <m.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
         className="text-slate-500 dark:text-slate-400 mb-8 sm:mb-10 max-w-xs sm:max-w-sm mx-auto text-sm sm:text-base leading-relaxed">
         {t('contact.subtitle')}
-      </motion.p>
+      </m.p>
 
-      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+      <m.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
         className="flex flex-wrap gap-2 sm:gap-3 justify-center mb-8 sm:mb-10">
         {/* Email */}
         <a href={`mailto:${email}`}
@@ -69,16 +69,16 @@ export default function ContactSection({ onOpenCV }: SectionProps) {
             <CodewarsIcon />Codewars
           </a>
         )}
-      </motion.div>
+      </m.div>
 
-      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
+      <m.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
         className="text-sm text-slate-400 dark:text-slate-500 flex items-center justify-center gap-1.5 mb-6">
         <span>📍</span>
         {localize(location, lang)}
-      </motion.p>
+      </m.p>
 
       {onOpenCV && (
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
+        <m.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
           <button
             onClick={onOpenCV}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-dashed border-violet-400 dark:border-violet-600 text-violet-600 dark:text-violet-400 text-sm font-medium hover:bg-violet-50 dark:hover:bg-violet-950/30 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer touch-manipulation"
@@ -86,7 +86,7 @@ export default function ContactSection({ onOpenCV }: SectionProps) {
             <span>📄</span>
             {lang === 'es' ? 'Generar CV adaptado' : 'Generate tailored CV'}
           </button>
-        </motion.div>
+        </m.div>
       )}
     </SectionWrapper>
   )

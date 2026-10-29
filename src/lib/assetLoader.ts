@@ -1,6 +1,7 @@
 import {
-  CASE_STUDY_LANGS, MANIFEST_ELEMENT_ID, META_FILE, assetState, caseStudyFile, parseManifest, parsePortfolioMeta, projectAssetUrls,
-  type AssetManifest, type PortfolioMeta,
+  CASE_STUDY_LANGS, IMAGES_ELEMENT_ID, MANIFEST_ELEMENT_ID, META_FILE, assetState, caseStudyFile, parseImageVariants, parseManifest,
+  parsePortfolioMeta, projectAssetUrls,
+  type AssetManifest, type ImageVariants, type PortfolioMeta,
 } from './projectAssets'
 
 /*
@@ -13,17 +14,27 @@ import {
 export { MANIFEST_ELEMENT_ID }
 
 let manifestCache: AssetManifest | undefined
+let variantsCache: ImageVariants | undefined
+
+/** JSON inlined into index.html under `id`; `{}` when absent or malformed */
+function readInlineJson(id: string): unknown {
+  try {
+    const el = typeof document !== 'undefined' ? document.getElementById(id) : null
+    if (el?.textContent) return JSON.parse(el.textContent)
+  } catch { /* malformed: ignore it */ }
+  return {}
+}
 
 /** The manifest the build inlined into index.html (`{}` in dev or when the build was offline) */
 export function getManifest(): AssetManifest {
-  if (manifestCache) return manifestCache
-  let parsed: unknown = {}
-  try {
-    const el = typeof document !== 'undefined' ? document.getElementById(MANIFEST_ELEMENT_ID) : null
-    if (el?.textContent) parsed = JSON.parse(el.textContent)
-  } catch { /* malformed: treat every repo as unknown */ }
-  manifestCache = parseManifest(parsed)
+  manifestCache ??= parseManifest(readInlineJson(MANIFEST_ELEMENT_ID))
   return manifestCache
+}
+
+/** The responsive WebP variants the build generated (`{}` in dev, offline builds or failed generation) */
+export function getImageVariants(): ImageVariants {
+  variantsCache ??= parseImageVariants(readInlineJson(IMAGES_ELEMENT_ID))
+  return variantsCache
 }
 
 type Fetch = typeof fetch
@@ -107,4 +118,5 @@ export function resetAssetCaches() {
   metaCache.clear()
   caseCache.clear()
   manifestCache = undefined
+  variantsCache = undefined
 }

@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import type { RawProject } from '../../context/PortfolioDataContext'
 import { localize } from '../../lib/localize'
@@ -104,7 +104,7 @@ export function FeaturedProjectCard({ project, index, onOpen }: Props) {
   const meta = useProjectMeta(project.github)
 
   return (
-    <motion.article {...enter(index)} data-testid="project-card" data-featured="true" className={`${CARD} overflow-hidden`}>
+    <m.article {...enter(index)} data-testid="project-card" data-featured="true" className={`${CARD} overflow-hidden`}>
       <ProjectBanner project={project} meta={meta} className="border-b border-slate-200/70 dark:border-slate-800" />
       <div className="flex flex-col flex-1 p-3.5 sm:p-4">
         <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400 mb-1">
@@ -125,7 +125,7 @@ export function FeaturedProjectCard({ project, index, onOpen }: Props) {
           <CardLinks project={project} />
         </div>
       </div>
-    </motion.article>
+    </m.article>
   )
 }
 
@@ -136,7 +136,7 @@ export default function ProjectCard({ project, index, onOpen }: Props) {
   const nda = isNda(project)
 
   return (
-    <motion.article {...enter(index)} data-testid="project-card" data-nda={nda ? 'true' : undefined} className={`${CARD} p-3 sm:p-3.5`}>
+    <m.article {...enter(index)} data-testid="project-card" data-nda={nda ? 'true' : undefined} className={`${CARD} p-3 sm:p-3.5`}>
       <div className="flex items-start gap-3">
         <ProjectIcon project={project} meta={meta} className="w-10 h-10 rounded-lg" />
         <div className="min-w-0 flex-1">
@@ -156,6 +156,6 @@ export default function ProjectCard({ project, index, onOpen }: Props) {
       <div className="mt-auto pt-1.5 pl-[3.25rem]">
         <CardLinks project={project} />
       </div>
-    </motion.article>
+    </m.article>
   )
 }

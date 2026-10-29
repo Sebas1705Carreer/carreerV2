@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from 'framer-motion'
+import { m, useReducedMotion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import type { SectionProps } from '../../types'
 import { usePortfolioData } from '../../context/PortfolioDataContext'
@@ -39,26 +39,36 @@ export default function HeroSection({ onNext, onOpenCV }: SectionProps) {
 
   return (
     <SectionWrapper className="text-center">
-      <motion.p {...item(0.05)} className="font-mono text-xs sm:text-sm tracking-[0.25em] uppercase text-violet-600 dark:text-violet-400 mb-3 sm:mb-5">
+      <m.p {...item(0.05)} className="font-mono text-xs sm:text-sm tracking-[0.25em] uppercase text-violet-600 dark:text-violet-400 mb-3 sm:mb-5">
         {localize(personal.greeting, lang)}
-      </motion.p>
+      </m.p>
 
-      <motion.h1
+      <m.h1
         {...item(0.15)}
         className="font-display text-[2.75rem] sm:text-7xl lg:text-8xl font-bold tracking-tight text-slate-900 dark:text-white mb-3 sm:mb-5 leading-tight break-words hyphens-auto"
       >
         {personal.name || 'Sebastián Entrerrios García'}
-      </motion.h1>
+      </m.h1>
 
-      <motion.p {...item(0.25)} className="text-lg sm:text-2xl lg:text-4xl font-light text-violet-600 dark:text-violet-400 mb-5 sm:mb-7">
+      <m.p {...item(0.25)} className="text-lg sm:text-2xl lg:text-4xl font-light text-violet-600 dark:text-violet-400 mb-5 sm:mb-7">
         {localize(personal.role, lang)}
-      </motion.p>
+      </m.p>
 
-      <motion.p {...item(0.35)} className="text-slate-500 dark:text-slate-400 text-sm sm:text-lg max-w-xl mx-auto mb-8 sm:mb-10 leading-relaxed">
+      <m.p {...item(0.35)} className="text-slate-500 dark:text-slate-400 text-sm sm:text-lg max-w-xl mx-auto mb-4 sm:mb-5 leading-relaxed">
         {localize(personal.tagline, lang)}
-      </motion.p>
+      </m.p>
 
-      <motion.div {...item(0.45)} className="flex flex-wrap gap-3 sm:gap-4 justify-center mb-8 sm:mb-10">
+      {/* Availability: plain text (the dot is decorative), so it reads the same for everyone */}
+      <m.p
+        {...item(0.4)}
+        data-testid="hero-availability"
+        className="inline-flex items-center gap-2 mb-8 sm:mb-10 px-3 py-1 rounded-full border border-teal-500/30 bg-teal-50/80 dark:bg-teal-950/40 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200"
+      >
+        <span aria-hidden="true" className="w-2 h-2 rounded-full bg-teal-500 shrink-0" />
+        {t('hero.availability')}
+      </m.p>
+
+      <m.div {...item(0.45)} className="flex flex-wrap gap-3 sm:gap-4 justify-center mb-8 sm:mb-10">
         {/* Primary: the static PDF rendered at build time by scripts/build-cv.mjs (same document as the generator) */}
         <a
           href={`${import.meta.env.BASE_URL}cv/cv-${lang}.pdf`}
@@ -84,22 +94,22 @@ export default function HeroSection({ onNext, onOpenCV }: SectionProps) {
         >
           {t('hero.cta_contact')}
         </a>
-      </motion.div>
+      </m.div>
 
       {/* Secondary: the in-browser generator (role-specific and ATS variants) */}
       {onOpenCV && (
-        <motion.p {...item(0.5)} className="-mt-5 sm:-mt-6 mb-8 sm:mb-10 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+        <m.p {...item(0.5)} className="-mt-5 sm:-mt-6 mb-8 sm:mb-10 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
           <button
             onClick={onOpenCV}
             className="underline underline-offset-4 decoration-slate-300 dark:decoration-slate-700 hover:text-violet-600 dark:hover:text-violet-400 transition-colors cursor-pointer touch-manipulation"
           >
             {isEs ? 'Otras versiones del CV (por rol, ATS)' : 'Other CV versions (by role, ATS)'}
           </button>
-        </motion.p>
+        </m.p>
       )}
 
       {/* Stats bar */}
-      <motion.div
+      <m.div
         {...item(0.55)}
         className="grid grid-cols-2 gap-x-6 gap-y-4 max-w-[280px] mx-auto sm:max-w-none sm:inline-flex sm:flex-wrap sm:gap-10 justify-center px-6 sm:px-10 py-4 rounded-2xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-800 backdrop-blur-sm"
       >
@@ -109,9 +119,9 @@ export default function HeroSection({ onNext, onOpenCV }: SectionProps) {
             <div className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1 leading-tight">{s.label}</div>
           </div>
         ))}
-      </motion.div>
+      </m.div>
 
-      <motion.button
+      <m.button
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.6, duration: 0.8 }}
@@ -119,12 +129,12 @@ export default function HeroSection({ onNext, onOpenCV }: SectionProps) {
         className="mt-8 sm:mt-10 mx-auto flex flex-col items-center gap-2 px-4 py-2 text-slate-400 dark:text-slate-600 hover:text-violet-600 dark:hover:text-violet-400 transition-colors cursor-pointer touch-manipulation"
       >
         <span className="text-xs tracking-widest uppercase">{t('nav.explore')}</span>
-        <motion.div animate={reduceMotion ? undefined : { y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}>
+        <m.div animate={reduceMotion ? undefined : { y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
             <path d="M7 10l5 5 5-5" />
           </svg>
-        </motion.div>
-      </motion.button>
+        </m.div>
+      </m.button>
     </SectionWrapper>
   )
 }

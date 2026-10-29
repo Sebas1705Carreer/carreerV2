@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { motion, useReducedMotion } from 'framer-motion'
+import { m, useReducedMotion } from 'framer-motion'
 
 interface Props {
   total: number
@@ -24,7 +24,7 @@ export default function NavDots({ total, current, onNavigate, sectionKeys }: Pro
           aria-current={i === current ? 'true' : undefined}
           data-section={sectionKeys[i]}
         >
-          <motion.span
+          <m.span
             animate={{ scale: i === current ? 1.6 : 1 }}
             transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 400, damping: 25 }}
             className={`block rounded-full transition-colors duration-300 ${
