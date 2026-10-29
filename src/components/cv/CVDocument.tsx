@@ -1,21 +1,26 @@
 import {
   Document, Page, Text, View, Link, Image, StyleSheet,
 } from '@react-pdf/renderer'
+import type { ReactNode } from 'react'
 import { localize } from '../../lib/localize'
 import type { PortfolioRawData } from '../../context/PortfolioDataContext'
-import { ROLES, SPOKEN_LANGS, atsDates, type RoleId } from './profiles'
+import { CV_FULL_NAME, atsDates, type RoleId } from './profiles'
+import { buildCvContent } from './cvContent'
 
 /*
  * Pure @react-pdf CV documents (HR + ATS variants).
  * No hooks, no DOM: shared by the in-browser generator (CVGenerator.tsx) and
  * by scripts/build-cv.mjs, which renders the static /cv/cv-{en,es}.pdf in CI.
+ * What gets printed (role, tagline, summary, skills, projects…) is decided in
+ * cvContent.ts; this file only lays it out.
  */
 
 
 // ── PDF styles ────────────────────────────────────────────────────────────────
 // Sin Font.register: @react-pdf no soporta woff2 (el registro anterior con
 // fonts.gstatic caía en silencio) — Helvetica es una de las 14 fuentes
-// estándar de PDF y no necesita registro ni red.
+// estándar de PDF y no necesita registro ni red. Solo cubre WinAnsi: nada de
+// flechas u otros símbolos fuera de Latin-1 (se pintaban como «—»).
 
 // Family ink palette — same brand as the site, the org and the Folio editor
 const PURPLE = '#4A5AF0'
@@ -25,58 +30,61 @@ const LIGHT  = '#94a3b8'
 const BORDER = '#E0E4FD'
 
 const s = StyleSheet.create({
-  page:       { fontFamily: 'Helvetica', fontSize: 9, color: DARK, paddingTop: 28, paddingBottom: 28, paddingHorizontal: 32, lineHeight: 1.4 },
+  page:       { fontFamily: 'Helvetica', fontSize: 9, color: DARK, paddingTop: 28, paddingBottom: 30, paddingHorizontal: 32, lineHeight: 1.4 },
   // header
-  header:     { flexDirection: 'row', gap: 12, marginBottom: 10 },
+  header:     { flexDirection: 'row', gap: 14, marginBottom: 4, alignItems: 'flex-start' },
   headerText: { flex: 1 },
-  photo:      { width: 62, height: 62, borderRadius: 31, borderWidth: 2, borderColor: PURPLE, objectFit: 'cover' },
-  name:       { fontSize: 18, fontWeight: 700, color: DARK, letterSpacing: -0.5 },
-  title:      { fontSize: 10, fontWeight: 700, color: PURPLE, marginTop: 2 },
-  contactRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 2, marginTop: 5, fontSize: 7.5, color: MID, borderTopWidth: 1.5, borderTopColor: PURPLE, paddingTop: 4 },
-  contactSep: { color: LIGHT },
-  kwRow:      { flexDirection: 'row', flexWrap: 'wrap', gap: 3, marginTop: 5 },
-  kw:         { fontSize: 7, fontWeight: 700, color: PURPLE, borderWidth: 1, borderColor: '#C7CDFB', backgroundColor: '#EEF0FE', borderRadius: 2, paddingHorizontal: 5, paddingVertical: 1 },
+  photo:      { width: 64, height: 64, borderRadius: 32, borderWidth: 2, borderColor: PURPLE, objectFit: 'cover' },
+  name:       { fontSize: 18, fontFamily: 'Helvetica-Bold', color: DARK, lineHeight: 1.2 },
+  title:      { fontSize: 10.5, fontFamily: 'Helvetica-Bold', color: PURPLE, lineHeight: 1.2, marginTop: 3 },
+  tagline:    { fontSize: 8.5, fontFamily: 'Helvetica-Oblique', color: MID, lineHeight: 1.2, marginTop: 3 },
+  contactRow: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 12, rowGap: 1, marginTop: 6, borderTopWidth: 1.5, borderTopColor: PURPLE, paddingTop: 4 },
+  contact:    { fontSize: 7.5, color: MID, lineHeight: 1.3 },
+  contactLink:{ fontSize: 7.5, color: PURPLE, lineHeight: 1.3, textDecoration: 'none' },
+  kwRow:      { flexDirection: 'row', flexWrap: 'wrap', gap: 3, marginTop: 6 },
+  kw:         { fontSize: 7, fontFamily: 'Helvetica-Bold', color: PURPLE, borderWidth: 0.75, borderColor: '#C7CDFB', backgroundColor: '#EEF0FE', borderRadius: 2, paddingHorizontal: 4, paddingTop: 2, paddingBottom: 1.5, lineHeight: 1 },
   // section heading
-  h2:         { fontSize: 7, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1.2, color: PURPLE, borderBottomWidth: 1, borderBottomColor: BORDER, paddingBottom: 2, marginTop: 12, marginBottom: 5 },
+  h2:         { fontSize: 7, fontFamily: 'Helvetica-Bold', textTransform: 'uppercase', letterSpacing: 1.2, color: PURPLE, borderBottomWidth: 1, borderBottomColor: BORDER, paddingBottom: 2, marginTop: 11, marginBottom: 5 },
   // summary
   summary:    { fontSize: 8.5, color: '#334155', lineHeight: 1.5 },
+  portfolio:  { fontSize: 8, color: MID, marginTop: 3 },
   // job
-  job:        { marginBottom: 8 },
-  jobRow:     { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' },
-  jobTitle:   { fontSize: 9, fontWeight: 700, color: DARK },
+  job:        { marginBottom: 7 },
+  jobRow:     { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', gap: 8 },
+  jobTitle:   { fontSize: 9, fontFamily: 'Helvetica-Bold', color: DARK },
   jobMeta:    { fontSize: 7.5, color: LIGHT },
-  jobCompany: { fontSize: 8.5, fontWeight: 700, color: PURPLE, marginTop: 1 },
+  jobCompany: { fontSize: 8.5, fontFamily: 'Helvetica-Bold', color: PURPLE, marginTop: 1 },
   jobDesc:    { fontSize: 8, color: MID, marginTop: 1 },
-  bullet:     { fontSize: 8, color: '#334155', marginTop: 1.5, paddingLeft: 8 },
+  bulletRow:  { flexDirection: 'row', marginTop: 1.5, paddingLeft: 4 },
+  bulletDot:  { fontSize: 8, color: PURPLE, width: 8 },
+  bulletText: { flex: 1, fontSize: 8, color: '#334155' },
   jobProjs:   { fontSize: 7.5, color: LIGHT, marginTop: 2 },
   // skills
-  skillRow:   { flexDirection: 'row', marginBottom: 3, alignItems: 'flex-start' },
-  skillCat:   { fontSize: 7.5, fontWeight: 700, color: MID, width: 110 },
-  skillList:  { flex: 1, fontSize: 8.5, color: DARK },
+  // one Text per row (label + list inline) so text extraction keeps label → skills order
+  skillRow:   { fontSize: 8.5, color: DARK, marginBottom: 2 },
+  skillCat:   { fontFamily: 'Helvetica-Bold', color: MID },
   // projects
-  proj:       { marginBottom: 7 },
-  projRow:    { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' },
-  projName:   { fontSize: 9, fontWeight: 700, color: DARK },
-  projCtx:    { fontSize: 7.5, color: LIGHT },
-  projDesc:   { fontSize: 8, color: MID, marginTop: 1.5 },
-  projTags:   { fontSize: 7.5, color: LIGHT, marginTop: 1 },
+  proj:       { marginBottom: 5.5 },
+  projHead:   { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'flex-end', columnGap: 8 },
+  projName:   { fontSize: 9, fontFamily: 'Helvetica-Bold', color: DARK },
+  projLink:   { fontSize: 7.5, color: PURPLE, textDecoration: 'none', paddingBottom: 0.6 },
+  projCtx:    { fontSize: 7.5, color: LIGHT, paddingBottom: 0.6 },
+  projDesc:   { fontSize: 8, color: MID, marginTop: 1 },
   // edu
-  edu:        { marginBottom: 7 },
-  eduRow:     { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' },
-  eduDeg:     { fontSize: 9, fontWeight: 700, color: DARK },
+  edu:        { marginBottom: 6 },
+  eduRow:     { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', gap: 8 },
+  eduDeg:     { fontSize: 9, fontFamily: 'Helvetica-Bold', color: DARK },
   eduPeriod:  { fontSize: 7.5, color: LIGHT },
-  eduSchool:  { fontSize: 8, color: MID, fontWeight: 700, marginTop: 1 },
+  eduSchool:  { fontSize: 8, color: MID, fontFamily: 'Helvetica-Bold', marginTop: 1 },
   eduDetail:  { fontSize: 7.5, color: LIGHT, marginTop: 1 },
   // certs
-  certRow:    { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 3.5 },
-  certName:   { fontSize: 8.5, color: PURPLE, fontWeight: 700 },
+  certRow:    { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', gap: 8, marginBottom: 3 },
+  certName:   { fontSize: 8.5, color: PURPLE, fontFamily: 'Helvetica-Bold', textDecoration: 'none' },
   certMeta:   { fontSize: 7.5, color: LIGHT },
   // langs
   langRow:    { flexDirection: 'row', gap: 20, flexWrap: 'wrap' },
   langItem:   { fontSize: 8.5, color: DARK },
-  langBold:   { fontWeight: 700 },
-  // link inline
-  inlineLink: { fontSize: 7.5, color: PURPLE },
+  langBold:   { fontFamily: 'Helvetica-Bold' },
 })
 
 // ── PDF Document ──────────────────────────────────────────────────────────────
@@ -92,94 +100,76 @@ export interface CVDocProps {
   avatar?: string
 }
 
+/**
+ * Section heading kept on the same page as its first item (minPresenceAhead alone
+ * left "KEY PROJECTS" orphaned at the bottom of page 1, its rule on page 2).
+ */
+function Section({ title, items }: { title: string; items: ReactNode[] }) {
+  const [first, ...rest] = items
+  return (
+    <>
+      <View wrap={false}>
+        <Text style={s.h2}>{title}</Text>
+        {first}
+      </View>
+      {rest}
+    </>
+  )
+}
+
 export function CVDocument({ lang, role, personal, skills, jobs, projects, education, avatar }: CVDocProps) {
-  const profile = ROLES[role]
   const isEs = lang === 'es'
   const loc = (v: unknown) => localize(v as Parameters<typeof localize>[0], lang)
+  const cv = buildCvContent({ lang, role, personal, skills, projects, education })
 
-  const cvSkills = profile.prioritySkillIds
-    .map(id => skills.find(s => s.id === id))
-    .filter(Boolean) as typeof skills
-
-  const skillGroups: Record<string, string[]> = {}
-  cvSkills.forEach(s => {
-    if (!skillGroups[s.category]) skillGroups[s.category] = []
-    skillGroups[s.category].push(s.name)
-  })
-
-  const CV_ROW_ORDER = [
-    { key: 'languages',     cats: ['languages'],              label: { en: 'Programming Languages', es: 'Lenguajes' } },
-    { key: 'frameworks',    cats: ['frameworks'],             label: { en: 'Frameworks & Libraries', es: 'Frameworks' } },
-    { key: 'tools',         cats: ['tools'],                  label: { en: 'Tools & DevOps',         es: 'Herramientas & DevOps' } },
-    { key: 'clouddb',       cats: ['databases', 'cloud'],     label: { en: 'Cloud & Databases',      es: 'Cloud & Bases de datos' } },
-    { key: 'architecture',  cats: ['architecture'],           label: { en: 'Architecture',            es: 'Arquitectura' } },
-    { key: 'methodologies', cats: ['methodologies'],          label: { en: 'Methodologies',           es: 'Metodologías' } },
-    { key: 'ai',            cats: ['ai', 'ides', 'os'],       label: { en: 'AI & Tools',              es: 'IA y Herramientas' } },
-  ] as const
-
-  const skillRows = CV_ROW_ORDER
-    .map(row => ({ ...row, names: row.cats.flatMap(c => skillGroups[c] ?? []) }))
-    .filter(row => row.names.length > 0)
-
-  const allProjects = [...(projects.work ?? []), ...(projects.featured ?? [])]
-  const cvProjects = profile.projectIds
-    .map(id => allProjects.find(p => p.id === id))
-    .filter(Boolean) as typeof allProjects
-
-  const cvCerts = (education.certs ?? []).slice(0, profile.maxCerts)
-  const spokenLangs = SPOKEN_LANGS[isEs ? 'es' : 'en']
-  const keywords    = isEs ? profile.keywordsEs : profile.keywordsEn
-  const summary     = isEs ? profile.summaryEs  : profile.summaryEn
-  const roleTitle   = isEs ? profile.labelEs    : profile.labelEn
-
-  const expLabel   = isEs ? 'Experiencia Profesional' : 'Professional Experience'
-  const skillsLbl  = isEs ? 'Habilidades Técnicas'    : 'Technical Skills'
-  const projsLbl   = isEs ? 'Proyectos Destacados'    : 'Key Projects'
-  const eduLbl     = isEs ? 'Formación Académica'     : 'Education'
-  const certsLbl   = isEs ? 'Certificaciones'         : 'Certifications'
-  const langsLbl   = isEs ? 'Idiomas'                 : 'Languages'
-  const profileLbl = isEs ? 'Perfil Profesional'      : 'Professional Profile'
+  const L = {
+    profile: isEs ? 'Perfil Profesional'      : 'Professional Profile',
+    exp:     isEs ? 'Experiencia Profesional' : 'Professional Experience',
+    skills:  isEs ? 'Habilidades Técnicas'    : 'Technical Skills',
+    projs:   isEs ? 'Proyectos Destacados'    : 'Key Projects',
+    edu:     isEs ? 'Formación Académica'     : 'Education',
+    certs:   isEs ? 'Certificaciones'         : 'Certifications',
+    langs:   isEs ? 'Idiomas'                 : 'Languages',
+    portfolio: isEs ? 'Portfolio y casos de estudio: ' : 'Portfolio and case studies: ',
+    products:  isEs ? 'Productos' : 'Products',
+  }
 
   return (
-    <Document title={`CV – Sebastián Ramiro Entrerrios García`} author="Sebastián Ramiro Entrerrios García" subject={roleTitle} creator="Portfolio CV Generator" keywords={keywords.join(', ')}>
+    <Document title={`CV – ${CV_FULL_NAME}`} author={CV_FULL_NAME} subject={cv.roleTitle} creator="Portfolio CV Generator" keywords={cv.keywords.join(', ')}>
       <Page size="A4" style={s.page}>
 
         {/* ── Header ── */}
         <View style={s.header}>
           {avatar && <Image style={s.photo} src={avatar} />}
           <View style={s.headerText}>
-            <Text style={s.name}>Sebastián Ramiro Entrerrios García</Text>
-            <Text style={s.title}>{roleTitle}</Text>
+            <Text style={s.name}>{CV_FULL_NAME}</Text>
+            <Text style={s.title}>{cv.roleTitle}</Text>
+            {cv.tagline && <Text style={s.tagline}>{cv.tagline}</Text>}
             <View style={s.contactRow}>
-              <Link src={`mailto:${personal.email}`} style={s.inlineLink}>{personal.email}</Link>
-              <Text style={s.contactSep}>  |  </Text>
-              {personal.social?.linkedin && (
-                <>
-                  <Link src={personal.social.linkedin} style={s.inlineLink}>linkedin.com/in/sebastián-ramiro-entrerrios-garcía-b1a713217</Link>
-                  <Text style={s.contactSep}>  |  </Text>
-                </>
-              )}
-              {personal.social?.github && (
-                <>
-                  <Link src={personal.social.github} style={s.inlineLink}>github.com/Sebas1705</Link>
-                  <Text style={s.contactSep}>  |  </Text>
-                </>
-              )}
-              <Text>{loc(personal.location)}</Text>
-            </View>
-            <View style={s.kwRow}>
-              {keywords.map(k => <Text key={k} style={s.kw}>{k}</Text>)}
+              <Link src={`mailto:${cv.contact.email}`} style={s.contactLink}>{cv.contact.email}</Link>
+              {cv.contact.links.map(l => (
+                <Link key={l.url} src={l.url} style={s.contactLink}>{l.label}</Link>
+              ))}
+              <Text style={s.contact}>{cv.contact.location}</Text>
             </View>
           </View>
         </View>
+        <View style={s.kwRow}>
+          {cv.keywords.map(k => <Text key={k} style={s.kw}>{k}</Text>)}
+        </View>
 
         {/* ── Profile ── */}
-        <Text style={s.h2}>{profileLbl}</Text>
-        <Text style={s.summary}>{summary}</Text>
+        <Section title={L.profile} items={[
+          <View key="summary">
+            <Text style={s.summary}>{cv.summary}</Text>
+            <Text style={s.portfolio}>
+              {L.portfolio}<Link src={cv.portfolio.url} style={s.contactLink}>{cv.portfolio.label}</Link>
+            </Text>
+          </View>,
+        ]} />
 
         {/* ── Experience ── */}
-        <Text style={s.h2}>{expLabel}</Text>
-        {jobs.map(j => (
+        <Section title={L.exp} items={jobs.map(j => (
           <View key={j.id} style={s.job}>
             <View style={s.jobRow}>
               <Text style={s.jobTitle}>{loc(j.role)}</Text>
@@ -188,48 +178,46 @@ export function CVDocument({ lang, role, personal, skills, jobs, projects, educa
             <Text style={s.jobCompany}>{j.company}</Text>
             <Text style={s.jobDesc}>{loc(j.desc)}</Text>
             {(j.achievements ?? []).map((a, i) => (
-              <Text key={i} style={s.bullet}>• {loc(a)}</Text>
+              <View key={i} style={s.bulletRow} wrap={false}>
+                <Text style={s.bulletDot}>•</Text>
+                <Text style={s.bulletText}>{loc(a)}</Text>
+              </View>
             ))}
             {(j.projects ?? []).length > 0 && (
               <Text style={s.jobProjs}>
-                {isEs ? 'Productos' : 'Products'}: {(j.projects ?? []).map(p => loc(p)).join(', ')}
+                {L.products}: {(j.projects ?? []).map(p => loc(p)).join(', ')}
               </Text>
             )}
           </View>
-        ))}
+        ))} />
 
-        {/* ── Skills ── */}
-        <Text style={s.h2}>{skillsLbl}</Text>
-        {skillRows.map(row => (
-          <View key={row.key} style={s.skillRow}>
-            <Text style={s.skillCat}>{row.label[lang]}:</Text>
-            <Text style={s.skillList}>{row.names.join(', ')}</Text>
-          </View>
-        ))}
+        {/* ── Skills (one block: never split across pages) ── */}
+        <Section title={L.skills} items={[
+          <View key="skills">
+            {cv.skillRows.map(row => (
+              <Text key={row.key} style={s.skillRow}>
+                <Text style={s.skillCat}>{row.label}: </Text>{row.names.join(', ')}
+              </Text>
+            ))}
+          </View>,
+        ]} />
 
         {/* ── Projects ── */}
-        <Text style={s.h2}>{projsLbl}</Text>
-        {cvProjects.slice(0, 5).map(p => (
-          <View key={p.id} style={s.proj}>
-            <View style={s.projRow}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, flex: 1 }}>
-                <Text style={s.projName}>{p.name}</Text>
-                {p.github && <Link src={p.github} style={s.inlineLink}>GitHub ↗</Link>}
-                {p.demo   && <Link src={p.demo}   style={s.inlineLink}>Demo ↗</Link>}
-              </View>
+        <Section title={L.projs} items={cv.projects.map(p => (
+          <View key={p.id} style={s.proj} wrap={false}>
+            {/* name · context · links on one line, in reading order (no right-aligned column) */}
+            <View style={s.projHead}>
+              <Text style={s.projName}>{p.name}</Text>
               <Text style={s.projCtx}>{p.context}</Text>
+              {p.links.map(l => <Link key={l.url} src={l.url} style={s.projLink}>{l.label}</Link>)}
             </View>
-            <Text style={s.projDesc}>{loc(p.desc)}</Text>
-            {(p.tags ?? []).length > 0 && (
-              <Text style={s.projTags}>{(p.tags ?? []).slice(0, 7).join(', ')}</Text>
-            )}
+            <Text style={s.projDesc}>{p.desc}</Text>
           </View>
-        ))}
+        ))} />
 
         {/* ── Education ── */}
-        <Text style={s.h2}>{eduLbl}</Text>
-        {(education.items ?? []).map((e, i) => (
-          <View key={i} style={s.edu}>
+        <Section title={L.edu} items={(education.items ?? []).map((e, i) => (
+          <View key={i} style={s.edu} wrap={false}>
             <View style={s.eduRow}>
               <Text style={s.eduDeg}>{loc(e.degree)}</Text>
               <Text style={s.eduPeriod}>{loc(e.period)}</Text>
@@ -237,32 +225,30 @@ export function CVDocument({ lang, role, personal, skills, jobs, projects, educa
             <Text style={s.eduSchool}>{e.school}</Text>
             <Text style={s.eduDetail}>{loc(e.detail)}</Text>
           </View>
-        ))}
+        ))} />
 
         {/* ── Certifications ── */}
-        {cvCerts.length > 0 && (
-          <>
-            <Text style={s.h2}>{certsLbl}</Text>
-            {cvCerts.map((c, i) => (
-              <View key={i} style={s.certRow}>
-                {c.url
-                  ? <Link src={c.url} style={s.certName}>{loc(c.name)}</Link>
-                  : <Text style={s.certName}>{loc(c.name)}</Text>}
-                <Text style={s.certMeta}>{c.issuer} · {c.date}</Text>
-              </View>
-            ))}
-          </>
+        {cv.certs.length > 0 && (
+          <Section title={L.certs} items={cv.certs.map((c, i) => (
+            <View key={i} style={s.certRow} wrap={false}>
+              {c.url
+                ? <Link src={c.url} style={s.certName}>{loc(c.name)}</Link>
+                : <Text style={s.certName}>{loc(c.name)}</Text>}
+              <Text style={s.certMeta}>{c.issuer} · {c.date}</Text>
+            </View>
+          ))} />
         )}
 
         {/* ── Languages ── */}
-        <Text style={s.h2}>{langsLbl}</Text>
-        <View style={s.langRow}>
-          {spokenLangs.map(l => (
-            <Text key={l.lang} style={s.langItem}>
-              <Text style={s.langBold}>{l.lang}: </Text>{l.level}
-            </Text>
-          ))}
-        </View>
+        <Section title={L.langs} items={[
+          <View key="langs" style={s.langRow}>
+            {cv.spokenLangs.map(l => (
+              <Text key={l.lang} style={s.langItem}>
+                <Text style={s.langBold}>{l.lang}: </Text>{l.level}
+              </Text>
+            ))}
+          </View>,
+        ]} />
 
       </Page>
     </Document>
@@ -275,53 +261,20 @@ export function CVDocument({ lang, role, personal, skills, jobs, projects, educa
 // or icons — everything a parser (ATS or an LLM screening agent) reads clean.
 const a = StyleSheet.create({
   page:    { fontFamily: 'Helvetica', fontSize: 10, color: '#000000', paddingTop: 42, paddingBottom: 42, paddingHorizontal: 48, lineHeight: 1.45 },
-  name:    { fontSize: 17, fontWeight: 700 },
-  role:    { fontSize: 11, fontWeight: 700, marginTop: 2 },
-  contact: { fontSize: 9, marginTop: 5 },
-  h2:      { fontSize: 11, fontWeight: 700, textTransform: 'uppercase', marginTop: 14, marginBottom: 5, borderBottomWidth: 1, borderBottomColor: '#000000', paddingBottom: 2 },
+  name:    { fontSize: 17, fontFamily: 'Helvetica-Bold', lineHeight: 1.2 },
+  role:    { fontSize: 11, fontFamily: 'Helvetica-Bold', marginTop: 2 },
+  contact: { fontSize: 9, marginTop: 3 },
+  h2:      { fontSize: 11, fontFamily: 'Helvetica-Bold', textTransform: 'uppercase', marginTop: 14, marginBottom: 5, borderBottomWidth: 1, borderBottomColor: '#000000', paddingBottom: 2 },
   p:       { fontSize: 9.5, marginBottom: 2 },
-  bold:    { fontWeight: 700 },
+  bold:    { fontFamily: 'Helvetica-Bold' },
   item:    { marginBottom: 7 },
   bullet:  { fontSize: 9.5, marginTop: 1.5, paddingLeft: 10 },
 })
 
-
-const ATS_ROW_ORDER = [
-  { key: 'languages',     cats: ['languages'],          label: { en: 'Programming Languages', es: 'Lenguajes' } },
-  { key: 'frameworks',    cats: ['frameworks'],         label: { en: 'Frameworks & Libraries', es: 'Frameworks' } },
-  { key: 'tools',         cats: ['tools'],              label: { en: 'Tools & DevOps',         es: 'Herramientas & DevOps' } },
-  { key: 'clouddb',       cats: ['databases', 'cloud'], label: { en: 'Cloud & Databases',      es: 'Cloud & Bases de datos' } },
-  { key: 'architecture',  cats: ['architecture'],       label: { en: 'Architecture',            es: 'Arquitectura' } },
-  { key: 'methodologies', cats: ['methodologies'],      label: { en: 'Methodologies',           es: 'Metodologías' } },
-  { key: 'ai',            cats: ['ai', 'ides', 'os'],   label: { en: 'AI & Tools',              es: 'IA y Herramientas' } },
-] as const
-
 export function AtsCVDocument({ lang, role, personal, skills, jobs, projects, education }: CVDocProps) {
-  const profile = ROLES[role]
   const isEs = lang === 'es'
   const loc = (v: unknown) => localize(v as Parameters<typeof localize>[0], lang)
-
-  const cvSkills = profile.prioritySkillIds
-    .map(id => skills.find(s => s.id === id))
-    .filter(Boolean) as typeof skills
-  const skillGroups: Record<string, string[]> = {}
-  cvSkills.forEach(s => {
-    if (!skillGroups[s.category]) skillGroups[s.category] = []
-    skillGroups[s.category].push(s.name)
-  })
-  const skillRows = ATS_ROW_ORDER
-    .map(row => ({ ...row, names: row.cats.flatMap(c => skillGroups[c] ?? []) }))
-    .filter(row => row.names.length > 0)
-
-  const allProjects = [...(projects.work ?? []), ...(projects.featured ?? [])]
-  const cvProjects = profile.projectIds
-    .map(id => allProjects.find(p => p.id === id))
-    .filter(Boolean) as typeof allProjects
-  const cvCerts = (education.certs ?? []).slice(0, profile.maxCerts)
-  const spokenLangs = SPOKEN_LANGS[isEs ? 'es' : 'en']
-  const keywords = isEs ? profile.keywordsEs : profile.keywordsEn
-  const summary = isEs ? profile.summaryEs : profile.summaryEn
-  const roleTitle = isEs ? profile.labelEs : profile.labelEn
+  const cv = buildCvContent({ lang, role, personal, skills, projects, education })
 
   const L = {
     summary: isEs ? 'Resumen Profesional' : 'Professional Summary',
@@ -336,22 +289,24 @@ export function AtsCVDocument({ lang, role, personal, skills, jobs, projects, ed
   }
 
   return (
-    <Document title="CV - Sebastian Ramiro Entrerrios Garcia (ATS)" author="Sebastián Ramiro Entrerrios García" subject={roleTitle} creator="Portfolio CV Generator" keywords={keywords.join(', ')}>
+    <Document title="CV - Sebastian Ramiro Entrerrios Garcia (ATS)" author={CV_FULL_NAME} subject={cv.roleTitle} creator="Portfolio CV Generator" keywords={cv.keywords.join(', ')}>
       <Page size="A4" style={a.page}>
-        <Text style={a.name}>Sebastián Ramiro Entrerrios García</Text>
-        <Text style={a.role}>{roleTitle}</Text>
-        <Text style={a.contact}>{personal.email} | {loc(personal.location)}</Text>
+        <Text style={a.name}>{CV_FULL_NAME}</Text>
+        <Text style={a.role}>{cv.roleTitle}</Text>
+        {cv.tagline && <Text style={a.contact}>{cv.tagline}</Text>}
+        <Text style={a.contact}>{cv.contact.email} | {cv.contact.location}</Text>
         {personal.social?.github   && <Text style={a.contact}>GitHub: {personal.social.github}</Text>}
         {personal.social?.linkedin && <Text style={a.contact}>LinkedIn: {personal.social.linkedin}</Text>}
+        <Text style={a.contact}>Portfolio: {cv.portfolio.url}</Text>
 
         <Text style={a.h2}>{L.summary}</Text>
-        <Text style={a.p}>{summary}</Text>
-        <Text style={a.p}><Text style={a.bold}>{L.keywordsLbl}:</Text> {keywords.join(', ')}</Text>
+        <Text style={a.p}>{cv.summary}</Text>
+        <Text style={a.p}><Text style={a.bold}>{L.keywordsLbl}:</Text> {cv.keywords.join(', ')}</Text>
 
         <Text style={a.h2}>{L.skills}</Text>
-        {skillRows.map(row => (
+        {cv.skillRows.map(row => (
           <Text key={row.key} style={a.p}>
-            <Text style={a.bold}>{row.label[lang]}: </Text>{row.names.join(', ')}
+            <Text style={a.bold}>{row.label}: </Text>{row.names.join(', ')}
           </Text>
         ))}
 
@@ -370,13 +325,12 @@ export function AtsCVDocument({ lang, role, personal, skills, jobs, projects, ed
         ))}
 
         <Text style={a.h2}>{L.projs}</Text>
-        {cvProjects.slice(0, 5).map(p => (
-          <View key={p.id} style={a.item}>
+        {cv.projects.map(p => (
+          <View key={p.id} style={a.item} wrap={false}>
             <Text style={a.p}><Text style={a.bold}>{p.name}</Text> ({p.context})</Text>
-            <Text style={a.p}>{loc(p.desc)}</Text>
-            {(p.tags ?? []).length > 0 && <Text style={a.p}>{L.tech}: {(p.tags ?? []).slice(0, 8).join(', ')}</Text>}
-            {p.github && <Text style={a.p}>{p.github}</Text>}
-            {p.demo && <Text style={a.p}>{p.demo}</Text>}
+            <Text style={a.p}>{p.desc}</Text>
+            {p.tags.length > 0 && <Text style={a.p}>{L.tech}: {p.tags.slice(0, 8).join(', ')}</Text>}
+            {p.links.map(l => <Text key={l.url} style={a.p}>{l.url}</Text>)}
           </View>
         ))}
 
@@ -388,17 +342,17 @@ export function AtsCVDocument({ lang, role, personal, skills, jobs, projects, ed
           </View>
         ))}
 
-        {cvCerts.length > 0 && (
+        {cv.certs.length > 0 && (
           <>
             <Text style={a.h2}>{L.certs}</Text>
-            {cvCerts.map((c, i) => (
+            {cv.certs.map((c, i) => (
               <Text key={i} style={a.p}>- {loc(c.name)} | {c.issuer} | {c.date}{c.url ? ` | ${c.url}` : ''}</Text>
             ))}
           </>
         )}
 
         <Text style={a.h2}>{L.langs}</Text>
-        {spokenLangs.map(l => (
+        {cv.spokenLangs.map(l => (
           <Text key={l.lang} style={a.p}>- {l.lang}: {l.level}</Text>
         ))}
       </Page>

@@ -5,7 +5,8 @@ import { localize } from '../lib/localize'
 import { useLang } from '../hooks/useLang'
 import { pdf, type DocumentProps } from '@react-pdf/renderer'
 import { CVDocument, AtsCVDocument } from './cv/CVDocument'
-import { ROLES, ROLE_IDS, SPOKEN_LANGS, atsDates, type RoleId } from './cv/profiles'
+import { CV_FULL_NAME, ROLES, ROLE_IDS, atsDates, type RoleId } from './cv/profiles'
+import { buildCvContent } from './cv/cvContent'
 
 // ── Download helper ───────────────────────────────────────────────────────────
 async function downloadPDF(doc: React.ReactElement<DocumentProps>, filename: string) {
@@ -28,44 +29,14 @@ export default function CVGenerator({ onClose }: Props) {
   const [variant, setVariant] = useState<'hr' | 'ats'>('hr')
   const [generating, setGenerating] = useState(false)
 
-  const profile = ROLES[role]
   const loc = (v: unknown) => localize(v as Parameters<typeof localize>[0], lang)
   const isEs = lang === 'es'
 
-  const cvSkills = profile.prioritySkillIds
-    .map(id => skills.find(s => s.id === id))
-    .filter(Boolean) as typeof skills
-
-  const skillGroups: Record<string, string[]> = {}
-  cvSkills.forEach(s => {
-    if (!skillGroups[s.category]) skillGroups[s.category] = []
-    skillGroups[s.category].push(s.name)
-  })
-
-  const CV_ROW_ORDER = [
-    { key: 'languages',     cats: ['languages'],              label: { en: 'Programming Languages', es: 'Lenguajes' } },
-    { key: 'frameworks',    cats: ['frameworks'],             label: { en: 'Frameworks & Libraries', es: 'Frameworks' } },
-    { key: 'tools',         cats: ['tools'],                  label: { en: 'Tools & DevOps',         es: 'Herramientas & DevOps' } },
-    { key: 'clouddb',       cats: ['databases', 'cloud'],     label: { en: 'Cloud & Databases',      es: 'Cloud & Bases de datos' } },
-    { key: 'architecture',  cats: ['architecture'],           label: { en: 'Architecture',            es: 'Arquitectura' } },
-    { key: 'methodologies', cats: ['methodologies'],          label: { en: 'Methodologies',           es: 'Metodologías' } },
-    { key: 'ai',            cats: ['ai', 'ides', 'os'],       label: { en: 'AI & Tools',              es: 'IA y Herramientas' } },
-  ] as const
-
-  const skillRows = CV_ROW_ORDER
-    .map(row => ({ ...row, names: row.cats.flatMap(c => skillGroups[c] ?? []) }))
-    .filter(row => row.names.length > 0)
-
-  const allProjects = [...(projects.work ?? []), ...(projects.featured ?? [])]
-  const cvProjects = profile.projectIds
-    .map(id => allProjects.find(p => p.id === id))
-    .filter(Boolean) as typeof allProjects
-
-  const cvCerts       = (education.certs ?? []).slice(0, profile.maxCerts)
-  const spokenLangs   = SPOKEN_LANGS[isEs ? 'es' : 'en']
-  const keywords      = isEs ? profile.keywordsEs : profile.keywordsEn
-  const summary       = isEs ? profile.summaryEs  : profile.summaryEn
-  const roleTitle     = isEs ? profile.labelEs    : profile.labelEn
+  // Same mapping the PDF documents use, so the preview matches the download
+  const cv = buildCvContent({ lang, role, personal, skills, projects, education })
+  const { roleTitle, tagline, summary, keywords, skillRows, spokenLangs } = cv
+  const cvProjects = cv.projects
+  const cvCerts = cv.certs
 
   const handleDownload = async () => {
     setGenerating(true)
@@ -154,7 +125,7 @@ export default function CVGenerator({ onClose }: Props) {
             {ROLE_IDS.map(r => (
               <button key={r} onClick={() => setRole(r)}
                 className={`flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 cursor-pointer whitespace-nowrap border ${role === r ? 'bg-violet-100 text-violet-800 border-violet-400 shadow-sm dark:bg-violet-600 dark:text-white dark:border-violet-500' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-transparent hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-slate-800 dark:hover:text-slate-200'}`}>
-                {isEs ? ROLES[r].tabEs : ROLES[r].tabEn}
+                {ROLES[r].tab[lang]}
               </button>
             ))}
             <div className="ml-auto flex items-center gap-1 rounded-full border border-slate-200 dark:border-slate-700 p-0.5">
@@ -179,11 +150,13 @@ export default function CVGenerator({ onClose }: Props) {
             ) : variant === 'ats' ? (
               /* ── ATS/AI preview: exactly the plain structure the parser will read ── */
               <div className="bg-white rounded-xl border border-slate-200 p-6 sm:p-8 shadow-sm text-slate-900 text-[11px] leading-relaxed">
-                <p className="text-base font-bold">Sebastián Ramiro Entrerrios García</p>
+                <p className="text-base font-bold">{CV_FULL_NAME}</p>
                 <p className="font-bold">{roleTitle}</p>
+                {tagline && <p className="text-slate-700">{tagline}</p>}
                 <p className="mt-1 text-slate-700">{personal.email} | {loc(personal.location)}</p>
                 {personal.social?.github && <p className="text-slate-700">GitHub: {personal.social.github}</p>}
                 {personal.social?.linkedin && <p className="text-slate-700 break-all">LinkedIn: {personal.social.linkedin}</p>}
+                <p className="text-slate-700 break-all">Portfolio: {cv.portfolio.url}</p>
 
                 <p className="mt-4 font-bold uppercase border-b border-slate-900 pb-0.5">{isEs ? 'Resumen Profesional' : 'Professional Summary'}</p>
                 <p className="mt-1">{summary}</p>
@@ -191,7 +164,7 @@ export default function CVGenerator({ onClose }: Props) {
 
                 <p className="mt-4 font-bold uppercase border-b border-slate-900 pb-0.5">{isEs ? 'Habilidades Técnicas' : 'Technical Skills'}</p>
                 {skillRows.map(row => (
-                  <p key={row.key} className="mt-0.5"><span className="font-bold">{row.label[lang]}:</span> {row.names.join(', ')}</p>
+                  <p key={row.key} className="mt-0.5"><span className="font-bold">{row.label}:</span> {row.names.join(', ')}</p>
                 ))}
 
                 <p className="mt-4 font-bold uppercase border-b border-slate-900 pb-0.5">{isEs ? 'Experiencia Profesional' : 'Professional Experience'}</p>
@@ -204,11 +177,11 @@ export default function CVGenerator({ onClose }: Props) {
                 ))}
 
                 <p className="mt-4 font-bold uppercase border-b border-slate-900 pb-0.5">{isEs ? 'Proyectos' : 'Projects'}</p>
-                {cvProjects.slice(0, 5).map(p => (
+                {cvProjects.map(p => (
                   <div key={p.id} className="mt-1.5">
-                    <p><span className="font-bold">{p.name}</span> ({p.context}) - {loc(p.desc)}</p>
-                    {(p.tags ?? []).length > 0 && <p className="text-slate-700">{isEs ? 'Tecnologías' : 'Technologies'}: {(p.tags ?? []).slice(0, 8).join(', ')}</p>}
-                    {p.github && <p className="text-slate-700 break-all">{p.github}</p>}
+                    <p><span className="font-bold">{p.name}</span> ({p.context}) - {p.desc}</p>
+                    {p.tags.length > 0 && <p className="text-slate-700">{isEs ? 'Tecnologías' : 'Technologies'}: {p.tags.slice(0, 8).join(', ')}</p>}
+                    {p.links.map(l => <p key={l.url} className="text-slate-700 break-all">{l.url}</p>)}
                   </div>
                 ))}
 
@@ -246,18 +219,16 @@ export default function CVGenerator({ onClose }: Props) {
                   })()}
                   <div className="flex-1 min-w-0">
                     <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-                      Sebastián Ramiro Entrerrios García
+                      {CV_FULL_NAME}
                     </h1>
                     <p className="text-sm font-semibold text-violet-700 mt-0.5">{roleTitle}</p>
+                    {tagline && <p className="text-[11px] italic text-slate-500 mt-0.5">{tagline}</p>}
                     <div className="flex flex-wrap gap-x-4 gap-y-0.5 mt-2 text-[10px] text-slate-500">
                       <a href={`mailto:${personal.email}`} className="hover:text-violet-600">{personal.email}</a>
-                      {personal.social?.linkedin && (
-                        <a href={personal.social.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-violet-600">LinkedIn ↗</a>
-                      )}
-                      {personal.social?.github && (
-                        <a href={personal.social.github} target="_blank" rel="noopener noreferrer" className="hover:text-violet-600">github.com/Sebas1705</a>
-                      )}
-                      <span>📍 {loc(personal.location)}</span>
+                      {cv.contact.links.map(l => (
+                        <a key={l.url} href={l.url} target="_blank" rel="noopener noreferrer" className="hover:text-violet-600 break-all">{l.label}</a>
+                      ))}
+                      <span>📍 {cv.contact.location}</span>
                     </div>
                     <div className="flex flex-wrap gap-1 mt-2">
                       {keywords.map(k => (
@@ -275,6 +246,10 @@ export default function CVGenerator({ onClose }: Props) {
                     {isEs ? 'Perfil Profesional' : 'Professional Profile'}
                   </h2>
                   <p className="text-[11px] text-slate-600 leading-relaxed">{summary}</p>
+                  <p className="text-[10px] text-slate-500 mt-1">
+                    {isEs ? 'Portfolio y casos de estudio: ' : 'Portfolio and case studies: '}
+                    <a href={cv.portfolio.url} target="_blank" rel="noopener noreferrer" className="text-violet-600 hover:underline">{cv.portfolio.label}</a>
+                  </p>
                 </section>
 
                 {/* Experience */}
@@ -319,7 +294,7 @@ export default function CVGenerator({ onClose }: Props) {
                     {skillRows.map(row => (
                       <div key={row.key} className="flex gap-2 items-baseline">
                         <span className="text-[9px] font-bold text-slate-500 w-36 flex-shrink-0">
-                          {row.label[lang]}:
+                          {row.label}:
                         </span>
                         <span className="text-[10px] text-slate-700">{row.names.join(', ')}</span>
                       </div>
@@ -333,18 +308,18 @@ export default function CVGenerator({ onClose }: Props) {
                     {isEs ? 'Proyectos Destacados' : 'Key Projects'}
                   </h2>
                   <div className="space-y-3">
-                    {cvProjects.slice(0, 5).map(p => (
+                    {cvProjects.map(p => (
                       <div key={p.id}>
                         <div className="flex items-baseline justify-between gap-2">
                           <span className="text-[11px] font-bold text-slate-900">
                             {p.name}
-                            {p.github && <a href={p.github} target="_blank" rel="noopener noreferrer" className="ml-2 text-violet-500 font-normal text-[9px] hover:underline">GitHub ↗</a>}
-                            {p.demo   && <a href={p.demo}   target="_blank" rel="noopener noreferrer" className="ml-1 text-violet-500 font-normal text-[9px] hover:underline">Demo ↗</a>}
+                            {p.links.map(l => (
+                              <a key={l.url} href={l.url} target="_blank" rel="noopener noreferrer" className="ml-2 text-violet-500 font-normal text-[9px] hover:underline">{l.label}</a>
+                            ))}
                           </span>
-                          <span className="text-[9px] text-slate-400 capitalize whitespace-nowrap flex-shrink-0">{p.context}</span>
+                          <span className="text-[9px] text-slate-400 whitespace-nowrap flex-shrink-0">{p.context}</span>
                         </div>
-                        <p className="text-[10px] text-slate-500 mt-0.5">{loc(p.desc)}</p>
-                        <p className="text-[9px] text-slate-400 mt-0.5">{(p.tags ?? []).slice(0, 7).join(', ')}</p>
+                        <p className="text-[10px] text-slate-500 mt-0.5">{p.desc}</p>
                       </div>
                     ))}
                   </div>
