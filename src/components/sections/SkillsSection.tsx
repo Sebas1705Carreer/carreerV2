@@ -282,26 +282,39 @@ export default function SkillsSection() {
         </motion.div>
       )}
 
-      {/* Soft skills */}
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-        <p className="text-[10px] font-semibold uppercase tracking-widest text-violet-600 dark:text-violet-400 mb-2 sm:mb-2.5 text-center">
-          {t('skills.soft')}
-        </p>
-        <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center">
-          {softSkills.map(ss => {
-            const name = typeof ss.name === 'string' ? ss.name : (lang === 'es' ? (ss.name as { es: string }).es : (ss.name as { en: string }).en)
-            return (
-              <span
-                key={name}
-                className="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs font-medium bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-100 dark:border-slate-800/50"
-              >
-                <span>{ss.icon}</span>
-                {name}
+      {/* Soft skills: a card of their own, as prominent as a skill category */}
+      {softSkills.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="rounded-xl sm:rounded-2xl border border-fuchsia-100 dark:border-fuchsia-900/40 bg-white/80 dark:bg-slate-900/70 shadow-sm overflow-hidden"
+        >
+          <div className="h-1 w-full bg-fuchsia-500" />
+          <div className="p-3.5 sm:p-5">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <h3 className="text-xs font-bold uppercase tracking-widest text-fuchsia-600 dark:text-fuchsia-400">{t('skills.soft')}</h3>
+              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full border border-fuchsia-200 dark:border-fuchsia-800/50 bg-fuchsia-50 dark:bg-fuchsia-900/20 text-fuchsia-700 dark:text-fuchsia-300 opacity-80">
+                {softSkills.length}
               </span>
-            )
-          })}
-        </div>
-      </motion.div>
+            </div>
+            <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
+              {softSkills.map(ss => {
+                const name = typeof ss.name === 'string' ? ss.name : (lang === 'es' ? (ss.name as { es: string }).es : (ss.name as { en: string }).en)
+                return (
+                  <li
+                    key={name}
+                    className="flex items-center gap-2.5 min-w-0 px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-xl border border-slate-100 dark:border-slate-800/60 bg-slate-50/70 dark:bg-slate-900/60"
+                  >
+                    <span className="w-8 h-8 shrink-0 flex items-center justify-center rounded-lg bg-fuchsia-50 dark:bg-fuchsia-900/20 text-base" aria-hidden>{ss.icon}</span>
+                    <span className="text-[13px] sm:text-sm font-medium leading-tight text-slate-700 dark:text-slate-200">{name}</span>
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+        </motion.div>
+      )}
     </SectionWrapper>
   )
 }
