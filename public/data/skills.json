@@ -17,7 +17,7 @@
     "id": "java",
     "name": "Java",
     "iconUrl": "https://img.icons8.com/?size=100&id=13679&format=png&color=000000",
-    "level": 3,
+    "level": 2,
     "category": "languages"
   },
   {
@@ -66,14 +66,14 @@
     "id": "react",
     "name": "React",
     "iconUrl": "https://cdn.simpleicons.org/react",
-    "level": 4,
+    "level": 3,
     "category": "frameworks"
   },
   {
     "id": "spring-boot",
     "name": "Spring Boot",
     "iconUrl": "https://cdn.simpleicons.org/springboot",
-    "level": 3,
+    "level": 2,
     "category": "frameworks"
   },
   {
@@ -94,7 +94,7 @@
     "id": "ktor",
     "name": "Ktor",
     "iconUrl": "https://cdn.simpleicons.org/ktor",
-    "level": 4,
+    "level": 3,
     "category": "frameworks"
   },
   {
@@ -136,7 +136,7 @@
     "id": "github-actions",
     "name": "GitHub Actions",
     "iconUrl": "https://cdn.simpleicons.org/githubactions",
-    "level": 3,
+    "level": 4,
     "category": "tools"
   },
   {
@@ -241,7 +241,7 @@
     "id": "cloudflare",
     "name": "Cloudflare Workers",
     "iconUrl": "https://cdn.simpleicons.org/cloudflareworkers",
-    "level": 4,
+    "level": 3,
     "category": "cloud"
   },
   {
@@ -283,7 +283,217 @@
     "id": "junit",
     "name": "JUnit",
     "iconUrl": "https://cdn.simpleicons.org/junit5",
+    "level": 3,
+    "category": "tools"
+  },
+  {
+    "id": "kotlin-coroutines",
+    "name": "Kotlin Coroutines",
+    "iconUrl": "https://cdn.simpleicons.org/kotlin",
+    "level": 4,
+    "category": "frameworks"
+  },
+  {
+    "id": "kotlinx-serialization",
+    "name": "kotlinx.serialization",
+    "iconUrl": "https://cdn.simpleicons.org/kotlin",
+    "level": 3,
+    "category": "frameworks"
+  },
+  {
+    "id": "room",
+    "name": "Room",
+    "iconUrl": "https://cdn.simpleicons.org/android",
+    "level": 3,
+    "category": "databases"
+  },
+  {
+    "id": "retrofit",
+    "name": "Retrofit",
+    "iconUrl": null,
+    "level": 3,
+    "category": "frameworks"
+  },
+  {
+    "id": "koin",
+    "name": "Koin",
+    "iconUrl": null,
+    "level": 3,
+    "category": "frameworks"
+  },
+  {
+    "id": "navigation-3",
+    "name": "Navigation 3",
+    "iconUrl": "https://cdn.simpleicons.org/android",
     "level": 2,
+    "category": "frameworks"
+  },
+  {
+    "id": "sql",
+    "name": "SQL",
+    "iconUrl": null,
+    "level": 3,
+    "category": "databases"
+  },
+  {
+    "id": "vitest",
+    "name": "Vitest",
+    "iconUrl": "https://cdn.simpleicons.org/vitest",
+    "level": 3,
+    "category": "frameworks"
+  },
+  {
+    "id": "playwright",
+    "name": "Playwright",
+    "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/playwright/playwright-original.svg",
+    "level": 2,
+    "category": "frameworks"
+  },
+  {
+    "id": "tailwindcss",
+    "name": "Tailwind CSS",
+    "iconUrl": "https://cdn.simpleicons.org/tailwindcss",
+    "level": 3,
+    "category": "frameworks"
+  },
+  {
+    "id": "html",
+    "name": "HTML",
+    "iconUrl": "https://cdn.simpleicons.org/html5",
+    "level": 3,
+    "category": "languages"
+  },
+  {
+    "id": "css",
+    "name": "CSS",
+    "iconUrl": "https://cdn.simpleicons.org/css",
+    "level": 3,
+    "category": "languages"
+  },
+  {
+    "id": "vite",
+    "name": "Vite",
+    "iconUrl": "https://cdn.simpleicons.org/vite",
+    "level": 3,
+    "category": "frameworks"
+  },
+  {
+    "id": "codeql",
+    "name": "CodeQL",
+    "iconUrl": null,
+    "level": 3,
+    "category": "tools"
+  },
+  {
+    "id": "github",
+    "name": "GitHub",
+    "iconUrl": "https://cdn.simpleicons.org/github/94a3b8",
+    "level": 4,
+    "category": "tools"
+  },
+  {
+    "id": "doppler",
+    "name": "Doppler",
+    "iconUrl": null,
+    "level": 3,
+    "category": "tools"
+  },
+  {
+    "id": "wails",
+    "name": "Wails",
+    "iconUrl": "https://cdn.simpleicons.org/wails",
+    "level": 3,
+    "category": "frameworks"
+  },
+  {
+    "id": "bash",
+    "name": "Bash",
+    "iconUrl": "https://cdn.simpleicons.org/gnubash",
+    "level": 3,
+    "category": "languages"
+  },
+  {
+    "id": "powershell",
+    "name": "PowerShell",
+    "iconUrl": null,
+    "level": 3,
+    "category": "languages"
+  },
+  {
+    "id": "mvc",
+    "name": "MVC",
+    "iconUrl": null,
+    "level": 3,
+    "category": "architecture"
+  },
+  {
+    "id": "kubernetes",
+    "name": "Kubernetes",
+    "iconUrl": "https://cdn.simpleicons.org/kubernetes",
+    "level": 2,
+    "category": "tools"
+  },
+  {
+    "id": "microsoft-powerbi",
+    "name": "Microsoft Power BI",
+    "iconUrl": null,
+    "level": 2,
+    "category": "tools"
+  },
+  {
+    "id": "mysql",
+    "name": "MySQL",
+    "iconUrl": "https://cdn.simpleicons.org/mysql",
+    "level": 2,
+    "category": "databases"
+  },
+  {
+    "id": "c",
+    "name": "C",
+    "iconUrl": "https://cdn.simpleicons.org/c",
+    "level": 2,
+    "category": "languages"
+  },
+  {
+    "id": "cpp",
+    "name": "C++",
+    "iconUrl": "https://cdn.simpleicons.org/cplusplus",
+    "level": 2,
+    "category": "languages"
+  },
+  {
+    "id": "ci-cd",
+    "name": "CI/CD",
+    "iconUrl": "https://cdn.simpleicons.org/githubactions",
+    "level": 4,
+    "category": "tools"
+  },
+  {
+    "id": "rest-api",
+    "name": "REST APIs",
+    "iconUrl": null,
+    "level": 4,
+    "category": "architecture"
+  },
+  {
+    "id": "material-3",
+    "name": "Material 3",
+    "iconUrl": "https://cdn.simpleicons.org/materialdesign",
+    "level": 3,
+    "category": "frameworks"
+  },
+  {
+    "id": "supabase",
+    "name": "Supabase",
+    "iconUrl": "https://cdn.simpleicons.org/supabase",
+    "level": 2,
+    "category": "cloud"
+  },
+  {
+    "id": "openapi",
+    "name": "OpenAPI",
+    "iconUrl": "https://cdn.simpleicons.org/openapiinitiative",
+    "level": 3,
     "category": "tools"
   }
 ]
