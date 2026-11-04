@@ -70,6 +70,9 @@ export function useSection(sectionKeys: readonly string[], enabled = true) {
     if (!enabled) return
     const onKey = (e: KeyboardEvent) => {
       if (document.querySelector('[data-modal]')) return
+      // Arrow keys belong to a text field while typing (e.g. the skills search)
+      const el = e.target as HTMLElement | null
+      if (el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName))) return
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next()
       if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prev()
     }
@@ -99,12 +102,15 @@ export function useSection(sectionKeys: readonly string[], enabled = true) {
     if (!enabled) return
     let startX = 0
     let startY = 0
+    let blocked = false
     const onTouchStart = (e: TouchEvent) => {
+      // A horizontally scrolling strip (data-no-swipe) must not flip the section
+      blocked = !!(e.target as HTMLElement).closest?.('[data-no-swipe]')
       startX = e.touches[0].clientX
       startY = e.touches[0].clientY
     }
     const onTouchEnd = (e: TouchEvent) => {
-      if (document.querySelector('[data-modal]')) return
+      if (blocked || document.querySelector('[data-modal]')) return
       const dx = startX - e.changedTouches[0].clientX
       const dy = startY - e.changedTouches[0].clientY
       // Only treat as horizontal swipe if predominantly horizontal

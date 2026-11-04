@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
-import { m, AnimatePresence } from 'framer-motion'
+import { useMemo, useState } from 'react'
+import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { usePortfolioData } from '../../context/PortfolioDataContext'
+import type { RawSkill } from '../../context/PortfolioDataContext'
 import { useLang } from '../../hooks/useLang'
 import SectionWrapper from '../ui/SectionWrapper'
 import SectionHeader from '../ui/SectionHeader'
@@ -121,101 +122,168 @@ const GROUPS = [
   },
 ] as const
 
-const MAX_VISIBLE = 9
+type Group = typeof GROUPS[number]
+type TabId = 'all' | Group['id']
+
 const EASE = [0.22, 1, 0.36, 1] as const
 
-type GroupId = typeof GROUPS[number]['id']
+const LEVEL_TITLE: Record<number, { en: string; es: string }> = {
+  4: { en: 'Advanced',   es: 'Avanzado' },
+  3: { en: 'Proficient', es: 'Competente' },
+  2: { en: 'Familiar',   es: 'Conocimiento' },
+  1: { en: 'Basic',      es: 'Básico' },
+}
+
+/** Case- and accent-insensitive, so "ingenieria" finds "Ingeniería" */
+const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+const byLevel = (a: RawSkill, b: RawSkill) => Math.min(4, b.level) - Math.min(4, a.level) || a.name.localeCompare(b.name)
+
+interface Bucket { g: Group; items: RawSkill[] }
 
 export default function SkillsSection() {
   const { t } = useTranslation()
   const lang = useLang()
   const { skills, softSkills, loading } = usePortfolioData()
   const isEs = lang === 'es'
-  const [expandedGroup, setExpandedGroup] = useState<GroupId | null>(null)
+  const [tab, setTab] = useState<TabId>('all')
+  const [query, setQuery] = useState('')
 
-  useEffect(() => {
-    if (!expandedGroup) return
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setExpandedGroup(null) }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [expandedGroup])
+  // Every category that has skills, each sorted by level (then name)
+  const buckets = useMemo<Bucket[]>(
+    () => GROUPS
+      .map(g => ({ g, items: skills.filter(s => (g.cats as readonly string[]).includes(s.category)).sort(byLevel) }))
+      .filter(b => b.items.length > 0),
+    [skills],
+  )
 
-  const openGroup = expandedGroup ? GROUPS.find(g => g.id === expandedGroup) ?? null : null
-  const allGroupSkills = openGroup
-    ? skills.filter(s => (openGroup.cats as readonly string[]).includes(s.category)).sort((a, b) => b.level - a.level)
-    : []
+  const q = norm(query.trim())
+  const active: TabId = tab === 'all' || buckets.some(b => b.g.id === tab) ? tab : 'all'
+
+  // Searching looks in every category; otherwise the selected tab decides what is shown
+  const shown: Bucket[] = q
+    ? buckets.map(b => ({ g: b.g, items: b.items.filter(s => norm(s.name).includes(q)) })).filter(b => b.items.length > 0)
+    : active === 'all' ? buckets : buckets.filter(b => b.g.id === active)
+  const matches = shown.reduce((n, b) => n + b.items.length, 0)
+  const totalSkills = buckets.reduce((n, b) => n + b.items.length, 0)
+  // One category selected: break it down by level so the strongest read first
+  const byLevelView = !q && active !== 'all'
+
+  const tabs: { id: TabId; label: string; count: number; g?: Group }[] = [
+    { id: 'all', label: isEs ? 'Todas' : 'All', count: totalSkills },
+    ...buckets.map(b => ({ id: b.g.id as TabId, label: isEs ? b.g.labelEs : b.g.labelEn, count: b.items.length, g: b.g })),
+  ]
 
   return (
-    <SectionWrapper maxWidth="max-w-6xl">
-      <SectionHeader navKey="nav.skills" titleKey="skills.title" className="mb-4 sm:mb-5" meta={skills.length ? String(skills.length) : undefined} />
+    <SectionWrapper maxWidth="max-w-5xl">
+      <SectionHeader navKey="nav.skills" titleKey="skills.title" className="mb-4 sm:mb-5" meta={totalSkills ? String(totalSkills) : undefined} />
 
       {loading ? (
         <SkillChipsSkeleton />
       ) : (
-        <m.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.08, duration: 0.35 }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-5 sm:mb-6"
-        >
-          {GROUPS.map(({ id, cats, labelEn, labelEs, header, border, top, low, accent }) => {
-            const grouped = skills
-              .filter(s => (cats as readonly string[]).includes(s.category))
-              .sort((a, b) => b.level - a.level)
-            const total      = grouped.length
-            const shown      = grouped.slice(0, MAX_VISIBLE)
-            const hiddenCount = total - shown.length
-            const label      = isEs ? labelEs : labelEn
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08, duration: 0.35 }}>
+          {/* Search */}
+          <div className="relative mb-3 sm:mb-4">
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+              <circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" />
+            </svg>
+            <input
+              type="search"
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Escape') setQuery('') }}
+              placeholder={isEs ? 'Buscar una habilidad…' : 'Search a skill…'}
+              aria-label={isEs ? 'Buscar una habilidad' : 'Search a skill'}
+              autoComplete="off"
+              enterKeyHint="search"
+              className="w-full h-11 pl-10 pr-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/70 text-base sm:text-sm text-slate-800 dark:text-slate-100 placeholder:text-slate-400 outline-none focus:border-violet-400 dark:focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 transition"
+            />
+          </div>
 
-            return (
-              <m.div
-                key={id}
-                initial={{ opacity: 0, y: 16 }}
+          {/* Category tabs: a scrolling strip on phones, wrapped on larger screens */}
+          <div
+            role="tablist"
+            aria-label={isEs ? 'Categorías de habilidades' : 'Skill categories'}
+            data-no-swipe
+            className="flex gap-2 overflow-x-auto sm:flex-wrap -mx-5 px-5 sm:mx-0 sm:px-0 pb-2 mb-4 sm:mb-5 snap-x"
+            style={{ scrollbarWidth: 'none' }}
+          >
+            {tabs.map(({ id, label, count, g }) => {
+              const selected = !q && active === id
+              return (
+                <button
+                  key={id}
+                  role="tab"
+                  aria-selected={selected}
+                  onClick={() => { setQuery(''); setTab(id) }}
+                  className={`shrink-0 snap-start inline-flex items-center gap-2 min-h-10 px-3.5 rounded-full border text-sm font-medium cursor-pointer touch-manipulation transition-colors duration-150 ${
+                    selected
+                      ? `${g ? g.accent : 'bg-violet-600'} border-transparent text-white shadow-sm`
+                      : 'border-slate-200 dark:border-slate-700 bg-white/70 dark:bg-slate-900/60 text-slate-600 dark:text-slate-300 hover:border-violet-300 dark:hover:border-violet-600'
+                  }`}
+                >
+                  {label}
+                  <span className={`text-[11px] font-semibold tabular-nums ${selected ? 'text-white/80' : 'text-slate-400 dark:text-slate-500'}`}>{count}</span>
+                </button>
+              )
+            })}
+          </div>
+
+          {/* Results */}
+          <div role="tabpanel" aria-live="polite" className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
+            {q && (
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {matches
+                  ? (isEs ? `${matches} resultado${matches === 1 ? '' : 's'} para «${query.trim()}»` : `${matches} result${matches === 1 ? '' : 's'} for “${query.trim()}”`)
+                  : (isEs ? `Nada coincide con «${query.trim()}».` : `Nothing matches “${query.trim()}”.`)}
+              </p>
+            )}
+
+            {shown.map(({ g, items }, i) => (
+              <motion.div
+                key={g.id}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: GROUPS.findIndex(g => g.id === id) * 0.05 + 0.1, duration: 0.3, ease: EASE }}
-                className={`min-w-0 rounded-xl sm:rounded-2xl border bg-white/80 dark:bg-slate-900/70 shadow-sm hover:shadow-md transition-shadow duration-200 ${border}`}
+                transition={{ delay: Math.min(i, 5) * 0.04, duration: 0.28, ease: EASE }}
+                className={`min-w-0 rounded-xl sm:rounded-2xl border bg-white/80 dark:bg-slate-900/70 shadow-sm overflow-hidden ${g.border}`}
               >
-                {/* Colored top accent bar */}
-                <div className={`h-1 w-full rounded-t-xl sm:rounded-t-2xl ${accent}`} />
-
-                <div className="p-3 sm:p-4">
-                  {/* Header row */}
-                  <div className="flex items-center justify-between mb-2.5">
-                    <h3 className={`text-[11px] sm:text-[10px] font-bold uppercase tracking-widest ${header}`}>
-                      {label}
-                    </h3>
-                    <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full border ${top} opacity-80`}>
-                      {total}
-                    </span>
+                <div className={`h-1 w-full ${g.accent}`} />
+                <div className="p-3.5 sm:p-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className={`text-xs font-bold uppercase tracking-widest ${g.header}`}>{isEs ? g.labelEs : g.labelEn}</h3>
+                    <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${g.top} opacity-80`}>{items.length}</span>
                   </div>
 
-                  {/* Chips */}
-                  <div className="flex flex-wrap gap-1 sm:gap-1.5">
-                    {shown.map(s => (
-                      <SkillChip
-                        key={s.id}
-                        skill={s}
-                        chipClass={s.level >= 3 ? top : low}
-                      />
-                    ))}
-                    {hiddenCount > 0 && (
-                      <button
-                        onClick={() => setExpandedGroup(id as GroupId)}
-                        className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border text-[11px] sm:text-[10px] font-semibold cursor-pointer transition-all duration-150 hover:scale-105 active:scale-95 ${top}`}
-                      >
-                        +{hiddenCount} {isEs ? 'más' : 'more'}
-                      </button>
-                    )}
-                  </div>
+                  {byLevelView ? (
+                    <div className="space-y-3.5">
+                      {[4, 3, 2, 1].map(lv => {
+                        const group = items.filter(s => Math.min(4, s.level) === lv)
+                        if (!group.length) return null
+                        return (
+                          <div key={lv}>
+                            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">
+                              {LEVEL_TITLE[lv][lang]}
+                            </p>
+                            <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                              {group.map(s => <SkillChip key={s.id} skill={s} chipClass={s.level >= 3 ? g.top : g.low} />)}
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  ) : (
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                      {items.map(s => <SkillChip key={s.id} skill={s} chipClass={s.level >= 3 ? g.top : g.low} />)}
+                    </div>
+                  )}
                 </div>
-              </m.div>
-            )
-          })}
-        </m.div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       )}
 
       {/* Soft skills */}
-      <m.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}>
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
         <p className="text-[10px] font-semibold uppercase tracking-widest text-violet-600 dark:text-violet-400 mb-2 sm:mb-2.5 text-center">
           {t('skills.soft')}
         </p>
@@ -233,69 +301,7 @@ export default function SkillsSection() {
             )
           })}
         </div>
-      </m.div>
-
-      {t('nav.skills') && null}
-
-      {/* Skills popup modal */}
-      <AnimatePresence>
-        {openGroup && (
-          <m.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.18 }}
-            data-modal
-            className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center sm:p-8 bg-black/50 backdrop-blur-sm"
-            onClick={e => { if (e.target === e.currentTarget) setExpandedGroup(null) }}
-          >
-            <m.div
-              initial={{ opacity: 0, scale: 0.94, y: 12 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.94, y: 12 }}
-              transition={{ duration: 0.22, ease: EASE }}
-              className="bg-white dark:bg-slate-900 rounded-t-2xl sm:rounded-2xl shadow-2xl w-full max-w-lg max-h-[85dvh] flex flex-col border border-slate-200 dark:border-slate-700 overflow-hidden"
-            >
-              {/* Accent bar */}
-              <div className={`h-1.5 w-full shrink-0 ${openGroup.accent}`} />
-
-              <div className="p-5 sm:p-6 pb-[calc(1.25rem+env(safe-area-inset-bottom))] overflow-y-auto overscroll-contain">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h3 className={`text-xs font-bold uppercase tracking-widest ${openGroup.header}`}>
-                      {isEs ? openGroup.labelEs : openGroup.labelEn}
-                    </h3>
-                    <p className="text-slate-400 dark:text-slate-500 text-xs mt-0.5">
-                      {allGroupSkills.length} {isEs ? 'habilidades' : 'skills'}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setExpandedGroup(null)}
-                    aria-label={isEs ? 'Cerrar' : 'Close'}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-                  >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <path d="M18 6L6 18M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-
-                {/* All skills */}
-                <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                  {allGroupSkills.map(s => (
-                    <SkillChip
-                      key={s.id}
-                      skill={s}
-                      chipClass={s.level >= 3 ? openGroup.top : openGroup.low}
-                    />
-                  ))}
-                </div>
-              </div>
-            </m.div>
-          </m.div>
-        )}
-      </AnimatePresence>
+      </motion.div>
     </SectionWrapper>
   )
 }
