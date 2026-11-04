@@ -80,15 +80,19 @@ const SKILL_ROWS: { key: string; cats: string[]; label: Record<CvLang, string> }
 const OTHER_ROW = { key: 'other', label: { en: 'Other', es: 'Otros' } }
 
 /**
- * Every API skill, grouped by category. Within a row the role's priority list
- * comes first (core stack), then the rest by level (highest first), then API order.
+ * The API skills a CV prints, grouped by category: level 3 and 4 (the portfolio shows all of them, a CV
+ * stays short) plus anything on the role's priority list. Within a row the priority list comes first
+ * (core stack), then the rest by level (highest first), then API order.
  */
+export const CV_MIN_LEVEL = 3
+
 export function groupSkills(skills: RawSkill[], priority: string[], lang: CvLang): CvSkillRow[] {
   const rank = (s: RawSkill) => {
     const i = priority.indexOf(s.id)
     return i === -1 ? Number.POSITIVE_INFINITY : i
   }
   const ordered = skills
+    .filter(s => (s.level ?? 0) >= CV_MIN_LEVEL || priority.includes(s.id))
     .map((s, i) => ({ s, i }))
     .sort((a, b) => rank(a.s) - rank(b.s) || (b.s.level ?? 0) - (a.s.level ?? 0) || a.i - b.i)
     .map(({ s }) => s)

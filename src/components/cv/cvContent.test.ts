@@ -4,7 +4,7 @@ import { renderToBuffer, type DocumentProps } from '@react-pdf/renderer'
 import type { PortfolioRawData } from '../../context/PortfolioDataContext'
 import { buildCvContent, displayUrl, groupSkills, portfolioUrl, projectLinks } from './cvContent'
 import { CVDocument } from './CVDocument'
-import { ROLE_IDS } from './profiles'
+import { ROLE_IDS, ROLES } from './profiles'
 import { FEATURED_IDS } from '../../lib/projectAssets'
 
 // The offline snapshot build-cv.mjs falls back to (same shape the API is adapted into)
@@ -57,11 +57,13 @@ describe('buildCvContent (fullstack, static CV)', () => {
     expect(cv.projects.every(p => p.desc.length > 0)).toBe(true)
   })
 
-  it.each(LANGS)('%s: lists every API skill, including the iOS / KMP stack', lang => {
+  it.each(LANGS)('%s: lists the level 3+ and priority skills, including the iOS / KMP stack', lang => {
     const cv = buildCvContent({ lang, role: 'fullstack', ...data })
     const printed = cv.skillRows.flatMap(r => r.names)
-    expect(printed).toHaveLength(data.skills.length)
-    expect(new Set(printed)).toEqual(new Set(data.skills.map(s => s.name)))
+    const priority = new Set(ROLES.fullstack.prioritySkillIds)
+    const expected = data.skills.filter(s => (s.level ?? 0) >= 3 || priority.has(s.id)).map(s => s.name)
+    expect(new Set(printed)).toEqual(new Set(expected))
+    expect(printed.length).toBeLessThan(data.skills.length)
     for (const name of ['Swift', 'SwiftUI', 'Kotlin Multiplatform']) expect(printed).toContain(name)
     expect(cv.skillRows[0].names[0]).toBe('Kotlin')
   })
@@ -104,14 +106,14 @@ describe('helpers', () => {
       .toEqual(['b.web.app', 'github.com/a/b'])
   })
 
-  it('groupSkills puts priority skills first and unknown categories in a last row', () => {
+  it('groupSkills drops level 1-2 skills unless prioritised, puts priority first and unknown categories last', () => {
     const rows = groupSkills([
       { id: 'a', name: 'A', level: 2, category: 'languages' },
       { id: 'b', name: 'B', level: 4, category: 'languages' },
       { id: 'c', name: 'C', level: 1, category: 'languages' },
       { id: 'x', name: 'X', level: 3, category: 'weird' },
     ], ['c'], 'en')
-    expect(rows[0].names).toEqual(['C', 'B', 'A'])
+    expect(rows[0].names).toEqual(['C', 'B'])
     expect(rows.at(-1)).toMatchObject({ key: 'other', names: ['X'] })
   })
 })
