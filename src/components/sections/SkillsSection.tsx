@@ -123,9 +123,11 @@ const GROUPS = [
 ] as const
 
 type Group = typeof GROUPS[number]
-type TabId = 'all' | Group['id']
+type TabId = 'all' | 'soft' | Group['id']
 
 const EASE = [0.22, 1, 0.36, 1] as const
+/** The soft-skills tab and card use their own accent, like a category */
+const SOFT_GROUP = { accent: 'bg-fuchsia-500' }
 
 const LEVEL_TITLE: Record<number, { en: string; es: string }> = {
   4: { en: 'Advanced',   es: 'Avanzado' },
@@ -156,21 +158,32 @@ export default function SkillsSection() {
     [skills],
   )
 
+  const softItems = useMemo(
+    () => softSkills.map(ss => ({
+      icon: ss.icon,
+      name: typeof ss.name === 'string' ? ss.name : (lang === 'es' ? (ss.name as { es: string }).es : (ss.name as { en: string }).en),
+    })),
+    [softSkills, lang],
+  )
+
   const q = norm(query.trim())
-  const active: TabId = tab === 'all' || buckets.some(b => b.g.id === tab) ? tab : 'all'
+  const active: TabId = tab === 'all' || (tab === 'soft' && softItems.length > 0) || buckets.some(b => b.g.id === tab) ? tab : 'all'
 
   // Searching looks in every category; otherwise the selected tab decides what is shown
   const shown: Bucket[] = q
     ? buckets.map(b => ({ g: b.g, items: b.items.filter(s => norm(s.name).includes(q)) })).filter(b => b.items.length > 0)
     : active === 'all' ? buckets : buckets.filter(b => b.g.id === active)
-  const matches = shown.reduce((n, b) => n + b.items.length, 0)
+  // Soft skills ride along in All, in their own tab, and in a search that matches them
+  const softShown = q ? softItems.filter(ss => norm(ss.name).includes(q)) : active === 'all' || active === 'soft' ? softItems : []
+  const matches = shown.reduce((n, b) => n + b.items.length, 0) + (q ? softShown.length : 0)
   const totalSkills = buckets.reduce((n, b) => n + b.items.length, 0)
   // One category selected: break it down by level so the strongest read first
   const byLevelView = !q && active !== 'all'
 
-  const tabs: { id: TabId; label: string; count: number; g?: Group }[] = [
+  const tabs: { id: TabId; label: string; count: number; g?: { accent: string } }[] = [
     { id: 'all', label: isEs ? 'Todas' : 'All', count: totalSkills },
     ...buckets.map(b => ({ id: b.g.id as TabId, label: isEs ? b.g.labelEs : b.g.labelEn, count: b.items.length, g: b.g })),
+    ...(softItems.length ? [{ id: 'soft' as TabId, label: t('skills.soft'), count: softItems.length, g: SOFT_GROUP }] : []),
   ]
 
   return (
@@ -278,43 +291,41 @@ export default function SkillsSection() {
                 </div>
               </motion.div>
             ))}
+
+            {softShown.length > 0 && (
+              <motion.div
+                key="soft"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: Math.min(shown.length, 5) * 0.04, duration: 0.28, ease: EASE }}
+                className="rounded-xl sm:rounded-2xl border border-fuchsia-100 dark:border-fuchsia-900/40 bg-white/80 dark:bg-slate-900/70 shadow-sm overflow-hidden"
+              >
+                <div className={`h-1 w-full ${SOFT_GROUP.accent}`} />
+                <div className="p-3.5 sm:p-5">
+                  <div className="flex items-center justify-between mb-3 sm:mb-4">
+                    <h3 className="text-xs font-bold uppercase tracking-widest text-fuchsia-600 dark:text-fuchsia-400">{t('skills.soft')}</h3>
+                    <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full border border-fuchsia-200 dark:border-fuchsia-800/50 bg-fuchsia-50 dark:bg-fuchsia-900/20 text-fuchsia-700 dark:text-fuchsia-300 opacity-80">
+                      {softShown.length}
+                    </span>
+                  </div>
+                  <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
+                    {softShown.map(ss => (
+                      <li
+                        key={ss.name}
+                        className="flex items-center gap-2.5 min-w-0 px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-xl border border-slate-100 dark:border-slate-800/60 bg-slate-50/70 dark:bg-slate-900/60"
+                      >
+                        <span className="w-8 h-8 shrink-0 flex items-center justify-center rounded-lg bg-fuchsia-50 dark:bg-fuchsia-900/20 text-base" aria-hidden>{ss.icon}</span>
+                        <span className="text-[13px] sm:text-sm font-medium leading-tight text-slate-700 dark:text-slate-200">{ss.name}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </motion.div>
+            )}
           </div>
         </motion.div>
       )}
 
-      {/* Soft skills: a card of their own, as prominent as a skill category */}
-      {softSkills.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="rounded-xl sm:rounded-2xl border border-fuchsia-100 dark:border-fuchsia-900/40 bg-white/80 dark:bg-slate-900/70 shadow-sm overflow-hidden"
-        >
-          <div className="h-1 w-full bg-fuchsia-500" />
-          <div className="p-3.5 sm:p-5">
-            <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-fuchsia-600 dark:text-fuchsia-400">{t('skills.soft')}</h3>
-              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full border border-fuchsia-200 dark:border-fuchsia-800/50 bg-fuchsia-50 dark:bg-fuchsia-900/20 text-fuchsia-700 dark:text-fuchsia-300 opacity-80">
-                {softSkills.length}
-              </span>
-            </div>
-            <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
-              {softSkills.map(ss => {
-                const name = typeof ss.name === 'string' ? ss.name : (lang === 'es' ? (ss.name as { es: string }).es : (ss.name as { en: string }).en)
-                return (
-                  <li
-                    key={name}
-                    className="flex items-center gap-2.5 min-w-0 px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-xl border border-slate-100 dark:border-slate-800/60 bg-slate-50/70 dark:bg-slate-900/60"
-                  >
-                    <span className="w-8 h-8 shrink-0 flex items-center justify-center rounded-lg bg-fuchsia-50 dark:bg-fuchsia-900/20 text-base" aria-hidden>{ss.icon}</span>
-                    <span className="text-[13px] sm:text-sm font-medium leading-tight text-slate-700 dark:text-slate-200">{name}</span>
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
-        </motion.div>
-      )}
     </SectionWrapper>
   )
 }
