@@ -32,7 +32,7 @@ describe('buildSnapshot', () => {
   const html = buildSnapshot('/carreerV2/')
 
   it('renders the name as the h1 and the section nav', () => {
-    expect(html).toContain('<h1>Sebastián Ramiro Entrerrios García</h1>')
+    expect(html).toContain('<h1>Sebastián Entrerrios García</h1>')
     expect(html).toContain('<nav aria-label="Sections">')
     expect(html).toContain('href="#projects"')
   })

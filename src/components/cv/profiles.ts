@@ -7,8 +7,8 @@
 // Facts in the summaries must match the career API (jobs[].achievements, projects[].desc).
 // The headline role and the tagline come from the API (personal.role / personal.tagline);
 // only the role variants set their own `label`.
-/** Full legal name printed on the CV (the API's personal.name is the short form) */
-export const CV_FULL_NAME = 'Sebastián Ramiro Entrerrios García'
+/** Name printed on the CV: the same spelling as the career API's personal.name, the page title, the h1 and the JSON-LD */
+export const CV_FULL_NAME = 'Sebastián Entrerrios García'
 
 export type RoleId = 'fullstack' | 'mobile' | 'backend' | 'frontend'
 
