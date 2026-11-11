@@ -25,3 +25,6 @@ dist-ssr
 public/cv/
 /playwright-report/
 /test-results/
+
+# Per-machine Claude Code settings (absolute local paths)
+.claude/settings.local.json
