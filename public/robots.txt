@@ -1,3 +1,7 @@
+# Crawlers only read robots.txt at the root of a host, and this is a GitHub project site
+# (https://sebas1705carreer.github.io/carreerV2/), so this file is NOT picked up by search engines.
+# It is kept because it is harmless and documents the sitemap location. Indexing is controlled by
+# <meta name="robots"> and <link rel="canonical"> in index.html; submit the sitemap in Search Console.
 User-agent: *
 Allow: /
 

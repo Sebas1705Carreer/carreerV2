@@ -93,7 +93,7 @@ export function buildSnapshot(base: string, manifest: AssetManifest = {}, varian
   const projects = read('projects') as { work: SnapshotProject[]; featured: SnapshotProject[] }
   const education = read('education') as { items: Array<{ degree: ML; school: string; period: ML }>; certs: Array<{ name: ML; issuer: string; date: string; url: string | null }> }
 
-  const name = 'Sebastián Ramiro Entrerrios García'
+  const name = 'Sebastián Entrerrios García'
   // Same availability line as the hero (it lives in the i18n resources, not in the API data)
   const availability = (JSON.parse(readFileSync('src/i18n/locales/en/hero.json', 'utf8')) as { hero: { availability: string } }).hero.availability
   return `

@@ -289,7 +289,7 @@ export function AtsCVDocument({ lang, role, personal, skills, jobs, projects, ed
   }
 
   return (
-    <Document title="CV - Sebastian Ramiro Entrerrios Garcia (ATS)" author={CV_FULL_NAME} subject={cv.roleTitle} creator="Portfolio CV Generator" keywords={cv.keywords.join(', ')}>
+    <Document title="CV - Sebastian Entrerrios Garcia (ATS)" author={CV_FULL_NAME} subject={cv.roleTitle} creator="Portfolio CV Generator" keywords={cv.keywords.join(', ')}>
       <Page size="A4" style={a.page}>
         <Text style={a.name}>{CV_FULL_NAME}</Text>
         <Text style={a.role}>{cv.roleTitle}</Text>
